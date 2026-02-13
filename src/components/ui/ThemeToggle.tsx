@@ -3,12 +3,7 @@
 import { useTheme } from '@/lib/theme';
 
 export default function ThemeToggle() {
-  const { theme, toggleTheme, mounted } = useTheme();
-
-  if (!mounted) {
-    // Render placeholder to avoid layout shift
-    return <div className="h-9 w-9" />;
-  }
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <button
@@ -25,6 +20,7 @@ export default function ThemeToggle() {
         strokeWidth={2}
         strokeLinecap="round"
         strokeLinejoin="round"
+        aria-hidden="true"
         className={`absolute inset-0 m-auto h-4 w-4 transition-all duration-300 ${
           theme === 'dark' ? 'rotate-90 scale-0 opacity-0' : 'rotate-0 scale-100 opacity-100'
         }`}
@@ -41,6 +37,7 @@ export default function ThemeToggle() {
         strokeWidth={2}
         strokeLinecap="round"
         strokeLinejoin="round"
+        aria-hidden="true"
         className={`absolute inset-0 m-auto h-4 w-4 transition-all duration-300 ${
           theme === 'dark' ? 'rotate-0 scale-100 opacity-100' : '-rotate-90 scale-0 opacity-0'
         }`}
