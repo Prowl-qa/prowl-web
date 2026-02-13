@@ -94,13 +94,15 @@ export default function Hero() {
 
             {/* YAML code block */}
             <pre className="rounded-lg border border-border-subtle bg-code-bg p-4 text-xs leading-relaxed font-mono text-zinc-300">
-              <code>{`name: checkout-flow
-steps:
-  - navigate: "/cart"
-  - click: "Checkout"
-  - fill: "Email" "{{TEST_EMAIL}}"
-  - click: "Pay now"
-  - assert: visible "Order confirmed"`}</code>
+              <code>
+                <span className="text-purple-400">name</span><span className="text-zinc-500">:</span> <span className="text-green-400">checkout-flow</span>{'\n'}
+                <span className="text-purple-400">steps</span><span className="text-zinc-500">:</span>{'\n'}
+                {'  '}<span className="text-zinc-500">-</span> <span className="text-cyan-light">navigate</span><span className="text-zinc-500">:</span> <span className="text-green-400">&quot;/cart&quot;</span>{'\n'}
+                {'  '}<span className="text-zinc-500">-</span> <span className="text-cyan-light">click</span><span className="text-zinc-500">:</span> <span className="text-green-400">&quot;Checkout&quot;</span>{'\n'}
+                {'  '}<span className="text-zinc-500">-</span> <span className="text-cyan-light">fill</span><span className="text-zinc-500">:</span> <span className="text-green-400">&quot;Email&quot;</span> <span className="text-green-400">&quot;{'{{TEST_EMAIL}}'}&quot;</span>{'\n'}
+                {'  '}<span className="text-zinc-500">-</span> <span className="text-cyan-light">click</span><span className="text-zinc-500">:</span> <span className="text-green-400">&quot;Pay now&quot;</span>{'\n'}
+                {'  '}<span className="text-zinc-500">-</span> <span className="text-cyan-light">assert</span><span className="text-zinc-500">:</span> <span className="text-yellow-300">visible</span> <span className="text-green-400">&quot;Order confirmed&quot;</span>
+              </code>
             </pre>
 
             {/* Result bar */}
