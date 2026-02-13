@@ -1,0 +1,50 @@
+import Image from 'next/image';
+
+export default function FinalCta() {
+  return (
+    <section className="px-6 pb-24">
+      <div className="mx-auto w-full max-w-6xl overflow-hidden rounded-2xl border border-border bg-surface p-7 sm:p-10">
+        <div className="grid items-center gap-8 md:grid-cols-[1.15fr_0.85fr]">
+          <div>
+            <p className="text-xs uppercase tracking-[0.2em] text-muted">Ready to harden your release flow?</p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+              Install Prowl CLI and start testing entire user journeys today.
+            </h2>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">
+              Keep your velocity, reduce blind spots, and make end-to-end coverage a default part of shipping.
+            </p>
+
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <a
+                href="https://www.npmjs.com/package/prowlai"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center rounded-md bg-gradient-to-r from-gradient-from to-gradient-to px-6 py-3 text-sm font-semibold text-white transition-shadow hover:shadow-lg hover:shadow-cyan/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan"
+              >
+                Install the CLI
+              </a>
+              <a
+                href="https://github.com/Prowl-qa/prowl"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center rounded-md border border-border bg-background/85 px-6 py-3 text-sm font-semibold transition hover:border-cyan/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan"
+              >
+                Star on GitHub
+              </a>
+            </div>
+          </div>
+
+          <div className="mx-auto flex w-full max-w-xs items-center justify-center rounded-xl border border-border/70 bg-background/75 p-6">
+            <Image
+              src="/static/img/prowl-mascot.png"
+              alt="Prowl mascot"
+              width={240}
+              height={240}
+              className="h-auto w-full"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
