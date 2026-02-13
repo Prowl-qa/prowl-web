@@ -10,14 +10,40 @@ const steps = [
   { label: 'Run your first hunt', command: 'prowl run homepage' },
 ];
 
+function copyToClipboard(text: string): Promise<void> {
+  if (navigator.clipboard?.writeText) {
+    return navigator.clipboard.writeText(text);
+  }
+  // Fallback for non-secure contexts
+  return new Promise((resolve, reject) => {
+    try {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      resolve();
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
+
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = useCallback(() => {
-    navigator.clipboard.writeText(text).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
+    copyToClipboard(text)
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      })
+      .catch(() => {
+        // Silently fail — clipboard may be unavailable
+      });
   }, [text]);
 
   return (
@@ -27,15 +53,40 @@ function CopyButton({ text }: { text: string }) {
       className="shrink-0 rounded-md p-1.5 text-muted hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan"
     >
       {copied ? (
-        <svg className="w-4 h-4 text-green-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+        <svg className="w-4 h-4 text-green-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <path d="M20 6L9 17l-5-5" />
         </svg>
       ) : (
-        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <rect x="9" y="9" width="13" height="13" rx="2" />
           <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
         </svg>
       )}
+    </button>
+  );
+}
+
+function CopyAllButton({ text }: { text: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = useCallback(() => {
+    copyToClipboard(text)
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      })
+      .catch(() => {
+        // Silently fail
+      });
+  }, [text]);
+
+  return (
+    <button
+      onClick={handleCopy}
+      aria-label={copied ? 'All commands copied!' : 'Copy all commands to clipboard'}
+      className="text-sm text-muted hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-md px-3 py-1.5"
+    >
+      {copied ? 'Copied!' : 'Copy all commands'}
     </button>
   );
 }
@@ -63,6 +114,7 @@ export default function Install() {
                 <div className="flex-1 min-w-0">
                   <p className="text-sm text-muted mb-1.5">{step.label}</p>
                   <div className="flex items-center gap-2 rounded-lg bg-code-bg border border-border-subtle px-4 py-2.5">
+                    {/* Fixed light text on dark code background — intentionally not themed */}
                     <code className="flex-1 text-sm font-mono text-zinc-100 truncate">
                       {step.command}
                     </code>
@@ -74,12 +126,7 @@ export default function Install() {
           </div>
 
           <div className="mt-8 flex justify-center">
-            <button
-              onClick={() => navigator.clipboard.writeText(allCommands)}
-              className="text-sm text-muted hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-md px-3 py-1.5"
-            >
-              Copy all commands
-            </button>
+            <CopyAllButton text={allCommands} />
           </div>
         </div>
       </section>

@@ -16,14 +16,15 @@ function DesktopTable() {
   return (
     <div className="hidden md:block overflow-x-auto">
       <table className="w-full text-sm">
+        <caption className="sr-only">Feature comparison between Prowl, Playwright, and Maestro</caption>
         <thead>
           <tr className="border-b border-border">
-            <th className="text-left py-4 px-4 font-medium text-muted w-1/4">Category</th>
-            <th className="text-left py-4 px-4 font-semibold w-1/4 bg-cyan/5 rounded-tl-lg">
+            <th scope="col" className="text-left py-4 px-4 font-medium text-muted w-1/4">Category</th>
+            <th scope="col" className="text-left py-4 px-4 font-semibold w-1/4 bg-cyan/5 rounded-tl-lg">
               <span className="text-cyan">Prowl</span>
             </th>
-            <th className="text-left py-4 px-4 font-medium text-muted w-1/4">Playwright</th>
-            <th className="text-left py-4 px-4 font-medium text-muted w-1/4">Maestro</th>
+            <th scope="col" className="text-left py-4 px-4 font-medium text-muted w-1/4">Playwright</th>
+            <th scope="col" className="text-left py-4 px-4 font-medium text-muted w-1/4">Maestro</th>
           </tr>
         </thead>
         <tbody>
@@ -50,7 +51,7 @@ function DesktopTable() {
 
 function MobileCards() {
   return (
-    <div className="md:hidden space-y-4">
+    <div className="md:hidden space-y-4" aria-label="Feature comparison between Prowl, Playwright, and Maestro" role="region">
       {comparisonData.map((row) => (
         <motion.div
           key={row.category}

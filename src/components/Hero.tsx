@@ -53,8 +53,8 @@ export default function Hero() {
           <Image
             src="/static/img/prowl-mascot.png"
             alt="Prowl mascot — a raccoon with a magnifying glass hunting for bugs"
-            width={180}
-            height={180}
+            width={176}
+            height={176}
             className="mx-auto h-36 w-36 sm:h-44 sm:w-44 drop-shadow-lg"
             priority
           />
@@ -67,12 +67,16 @@ export default function Hero() {
         >
           <a
             href="https://docs.prowlqa.dev/getting-started"
+            target="_blank"
+            rel="noopener noreferrer"
             className="group relative rounded-full bg-gradient-to-r from-gradient-from to-gradient-to px-7 py-3.5 text-sm font-semibold text-white transition-shadow hover:shadow-lg hover:shadow-cyan/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             Get Started
           </a>
           <a
             href="https://github.com/Prowl-qa/prowl"
+            target="_blank"
+            rel="noopener noreferrer"
             className="rounded-full border border-border px-7 py-3.5 text-sm font-semibold hover:bg-surface transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             View on GitHub
