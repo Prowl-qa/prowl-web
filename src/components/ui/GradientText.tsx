@@ -1,5 +1,3 @@
-'use client';
-
 interface GradientTextProps {
   children: React.ReactNode;
   className?: string;

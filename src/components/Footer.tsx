@@ -25,22 +25,22 @@ export default function Footer() {
         </div>
 
         {/* Right: Link groups */}
-        <div className="flex gap-12 sm:gap-16">
+        <nav aria-label="Footer" className="flex gap-12 sm:gap-16">
           <div>
             <h4 className="font-semibold mb-3 text-xs uppercase tracking-wider text-muted">Product</h4>
             <ul className="space-y-2 text-muted">
               <li>
-                <a href="https://docs.prowlqa.dev" className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
+                <a href="https://docs.prowlqa.dev" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
                   Docs
                 </a>
               </li>
               <li>
-                <a href="https://docs.prowlqa.dev/getting-started" className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
+                <a href="https://docs.prowlqa.dev/getting-started" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
                   Getting Started
                 </a>
               </li>
               <li>
-                <a href="https://www.npmjs.com/package/prowlai" className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
+                <a href="https://www.npmjs.com/package/prowlai" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
                   npm
                 </a>
               </li>
@@ -50,18 +50,18 @@ export default function Footer() {
             <h4 className="font-semibold mb-3 text-xs uppercase tracking-wider text-muted">Community</h4>
             <ul className="space-y-2 text-muted">
               <li>
-                <a href="https://github.com/Prowl-qa/prowl" className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
+                <a href="https://github.com/Prowl-qa/prowl" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
                   GitHub
                 </a>
               </li>
               <li>
-                <a href="https://github.com/Prowl-qa/prowl-hub" className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
+                <a href="https://github.com/Prowl-qa/prowl-hub" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
                   Community Hub
                 </a>
               </li>
             </ul>
           </div>
-        </div>
+        </nav>
       </div>
 
       <div className="max-w-5xl mx-auto mt-10 text-xs text-muted">

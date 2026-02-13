@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, useCallback, useSyncExternalStore } from 'react';
+import { createContext, useContext, useCallback, useSyncExternalStore } from 'react';
 
 type Theme = 'light' | 'dark';
 
@@ -16,55 +16,63 @@ const ThemeContext = createContext<ThemeContextValue>({
   mounted: false,
 });
 
-function getInitialTheme(): Theme {
-  if (typeof window === 'undefined') return 'light';
+// External theme store — avoids setState-in-effect lint violations
+// Each ThemeProvider creates its own store instance via useRef-like pattern,
+// but since we only ever have one provider, a module-level store is fine.
+// The inline <script> in layout.tsx handles the initial class on <html>
+// before React hydrates, so FOUC is already prevented.
+let currentTheme: Theme = 'light';
+let listeners: Array<() => void> = [];
+
+function emitChange() {
+  for (const listener of listeners) {
+    listener();
+  }
+}
+
+function subscribe(listener: () => void) {
+  listeners = [...listeners, listener];
+  return () => {
+    listeners = listeners.filter((l) => l !== listener);
+  };
+}
+
+function getSnapshot(): Theme {
+  return currentTheme;
+}
+
+function getServerSnapshot(): Theme {
+  return 'light';
+}
+
+function initializeTheme() {
+  if (typeof window === 'undefined') return;
   const stored = localStorage.getItem('theme') as Theme | null;
-  if (stored) return stored;
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  const preferred = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  currentTheme = stored || preferred;
+  document.documentElement.classList.toggle('dark', currentTheme === 'dark');
 }
 
-// Track hydration without effect-based setState
-const subscribers = new Set<() => void>();
-let hydrated = false;
-
-function subscribeToHydration(cb: () => void) {
-  subscribers.add(cb);
-  return () => subscribers.delete(cb);
-}
-
-function getHydrated() {
-  return hydrated;
-}
-
-function getServerHydrated() {
-  return false;
+// Initialize synchronously on module load (client only).
+// This runs once when the module is first imported, before any component renders.
+if (typeof window !== 'undefined') {
+  initializeTheme();
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const isMounted = useSyncExternalStore(subscribeToHydration, getHydrated, getServerHydrated);
-
-  const [theme, setTheme] = useState<Theme>(() => {
-    if (typeof window === 'undefined') return 'light';
-    const initial = getInitialTheme();
-    document.documentElement.classList.toggle('dark', initial === 'dark');
-    if (!hydrated) {
-      hydrated = true;
-      queueMicrotask(() => subscribers.forEach((cb) => cb()));
-    }
-    return initial;
-  });
+  const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const mounted = typeof window !== 'undefined';
 
   const toggleTheme = useCallback(() => {
-    setTheme((prev) => {
-      const next = prev === 'light' ? 'dark' : 'light';
-      document.documentElement.classList.toggle('dark', next === 'dark');
-      localStorage.setItem('theme', next);
-      return next;
-    });
+    const next = currentTheme === 'light' ? 'dark' : 'light';
+    currentTheme = next;
+    document.documentElement.classList.toggle('dark', next === 'dark');
+    localStorage.setItem('theme', next);
+    emitChange();
   }, []);
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, mounted: isMounted }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme, mounted }}>
       {children}
     </ThemeContext.Provider>
   );
