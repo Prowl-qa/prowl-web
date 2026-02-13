@@ -7,13 +7,11 @@ type Theme = 'light' | 'dark';
 interface ThemeContextValue {
   theme: Theme;
   toggleTheme: () => void;
-  mounted: boolean;
 }
 
 const ThemeContext = createContext<ThemeContextValue>({
   theme: 'light',
   toggleTheme: () => {},
-  mounted: false,
 });
 
 // External theme store — avoids setState-in-effect lint violations
@@ -61,7 +59,6 @@ if (typeof window !== 'undefined') {
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-  const mounted = typeof window !== 'undefined';
 
   const toggleTheme = useCallback(() => {
     const next = currentTheme === 'light' ? 'dark' : 'light';
@@ -72,7 +69,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, mounted }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );
