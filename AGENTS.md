@@ -1,8 +1,8 @@
-# AGENTS.md instructions for /Users/michaeltookes/Desktop/prowl-web
+# AGENTS.md instructions for <project-root>
 
 ## Skills
 ### Available skills
-- codebase-familiarization-audit: Perform a comprehensive codebase familiarization and technical audit. Use when asked to get familiar with the project/codebase or provide an end-to-end repo review. (file: /Users/michaeltookes/.codex/skills/codebase-familiarization-audit/SKILL.md)
+- codebase-familiarization-audit: Perform a comprehensive codebase familiarization and technical audit. Use when asked to get familiar with the project/codebase or provide an end-to-end repo review. (file: <codex-home>/skills/codebase-familiarization-audit/SKILL.md)
 
 ### How to use skills
 - Trigger rules: If the user asks to "get familiar with the codebase", "review the whole repo", "audit the project", or equivalent onboarding/review requests, use `codebase-familiarization-audit`.

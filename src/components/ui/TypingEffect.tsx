@@ -28,7 +28,8 @@ const lineVariants: Variants = {
 
 export default function TypingEffect({ lines }: TypingEffectProps) {
   return (
-    <motion.div
+    <motion.span
+      className="block"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: '-40px' }}
@@ -43,6 +44,6 @@ export default function TypingEffect({ lines }: TypingEffectProps) {
           {line.text}
         </motion.span>
       ))}
-    </motion.div>
+    </motion.span>
   );
 }
