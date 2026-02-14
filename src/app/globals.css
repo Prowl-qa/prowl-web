@@ -1,26 +1,88 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #0a0a0a;
+  --surface: #f4f4f5;
+  --surface-elevated: #ffffff;
+  --border: #e4e4e7;
+  --border-subtle: #f4f4f5;
+  --muted: #71717a;
+  --cyan: #0891b2;
+  --cyan-light: #22d3ee;
+  --green: #22c55e;
+  --green-light: #4ade80;
+  --gradient-from: #0891b2;
+  --gradient-to: #22c55e;
+  --code-bg: #09090b;
+  --code-surface: #18181b;
+}
+
+.dark {
+  --background: #09090b;
+  --foreground: #fafafa;
+  --surface: #18181b;
+  --surface-elevated: #1c1c1f;
+  --border: #27272a;
+  --border-subtle: #1c1c1f;
+  --muted: #a1a1aa;
+  --cyan: #22d3ee;
+  --cyan-light: #67e8f9;
+  --green: #4ade80;
+  --green-light: #86efac;
+  --gradient-from: #22d3ee;
+  --gradient-to: #4ade80;
+  --code-bg: #09090b;
+  --code-surface: #18181b;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-border: var(--border);
+  --color-border-subtle: var(--border-subtle);
+  --color-muted: var(--muted);
+  --color-cyan: var(--cyan);
+  --color-cyan-light: var(--cyan-light);
+  --color-green: var(--green);
+  --color-green-light: var(--green-light);
+  --color-gradient-from: var(--gradient-from);
+  --color-gradient-to: var(--gradient-to);
+  --color-code-bg: var(--code-bg);
+  --color-code-surface: var(--code-surface);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+@keyframes gradient-shimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient-shimmer {
+  background-size: 200% auto;
+  animation: gradient-shimmer 3s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-gradient-shimmer {
+    animation: none;
+  }
 }
