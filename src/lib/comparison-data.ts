@@ -23,7 +23,7 @@ export const comparisonData: ComparisonRow[] = [
   },
   {
     category: 'Web support',
-    prowl: 'Web-first, Chromium',
+    prowl: 'Web-first, multi-browser',
     playwright: 'Multi-browser',
     maestro: 'Mobile-first, limited web',
     prowlWins: true,
