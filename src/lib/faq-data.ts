@@ -20,6 +20,11 @@ export const faqItems: FaqItem[] = [
       "Yes. Prowl QA is built for CI execution with deterministic exit codes and artifact outputs suitable for pipelines and pull requests.",
   },
   {
+    question: "Can AI agents use Prowl QA?",
+    answer:
+      "Yes. Run prowlqa ci --json to get structured JSON output with pass/fail status, step timings, and artifact paths. Structured exit codes let agents branch without parsing output. You can also import Prowl QA as a Node library for programmatic use. No MCP server or tool discovery needed.",
+  },
+  {
     question: "Why not rely on manual testing only?",
     answer:
       "Manual checks miss regressions in large apps. Prowl QA gives repeatable coverage of critical user journeys on every release.",
