@@ -53,7 +53,7 @@ export default function Footer() {
             </a>
             {/* Email (placeholder) */}
             <a
-              href="mailto:hello@prowlqa.dev"
+              href="mailto:info@prowlqa.dev"
               aria-label="Email us"
               className="flex h-9 w-9 items-center justify-center rounded-lg bg-foreground/10 text-muted transition-colors hover:bg-foreground/20 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan"
             >
