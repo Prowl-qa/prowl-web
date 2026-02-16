@@ -3,6 +3,7 @@ import Hero from '@/components/Hero';
 import WhyE2E from '@/components/WhyE2E';
 import HowItWorks from '@/components/HowItWorks';
 import CodeExample from '@/components/CodeExample';
+import AgentEfficiency from '@/components/AgentEfficiency';
 import Features from '@/components/Features';
 import Install from '@/components/Install';
 import Faq from '@/components/Faq';
@@ -18,6 +19,7 @@ export default function Home() {
         <WhyE2E />
         <HowItWorks />
         <CodeExample />
+        <AgentEfficiency />
         <Features />
         <Install />
         <Faq />
