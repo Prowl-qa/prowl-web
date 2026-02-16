@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Prowl - CLI-First QA Testing for the Web",
+  title: "Prowl QA - CLI-First QA Testing for the Web",
   description:
     "Write tests in YAML. Run them from the terminal. Get screenshots, traces, and reports automatically. Powered by Playwright.",
 };

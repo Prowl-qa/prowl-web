@@ -8,7 +8,7 @@ export default function FinalCta() {
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-muted">Ready to harden your release flow?</p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-              Install Prowl CLI and start testing entire user journeys today.
+              Install Prowl QA and start testing entire user journeys today.
             </h2>
             <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">
               Keep your velocity, reduce blind spots, and make end-to-end coverage a default part of shipping.
@@ -35,7 +35,7 @@ export default function FinalCta() {
           <div className="mx-auto flex w-full max-w-xs items-center justify-center rounded-xl border border-border/70 bg-background/75 p-6">
             <Image
               src="/static/img/prowl-mascot.png"
-              alt="Prowl mascot"
+              alt="Prowl QA mascot"
               width={240}
               height={240}
               className="h-auto w-full"

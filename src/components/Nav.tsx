@@ -30,12 +30,12 @@ export default function Nav() {
         <Link href="/" className="flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
           <Image
             src="/static/img/prowl-logo.png"
-            alt="Prowl logo"
+            alt="Prowl QA logo"
             width={32}
             height={32}
             className="h-8 w-8"
           />
-          <span className="text-xl font-bold tracking-tight">Prowl</span>
+          <span className="text-xl font-bold tracking-tight">Prowl QA</span>
         </Link>
 
         {/* Desktop links */}

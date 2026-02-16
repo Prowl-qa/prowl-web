@@ -48,7 +48,7 @@ export default function Hero() {
             variants={fadeUp}
             className="mt-6 max-w-2xl text-base leading-relaxed text-muted sm:text-lg"
           >
-            Prowl helps QA engineers and developers catch cross-feature regressions
+            Prowl QA helps QA engineers and developers catch cross-feature regressions
             before users do. Write readable hunts in YAML, run from the terminal, and
             collect debugging artifacts automatically.
           </motion.p>
@@ -81,7 +81,7 @@ export default function Hero() {
             variants={fadeUp}
             className="mt-6 max-w-md rounded-xl border border-border bg-code-bg/80 px-4 py-3 font-mono text-xs text-zinc-300"
           >
-            <span className="text-muted">$</span> npm install -g prowlai
+            <span className="text-muted">$</span> npm install -g prowlqa
           </motion.div>
         </div>
 
@@ -116,7 +116,7 @@ export default function Hero() {
           {/* Mascot */}
           <Image
             src="/static/img/prowl-mascot.png"
-            alt="Prowl mascot"
+            alt="Prowl QA mascot"
             width={144}
             height={144}
             className="absolute -bottom-8 -right-6 h-28 w-28"
