@@ -32,6 +32,15 @@ npm run lint    # Run ESLint
 ```
 
 ## Related Repos
-- **CLI**: Prowl-qa/prowl — source of truth for features
-- **Docs**: Prowl-qa/prowl-docs — documentation at docs.prowlqa.dev
-- **Community hub**: Prowl-qa/prowl-hub — community hunt templates
+
+All Prowl QA repos live at `~/Desktop/Current Projects/Prowl QA/Repositories/`.
+
+| Repo | Purpose | Local Path |
+|------|---------|------------|
+| `Prowl-qa/prowl` | CLI tool (source of truth) | `~/Desktop/Current Projects/Prowl QA/Repositories/prowl` |
+| `Prowl-qa/prowl-docs` | Docs site (docs.prowlqa.dev) | `~/Desktop/Current Projects/Prowl QA/Repositories/prowl-docs` |
+| `Prowl-qa/prowl-hub` | Community hunt templates | `~/Desktop/Current Projects/Prowl QA/Repositories/prowl-hub` |
+| `mtookes/prowl-twitter-bot` | Twitter bot (@prowlqa) | `~/Desktop/Current Projects/Prowl QA/Repositories/prowl-twitter-bot` |
+
+**Backlogs**: `~/Desktop/Backlogs/projects/Prowl/`
+**Assets**: `~/Desktop/Current Projects/Prowl QA/Assets/`
