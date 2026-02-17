@@ -30,12 +30,12 @@ export default function Nav() {
         <Link href="/" className="flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
           <Image
             src="/static/img/prowl-logo.png"
-            alt="Prowl logo"
+            alt="Prowl QA logo"
             width={32}
             height={32}
             className="h-8 w-8"
           />
-          <span className="text-xl font-bold tracking-tight">Prowl</span>
+          <span className="text-xl font-bold tracking-tight">Prowl QA</span>
         </Link>
 
         {/* Desktop links */}
@@ -57,7 +57,7 @@ export default function Nav() {
             GitHub
           </a>
           <a
-            href="https://www.npmjs.com/package/prowlai"
+            href="https://www.npmjs.com/package/prowlqa"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-cyan transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm"
@@ -107,7 +107,7 @@ export default function Nav() {
             GitHub
           </a>
           <a
-            href="https://www.npmjs.com/package/prowlai"
+            href="https://www.npmjs.com/package/prowlqa"
             target="_blank"
             rel="noopener noreferrer"
             className="block hover:text-cyan transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm"
