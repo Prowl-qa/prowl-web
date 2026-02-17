@@ -36,8 +36,8 @@ export const features: Feature[] = [
     icon: 'watch',
   },
   {
-    title: 'CI ready',
-    desc: 'Run hunts in any CI pipeline. JSON output, exit codes, and artifact paths work out of the box.',
+    title: 'CI & agent ready',
+    desc: 'Run hunts in any CI pipeline or from AI agents. JSON output, exit codes, and artifact paths work with any automation.',
     icon: 'ci',
   },
   {

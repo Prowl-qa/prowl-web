@@ -14,9 +14,26 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Prowl - CLI-First QA Testing for the Web",
+  metadataBase: new URL("https://prowlqa.dev"),
+  title: "Prowl QA - CLI-First QA Testing for the Web",
   description:
     "Write tests in YAML. Run them from the terminal. Get screenshots, traces, and reports automatically. Powered by Playwright.",
+  openGraph: {
+    title: "Prowl QA - CLI-First QA Testing for the Web",
+    description:
+      "Write tests in YAML. Run them from the terminal. Get screenshots, traces, and reports automatically.",
+    url: "https://prowlqa.dev",
+    siteName: "Prowl QA",
+    type: "website",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary",
+    title: "Prowl QA - CLI-First QA Testing for the Web",
+    description:
+      "Write tests in YAML. Run them from the terminal. Get screenshots, traces, and reports automatically.",
+    creator: "@prowlqa",
+  },
 };
 
 const themeScript = `
