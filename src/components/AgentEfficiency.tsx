@@ -6,40 +6,39 @@ import { highlights } from '@/lib/agent-data';
 import { fadeUp, staggerContainer } from '@/lib/animations';
 import SectionReveal from '@/components/ui/SectionReveal';
 
-// Fixed colors for dark code backgrounds — intentionally not themed
-const CYAN = 'text-cyan-light';
-const GREEN = 'text-green-400';
-const PURPLE = 'text-purple-400';
-const MUTED = 'text-zinc-500';
-const YELLOW = 'text-yellow-300';
+const CYAN = 'text-cyan-500 dark:text-cyan-300';
+const GREEN = 'text-emerald-500 dark:text-emerald-300';
+const PURPLE = 'text-violet-500 dark:text-violet-300';
+const MUTED = 'text-zinc-300 dark:text-zinc-400';
+const YELLOW = 'text-amber-500 dark:text-amber-300';
 
 /* ---------- Code snippets ---------- */
 
 const mcpCode: ReactNode = (
   <>
-    <span className={MUTED}>{'// Agent discovers tools via MCP'}</span>{'\n'}
-    <span className={PURPLE}>await</span> mcp.<span className={CYAN}>listTools</span>();{'\n'}
-    <span className={MUTED}>{'// → 47 tools, ~3,200 tokens of schema'}</span>{'\n\n'}
-    <span className={MUTED}>{'// Agent reasons about each step'}</span>{'\n'}
-    <span className={PURPLE}>await</span> mcp.<span className={CYAN}>call</span>(<span className={GREEN}>&quot;navigate&quot;</span>, {'{'} <span className={YELLOW}>url</span>: <span className={GREEN}>&quot;/login&quot;</span> {'}'});{'\n'}
-    <span className={PURPLE}>await</span> mcp.<span className={CYAN}>call</span>(<span className={GREEN}>&quot;fill&quot;</span>, {'{'} <span className={YELLOW}>selector</span>: <span className={GREEN}>&quot;Email&quot;</span>, ... {'}'});{'\n'}
-    <span className={PURPLE}>await</span> mcp.<span className={CYAN}>call</span>(<span className={GREEN}>&quot;click&quot;</span>, {'{'} <span className={YELLOW}>selector</span>: <span className={GREEN}>&quot;Sign In&quot;</span> {'}'});{'\n'}
-    <span className={PURPLE}>await</span> mcp.<span className={CYAN}>call</span>(<span className={GREEN}>&quot;assert&quot;</span>, {'{'} <span className={YELLOW}>visible</span>: <span className={GREEN}>&quot;Dashboard&quot;</span> {'}'});{'\n'}
-    <span className={MUTED}>{'// Each call: tool schema + reasoning + response'}</span>
+    <span className={MUTED}># login.hunt.yaml</span>{'\n'}
+    <span className={PURPLE}>name</span><span className={MUTED}>:</span> <span className={GREEN}>login-flow</span>{'\n'}
+    <span className={PURPLE}>steps</span><span className={MUTED}>:</span>{'\n'}
+    {'  '}<span className={MUTED}>-</span> <span className={CYAN}>navigate</span><span className={MUTED}>:</span> <span className={GREEN}>&quot;/login&quot;</span>{'\n'}
+    {'  '}<span className={MUTED}>-</span> <span className={CYAN}>fill</span><span className={MUTED}>:</span> <span className={GREEN}>&quot;Email&quot;</span> <span className={GREEN}>&quot;{'{{TEST_EMAIL}}'}&quot;</span>{'\n'}
+    {'  '}<span className={MUTED}>-</span> <span className={CYAN}>fill</span><span className={MUTED}>:</span> <span className={GREEN}>&quot;Password&quot;</span> <span className={GREEN}>&quot;{'{{TEST_PASSWORD}}'}&quot;</span>{'\n'}
+    {'  '}<span className={MUTED}>-</span> <span className={CYAN}>click</span><span className={MUTED}>:</span> <span className={GREEN}>&quot;Sign In&quot;</span>{'\n'}
+    {'  '}<span className={MUTED}>-</span> <span className={CYAN}>assert</span><span className={MUTED}>:</span> <span className={YELLOW}>visible</span> <span className={GREEN}>&quot;Dashboard&quot;</span>
   </>
 );
 
 const prowlCode: ReactNode = (
   <>
-    <span className={MUTED}>$</span> <span className={CYAN}>prowlqa</span> ci <span className={YELLOW}>--json</span> login.hunt.yaml{'\n\n'}
-    <span className={MUTED}>{'// Entire result in one response:'}</span>{'\n'}
-    {'{'}{'\n'}
-    {'  '}<span className={PURPLE}>&quot;status&quot;</span>: <span className={GREEN}>&quot;pass&quot;</span>,{'\n'}
-    {'  '}<span className={PURPLE}>&quot;duration&quot;</span>: <span className={YELLOW}>622</span>,{'\n'}
-    {'  '}<span className={PURPLE}>&quot;steps&quot;</span>: <span className={YELLOW}>5</span>,{'\n'}
-    {'  '}<span className={PURPLE}>&quot;artifacts&quot;</span>: <span className={GREEN}>&quot;./prowl-artifacts/latest&quot;</span>{'\n'}
-    {'}'}{'\n'}
-    <span className={MUTED}>{'// Exit code 0 — agent is done'}</span>
+    <span className={MUTED}>$</span> <span className={CYAN}>prowlqa</span> run login.hunt.yaml <span className={YELLOW}>--report</span> json{'\n'}
+    <span className={CYAN}>●</span> Running hunt: <span className={GREEN}>login-flow</span>{'\n'}
+    {'  '}<span className={GREEN}>✓</span> navigate &quot;/login&quot; (120ms){'\n'}
+    {'  '}<span className={GREEN}>✓</span> fill &quot;Email&quot; (85ms){'\n'}
+    {'  '}<span className={GREEN}>✓</span> fill &quot;Password&quot; (62ms){'\n'}
+    {'  '}<span className={GREEN}>✓</span> click &quot;Sign In&quot; (340ms){'\n'}
+    {'  '}<span className={GREEN}>✓</span> assert visible &quot;Dashboard&quot; (15ms){'\n'}
+    <span className={`${GREEN} font-bold`}>PASS</span> login-flow (622ms) 5/5 steps{'\n'}
+    <span className={PURPLE}>artifacts</span><span className={MUTED}>:</span> <span className={GREEN}>./prowl-artifacts/latest</span>{'\n'}
+    <span className={PURPLE}>exitCode</span><span className={MUTED}>:</span> <span className={YELLOW}>0</span>
   </>
 );
 
@@ -124,9 +123,9 @@ export default function AgentEfficiency() {
               </div>
 
               <ul className="space-y-1.5 text-sm text-muted">
-                <li className="flex gap-2"><span className="text-red-400 shrink-0">-</span>Tool discovery schema loaded every session</li>
-                <li className="flex gap-2"><span className="text-red-400 shrink-0">-</span>Agent reasons about each browser action</li>
-                <li className="flex gap-2"><span className="text-red-400 shrink-0">-</span>Round-trip per step multiplies token cost</li>
+                <li className="flex gap-2"><span className="text-red-400 shrink-0">-</span>MCP tool discovery schemas are loaded every session</li>
+                <li className="flex gap-2"><span className="text-red-400 shrink-0">-</span>Agent issues per-step MCP calls (navigate/fill/click/assert)</li>
+                <li className="flex gap-2"><span className="text-red-400 shrink-0">-</span>Round-trip MCP responses multiply token cost</li>
                 <li className="flex gap-2"><span className="text-red-400 shrink-0">-</span>Flaky when agent misinterprets selectors</li>
               </ul>
             </motion.div>

@@ -41,7 +41,7 @@ export default function Footer() {
             </a>
             {/* GitHub */}
             <a
-              href="https://github.com/Prowl-qa"
+              href="https://github.com/Prowl-qa/prowl"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Prowl QA on GitHub"
