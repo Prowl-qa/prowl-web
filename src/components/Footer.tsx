@@ -81,7 +81,7 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a href="https://www.npmjs.com/package/prowlai" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
+                <a href="https://www.npmjs.com/package/prowlqa" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
                   npm
                 </a>
               </li>
