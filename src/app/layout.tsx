@@ -15,13 +15,13 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://prowlqa.dev"),
-  title: "Prowl QA - CLI-First QA Testing for the Web",
+  title: "Prowl QA - YAML-Powered E2E Testing with Visual Regression and AI Generation",
   description:
-    "Write tests in YAML. Run them from the terminal. Get screenshots, traces, and reports automatically. Powered by Playwright.",
+    "Write end-to-end tests in YAML, catch visual regressions automatically, and generate tests with AI. 26 step types, Playwright precision, and rich debugging artifacts — all from the terminal.",
   openGraph: {
-    title: "Prowl QA - CLI-First QA Testing for the Web",
+    title: "Prowl QA - YAML-Powered E2E Testing with Visual Regression and AI Generation",
     description:
-      "Write tests in YAML. Run them from the terminal. Get screenshots, traces, and reports automatically.",
+      "Write end-to-end tests in YAML, catch visual regressions automatically, and generate tests with AI. 26 step types, Playwright precision, and rich debugging artifacts — all from the terminal.",
     url: "https://prowlqa.dev",
     siteName: "Prowl QA",
     type: "website",
@@ -29,9 +29,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary",
-    title: "Prowl QA - CLI-First QA Testing for the Web",
+    title: "Prowl QA - YAML-Powered E2E Testing with Visual Regression and AI Generation",
     description:
-      "Write tests in YAML. Run them from the terminal. Get screenshots, traces, and reports automatically.",
+      "Write end-to-end tests in YAML, catch visual regressions automatically, and generate tests with AI. 26 step types, Playwright precision, and rich debugging artifacts — all from the terminal.",
     creator: "@prowlqa",
   },
 };

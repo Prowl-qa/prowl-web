@@ -16,23 +16,23 @@ export interface HighlightItem {
 
 export const highlights: HighlightItem[] = [
   {
-    title: '--json structured output',
-    desc: 'Every run returns machine-readable JSON. Pass/fail, step timings, artifact paths — ready for agent consumption.',
-    icon: 'json',
+    title: 'Page analysis',
+    desc: 'prowlqa analyze <url> --json extracts interactive elements, selectors, and form structure. Agents get a structured page map without browser interaction.',
+    icon: 'analyze',
   },
   {
-    title: 'Structured exit codes',
-    desc: 'Exit 0 for pass, 1 for failure, 2 for config error. Agents branch on codes without parsing output.',
-    icon: 'exit',
+    title: 'AI hunt generation',
+    desc: 'prowlqa generate turns a page analysis and natural language intent into a valid, runnable YAML hunt file.',
+    icon: 'generate',
+  },
+  {
+    title: 'Structured execution',
+    desc: 'Every run returns machine-readable JSON with pass/fail, step timings, and artifact paths. Exit codes let agents branch without parsing.',
+    icon: 'json',
   },
   {
     title: 'Library API',
     desc: 'Import prowlqa as a Node module. Run hunts programmatically and get typed results — no shell exec needed.',
     icon: 'api',
-  },
-  {
-    title: 'Zero-overhead discovery',
-    desc: 'YAML hunts are self-describing. Agents read the hunt file, not a tool schema. No MCP handshake, no discovery round-trip.',
-    icon: 'discover',
   },
 ];
