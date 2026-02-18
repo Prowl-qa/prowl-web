@@ -51,10 +51,24 @@ function FeatureIcon({ icon }: { icon: string }) {
           <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
         </svg>
       );
-    case 'zap':
+    case 'eye':
       return (
         <svg className={cls} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+          <circle cx="12" cy="12" r="3" />
+        </svg>
+      );
+    case 'mock':
+      return (
+        <svg className={cls} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M2 12h4l3-9 6 18 3-9h4" />
+        </svg>
+      );
+    case 'branch':
+      return (
+        <svg className={cls} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <circle cx="18" cy="6" r="3" /><circle cx="6" cy="6" r="3" /><circle cx="18" cy="18" r="3" />
+          <path d="M6 9v6a3 3 0 0 0 3 3h6" /><path d="M18 9v9" />
         </svg>
       );
     default:

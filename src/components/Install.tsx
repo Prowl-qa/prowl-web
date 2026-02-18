@@ -4,10 +4,10 @@ import { useState, useCallback } from 'react';
 import SectionReveal from '@/components/ui/SectionReveal';
 
 const steps = [
-  { label: 'Install the CLI', command: 'npm install -g prowlai' },
+  { label: 'Install the CLI', command: 'npm install -g prowlqa' },
   { label: 'Install browser engine', command: 'npx playwright install chromium' },
-  { label: 'Initialize your project', command: 'prowl init' },
-  { label: 'Run your first hunt', command: 'prowl run homepage' },
+  { label: 'Initialize your project', command: 'prowlqa init' },
+  { label: 'Run your first hunt', command: 'prowlqa run homepage' },
 ];
 
 function copyToClipboard(text: string): Promise<void> {

@@ -22,11 +22,26 @@ export const faqItems: FaqItem[] = [
   {
     question: "Can AI agents use Prowl QA?",
     answer:
-      "Yes. Run prowlqa ci --json to get structured JSON output with pass/fail status, step timings, and artifact paths. Structured exit codes let agents branch without parsing output. You can also import Prowl QA as a Node library for programmatic use. No MCP server or tool discovery needed.",
+      "Yes. Prowl QA includes a complete agent toolkit. prowlqa analyze extracts page structure as JSON, prowlqa generate turns that into a runnable hunt from a natural language intent, and prowlqa run --json returns structured results with exit codes. You can also import Prowl QA as a Node library. No MCP server or tool discovery needed.",
   },
   {
     question: "Why not rely on manual testing only?",
     answer:
       "Manual checks miss regressions in large apps. Prowl QA gives repeatable coverage of critical user journeys on every release.",
+  },
+  {
+    question: "What is visual regression testing?",
+    answer:
+      "Visual regression compares screenshots against saved baselines to detect unintended visual changes. Prowl QA's assertScreenshot step does pixel-level comparison with a configurable threshold. On first run it saves the baseline automatically. Run prowlqa update-baselines to accept new screenshots as baselines.",
+  },
+  {
+    question: "Can Prowl QA generate tests automatically?",
+    answer:
+      "Yes. Run prowlqa analyze <url> --json to extract page elements, then pipe the output to prowlqa generate --intent 'describe the test' to produce a valid hunt file. The generated YAML is validated against Prowl's schema before output.",
+  },
+  {
+    question: "Does Prowl support network mocking?",
+    answer:
+      "Yes. The mockRoute step intercepts requests matching a URL pattern and returns a custom response — inline JSON or from a file. Use unmockRoute to remove the mock. This lets you test error, loading, and empty states without backend changes.",
   },
 ];
