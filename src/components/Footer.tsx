@@ -22,6 +22,7 @@ export default function Footer() {
             <div>
               <span className="text-lg font-bold tracking-tight">Prowl QA</span>
               <p className="mt-1 text-muted text-sm">CLI-first QA testing for the web.</p>
+              <p className="mt-1 text-muted text-sm">Built for agents, controlled by humans.</p>
             </div>
           </div>
 

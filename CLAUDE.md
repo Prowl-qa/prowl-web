@@ -32,6 +32,16 @@ npm run lint    # Run ESLint
 ```
 
 ## Related Repos
-- **CLI**: Prowl-qa/prowl — source of truth for features
-- **Docs**: Prowl-qa/prowl-docs — documentation at docs.prowlqa.dev
-- **Community hub**: Prowl-qa/prowl-hub — community hunt templates
+
+Use `<local_repo_root>` as a placeholder and replace it with your own local base path.
+Example: `./repos` or `~/work`.
+
+| Repo | Purpose | Local Path |
+|------|---------|------------|
+| `Prowl-qa/prowl` | CLI tool (source of truth) | `<local_repo_root>/prowl` |
+| `Prowl-qa/prowl-docs` | Docs site (docs.prowlqa.dev) | `<local_repo_root>/prowl-docs` |
+| `Prowl-qa/prowl-hub` | Community hunt templates | `<local_repo_root>/prowl-hub` |
+| `mtookes/prowl-twitter-bot` | Twitter bot (@prowlqa) | `<local_repo_root>/prowl-twitter-bot` |
+
+**Backlogs**: `<local_backlog_root>/Prowl`
+**Assets**: `<local_assets_root>/Prowl-QA`

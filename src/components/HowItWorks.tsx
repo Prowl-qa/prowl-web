@@ -18,7 +18,7 @@ const steps: { step: string; title: string; detail: string; code: ReactNode }[] 
     code: (
       <>
         <span className={MUTED}>$</span> <span className={CYAN}>npm</span> install -g <span className={GREEN}>prowlqa</span>{'\n'}
-        <span className={MUTED}>$</span> <span className={CYAN}>prowl</span> init
+        <span className={MUTED}>$</span> <span className={CYAN}>prowlqa</span> init
       </>
     ),
   },
@@ -41,7 +41,7 @@ const steps: { step: string; title: string; detail: string; code: ReactNode }[] 
     detail: 'Execute hunts from terminal, then wire the same commands into your pull request pipeline.',
     code: (
       <>
-        <span className={MUTED}>$</span> <span className={CYAN}>prowl</span> run <span className={GREEN}>critical-flows</span> <span className={YELLOW}>--report</span> json
+        <span className={MUTED}>$</span> <span className={CYAN}>prowlqa</span> run <span className={GREEN}>critical-flows</span> <span className={YELLOW}>--json</span>
       </>
     ),
   },

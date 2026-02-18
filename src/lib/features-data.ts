@@ -7,7 +7,7 @@ export interface Feature {
 export const features: Feature[] = [
   {
     title: 'YAML-first',
-    desc: 'Write tests in readable YAML. No JavaScript required. 16 step types cover clicks, fills, assertions, waits, and more.',
+    desc: 'Write tests in readable YAML. No JavaScript required. 26 step types cover navigation, forms, assertions, conditionals, mocking, and more.',
     icon: 'yaml',
   },
   {
@@ -26,23 +26,23 @@ export const features: Feature[] = [
     icon: 'artifacts',
   },
   {
-    title: 'Credential redaction',
-    desc: 'Variables from {{VAR}} interpolation are automatically redacted in reports. No credential leaks.',
-    icon: 'lock',
+    title: 'Visual regression',
+    desc: 'Compare screenshots against baselines to catch unintended visual changes. Pixel-level diff images show exactly what shifted.',
+    icon: 'eye',
   },
   {
-    title: 'Watch mode',
-    desc: 'Edit a hunt, save, and see results instantly. 300ms debounce keeps feedback tight during authoring.',
-    icon: 'watch',
+    title: 'Network mocking',
+    desc: 'Intercept API requests and return custom responses. Test error states, loading states, and empty states without touching your backend.',
+    icon: 'mock',
+  },
+  {
+    title: 'Conditional logic',
+    desc: 'Handle cookie banners, optional modals, and dynamic UI with if/repeat steps. Real-world flows need real-world control flow.',
+    icon: 'branch',
   },
   {
     title: 'CI & agent ready',
-    desc: 'Run hunts in any CI pipeline or from AI agents. JSON output, exit codes, and artifact paths work with any automation.',
+    desc: 'JSON output, JUnit XML reports, structured exit codes, and parallel execution. Plugs into any CI pipeline or AI agent workflow.',
     icon: 'ci',
-  },
-  {
-    title: 'Zero config',
-    desc: 'One install command. No config files needed. Convention over configuration gets you running in seconds.',
-    icon: 'zap',
   },
 ];

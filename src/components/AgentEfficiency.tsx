@@ -29,15 +29,11 @@ const mcpCode: ReactNode = (
 
 const prowlCode: ReactNode = (
   <>
-    <span className={MUTED}>$</span> <span className={CYAN}>prowlqa</span> run login.hunt.yaml <span className={YELLOW}>--report</span> json{'\n'}
-    <span className={CYAN}>●</span> Running hunt: <span className={GREEN}>login-flow</span>{'\n'}
-    {'  '}<span className={GREEN}>✓</span> navigate &quot;/login&quot; (120ms){'\n'}
-    {'  '}<span className={GREEN}>✓</span> fill &quot;Email&quot; (85ms){'\n'}
-    {'  '}<span className={GREEN}>✓</span> fill &quot;Password&quot; (62ms){'\n'}
-    {'  '}<span className={GREEN}>✓</span> click &quot;Sign In&quot; (340ms){'\n'}
-    {'  '}<span className={GREEN}>✓</span> assert visible &quot;Dashboard&quot; (15ms){'\n'}
-    <span className={`${GREEN} font-bold`}>PASS</span> login-flow (622ms) 5/5 steps{'\n'}
-    <span className={PURPLE}>artifacts</span><span className={MUTED}>:</span> <span className={GREEN}>./prowl-artifacts/latest</span>{'\n'}
+    <span className={MUTED}>$</span> <span className={CYAN}>prowlqa</span> analyze <span className={GREEN}>https://app.com/login</span> <span className={YELLOW}>--json</span> \{'\n'}
+    {'  '}<span className={MUTED}>|</span> <span className={CYAN}>prowlqa</span> generate <span className={YELLOW}>--intent</span> <span className={GREEN}>&quot;test login&quot;</span> <span className={YELLOW}>--stdout</span>{'\n'}
+    {'\n'}
+    <span className={MUTED}>$</span> <span className={CYAN}>prowlqa</span> run <span className={GREEN}>login</span> <span className={YELLOW}>--json</span>{'\n'}
+    <span className={`${GREEN} font-bold`}>PASS</span> login (622ms) 5/5 steps{'\n'}
     <span className={PURPLE}>exitCode</span><span className={MUTED}>:</span> <span className={YELLOW}>0</span>
   </>
 );
@@ -68,10 +64,19 @@ function HighlightIcon({ icon }: { icon: string }) {
           <path d="M4 6h2l4 6-4 6H4" /><path d="M20 6h-2l-4 6 4 6h2" />
         </svg>
       );
-    case 'discover':
+    case 'analyze':
       return (
         <svg className={cls} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" />
+          <path d="M8 11h6" /><path d="M11 8v6" />
+        </svg>
+      );
+    case 'generate':
+      return (
+        <svg className={cls} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M12 2l1.09 3.26L16 6l-2.91.74L12 10l-1.09-3.26L8 6l2.91-.74L12 2z" />
+          <path d="M5 15l.65 1.95L7.5 17.6l-1.85.65L5 20.2l-.65-1.95L2.5 17.6l1.85-.65L5 15z" />
+          <path d="M19 12l.65 1.95 1.85.65-1.85.65L19 17.2l-.65-1.95-1.85-.65 1.85-.65L19 12z" />
         </svg>
       );
     default:
@@ -95,8 +100,8 @@ export default function AgentEfficiency() {
           <motion.div variants={fadeUp} className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold">Built for AI agents</h2>
             <p className="mt-4 max-w-2xl mx-auto text-muted">
-              No MCP context tax. One CLI call replaces dozens of tool invocations.
-              Declarative YAML hunts eliminate per-step agent reasoning.
+              Analyze pages, generate tests, and execute hunts — all through the CLI.
+              No MCP server, no per-step reasoning, no context tax.
             </p>
           </motion.div>
 
@@ -154,10 +159,10 @@ export default function AgentEfficiency() {
               </div>
 
               <ul className="space-y-1.5 text-sm text-muted">
-                <li className="flex gap-2"><span className="text-cyan shrink-0">+</span>One CLI call, one JSON response</li>
+                <li className="flex gap-2"><span className="text-cyan shrink-0">+</span>Analyze a page, generate a hunt, run it — three commands</li>
                 <li className="flex gap-2"><span className="text-cyan shrink-0">+</span>Zero agent reasoning about browser steps</li>
                 <li className="flex gap-2"><span className="text-cyan shrink-0">+</span>Deterministic — same YAML, same result</li>
-                <li className="flex gap-2"><span className="text-cyan shrink-0">+</span>Structured exit codes for branching</li>
+                <li className="flex gap-2"><span className="text-cyan shrink-0">+</span>Structured JSON output and exit codes</li>
               </ul>
             </motion.div>
           </motion.div>
