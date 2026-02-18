@@ -48,9 +48,9 @@ export default function Hero() {
             variants={fadeUp}
             className="mt-6 max-w-2xl text-base leading-relaxed text-muted sm:text-lg"
           >
-            Prowl QA helps QA engineers and developers catch cross-feature regressions
-            before users do. Write readable hunts in YAML, run from the terminal, and
-            collect debugging artifacts automatically.
+            Prowl QA helps QA engineers and developers catch regressions before users
+            do. Write readable tests in YAML, detect visual changes with built-in
+            screenshot comparison, and generate hunts with AI — all from the terminal.
           </motion.p>
 
           {/* CTA buttons */}

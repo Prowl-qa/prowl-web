@@ -4,10 +4,10 @@ import { useState, useCallback } from 'react';
 import SectionReveal from '@/components/ui/SectionReveal';
 
 const steps = [
-  { label: 'Install the CLI', command: 'npm install -g prowlai' },
+  { label: 'Install the CLI', command: 'npm install -g prowlqa' },
   { label: 'Install browser engine', command: 'npx playwright install chromium' },
-  { label: 'Initialize your project', command: 'prowl init' },
-  { label: 'Run your first hunt', command: 'prowl run homepage' },
+  { label: 'Initialize your project', command: 'prowlqa init' },
+  { label: 'Run your first hunt', command: 'prowlqa run homepage' },
 ];
 
 function copyToClipboard(text: string): Promise<void> {
@@ -113,11 +113,10 @@ export default function Install() {
                 </span>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm text-muted mb-1.5">{step.label}</p>
-                  <div className="flex items-center gap-2 rounded-lg bg-code-bg border border-border-subtle px-4 py-2.5">
-                    {/* Fixed light text on dark code background — intentionally not themed */}
-                    <code className="flex-1 text-sm font-mono text-zinc-100 truncate">
+                  <div className="flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2.5">
+                    <p className="flex-1 min-w-0 truncate text-sm font-medium text-foreground">
                       {step.command}
-                    </code>
+                    </p>
                     <CopyButton text={step.command} />
                   </div>
                 </div>
