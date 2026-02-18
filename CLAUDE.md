@@ -33,14 +33,15 @@ npm run lint    # Run ESLint
 
 ## Related Repos
 
-All Prowl QA repos live at `~/Desktop/Current Projects/Prowl QA/Repositories/`.
+Use `<local_repo_root>` as a placeholder and replace it with your own local base path.
+Example: `./repos` or `~/work`.
 
 | Repo | Purpose | Local Path |
 |------|---------|------------|
-| `Prowl-qa/prowl` | CLI tool (source of truth) | `~/Desktop/Current Projects/Prowl QA/Repositories/prowl` |
-| `Prowl-qa/prowl-docs` | Docs site (docs.prowlqa.dev) | `~/Desktop/Current Projects/Prowl QA/Repositories/prowl-docs` |
-| `Prowl-qa/prowl-hub` | Community hunt templates | `~/Desktop/Current Projects/Prowl QA/Repositories/prowl-hub` |
-| `mtookes/prowl-twitter-bot` | Twitter bot (@prowlqa) | `~/Desktop/Current Projects/Prowl QA/Repositories/prowl-twitter-bot` |
+| `Prowl-qa/prowl` | CLI tool (source of truth) | `<local_repo_root>/prowl` |
+| `Prowl-qa/prowl-docs` | Docs site (docs.prowlqa.dev) | `<local_repo_root>/prowl-docs` |
+| `Prowl-qa/prowl-hub` | Community hunt templates | `<local_repo_root>/prowl-hub` |
+| `mtookes/prowl-twitter-bot` | Twitter bot (@prowlqa) | `<local_repo_root>/prowl-twitter-bot` |
 
-**Backlogs**: `~/Desktop/Backlogs/projects/Prowl/`
-**Assets**: `~/Desktop/Current Projects/Prowl QA/Assets/`
+**Backlogs**: `<local_backlog_root>/Prowl`
+**Assets**: `<local_assets_root>/Prowl-QA`
