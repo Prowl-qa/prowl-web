@@ -195,7 +195,7 @@ export default function AgentEfficiency() {
           {/* CTA */}
           <motion.div variants={fadeUp} className="mt-10 text-center">
             <a
-              href="https://docs.prowlqa.dev/guides/agent-integration"
+              href="https://docs.prowlqa.dev/agents"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-sm font-medium text-cyan hover:underline underline-offset-4"
