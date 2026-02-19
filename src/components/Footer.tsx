@@ -97,7 +97,7 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a href="https://hub.prowlqa.dev" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
+                <a href="https://github.com/Prowl-qa/prowl-hub" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
                   Community Hub
                 </a>
               </li>
