@@ -4,7 +4,7 @@ import { useState, useCallback } from 'react';
 import SectionReveal from '@/components/ui/SectionReveal';
 
 const steps = [
-  { label: 'Install the CLI', command: 'npm install -g prowlqa' },
+  { label: 'Install the CLI', command: 'npm install -g prowlqa', alt: 'brew tap prowl-qa/tap && brew install prowlqa' },
   { label: 'Install browser engine', command: 'npx playwright install chromium' },
   { label: 'Initialize your project', command: 'prowlqa init' },
   { label: 'Run your first hunt', command: 'prowlqa run homepage' },
@@ -119,6 +119,17 @@ export default function Install() {
                     </p>
                     <CopyButton text={step.command} />
                   </div>
+                  {'alt' in step && step.alt && (
+                    <>
+                      <p className="text-xs text-muted mt-2 mb-1.5">Or with Homebrew:</p>
+                      <div className="flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2.5">
+                        <p className="flex-1 min-w-0 truncate text-sm font-medium text-foreground">
+                          {step.alt}
+                        </p>
+                        <CopyButton text={step.alt} />
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             ))}
