@@ -3,7 +3,13 @@
 import { useState, useCallback } from 'react';
 import SectionReveal from '@/components/ui/SectionReveal';
 
-const steps = [
+interface Step {
+  label: string;
+  command: string;
+  alt?: string;
+}
+
+const steps: Step[] = [
   { label: 'Install the CLI', command: 'npm install -g prowlqa', alt: 'brew tap prowl-qa/tap && brew install prowlqa' },
   { label: 'Install browser engine', command: 'npx playwright install chromium' },
   { label: 'Initialize your project', command: 'prowlqa init' },
