@@ -117,13 +117,13 @@ export default function AgentEfficiency() {
             <div className="mb-4 grid gap-4 lg:grid-cols-2">
               <div>
                 <p className="mb-2 text-xs font-mono text-muted">login.hunt.yaml</p>
-                <pre className="overflow-x-auto rounded-md border border-border-subtle bg-code-bg p-4 text-xs leading-relaxed text-zinc-300 font-mono">
+                <pre className="overflow-x-auto rounded-md border border-border-subtle bg-code-bg p-4 text-xs leading-relaxed text-zinc-200 dark:text-zinc-300 font-mono">
                   <code>{prowlYaml}</code>
                 </pre>
               </div>
               <div>
                 <p className="mb-2 text-xs font-mono text-muted">terminal output</p>
-                <pre className="overflow-x-auto rounded-md border border-border-subtle bg-code-bg p-4 text-xs leading-relaxed text-zinc-300 font-mono">
+                <pre className="overflow-x-auto rounded-md border border-border-subtle bg-code-bg p-4 text-xs leading-relaxed text-zinc-200 dark:text-zinc-300 font-mono">
                   <code>{prowlCode}</code>
                 </pre>
               </div>
