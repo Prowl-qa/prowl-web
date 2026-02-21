@@ -65,7 +65,7 @@ export default function HowItWorks() {
         <div className="mx-auto w-full max-w-6xl rounded-2xl border border-border bg-surface/80 p-6 sm:p-8">
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">How it works</h2>
           <p className="mt-3 max-w-2xl text-muted">
-            A practical workflow for QA engineers, product developers, and teams adopting test discipline.
+            Go from install to your first useful test in under five minutes.
           </p>
 
           <div className="mt-8 grid gap-4 md:grid-cols-2">

@@ -30,7 +30,7 @@ export default function Hero() {
             variants={fadeUp}
             className="inline-flex rounded-full border border-border bg-surface px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-muted"
           >
-            CLI-First End-to-End Testing
+            Deterministic Web QA
           </motion.p>
 
           {/* Headline */}
@@ -38,9 +38,9 @@ export default function Hero() {
             variants={fadeUp}
             className="mt-7 max-w-3xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl lg:text-6xl"
           >
-            Ship confident releases with{' '}
-            <GradientText shimmer>full-flow coverage</GradientText>{' '}
-            in minutes.
+            Catch regressions before users do with{' '}
+            <GradientText shimmer>readable YAML hunts</GradientText>{' '}
+            and Playwright precision.
           </motion.h1>
 
           {/* Description */}
@@ -48,9 +48,10 @@ export default function Hero() {
             variants={fadeUp}
             className="mt-6 max-w-2xl text-base leading-relaxed text-muted sm:text-lg"
           >
-            Prowl QA helps QA engineers and developers catch regressions before users
-            do. Write readable tests in YAML, detect visual changes with built-in
-            screenshot comparison, and generate hunts with AI — all from the terminal.
+            Prowl QA is a CLI-first E2E testing tool that pairs YAML test
+            definitions with Playwright execution. QA engineers and developers
+            get deterministic flow coverage, visual regression detection, and
+            rich debugging artifacts — all from the terminal.
           </motion.p>
 
           {/* CTA buttons */}
@@ -67,9 +68,7 @@ export default function Hero() {
               Install the CLI
             </a>
             <a
-              href="https://github.com/Prowl-qa/prowl"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="#how-it-works"
               className="inline-flex items-center justify-center rounded-md border border-border bg-surface px-6 py-3 text-sm font-semibold transition hover:border-cyan/60 hover:bg-surface-elevated focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan"
             >
               How it Works

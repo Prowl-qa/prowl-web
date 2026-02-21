@@ -22,7 +22,7 @@ export const faqItems: FaqItem[] = [
   {
     question: "Can AI agents use Prowl QA?",
     answer:
-      "Yes. Prowl QA includes a complete agent toolkit. prowlqa analyze extracts page structure as JSON, prowlqa generate turns that into a runnable hunt from a natural language intent, and prowlqa run --json returns structured results with exit codes. You can also import Prowl QA as a Node library. No MCP server or tool discovery needed.",
+      "Yes. Prowl QA exposes a structured CLI that agents can drive directly. prowlqa analyze extracts page structure as JSON, prowlqa generate turns that into a runnable hunt from a natural language intent, and prowlqa run --json returns structured results with exit codes. You can also import Prowl QA as a Node library. No server setup or tool discovery required — just standard CLI commands.",
   },
   {
     question: "Why not rely on manual testing only?",
