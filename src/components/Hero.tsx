@@ -68,10 +68,12 @@ export default function Hero() {
               Install the CLI
             </a>
             <a
-              href="#how-it-works"
+              href="https://github.com/Prowl-qa/prowl"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-md border border-border bg-surface px-6 py-3 text-sm font-semibold transition hover:border-cyan/60 hover:bg-surface-elevated focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan"
             >
-              How it Works
+              View on GitHub
             </a>
           </motion.div>
 

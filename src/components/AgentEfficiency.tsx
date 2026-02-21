@@ -16,12 +16,24 @@ const YELLOW = 'text-amber-500 dark:text-amber-300';
 
 const prowlCode: ReactNode = (
   <>
-    <span className={MUTED}>$</span> <span className={CYAN}>prowlqa</span> analyze <span className={GREEN}>https://app.com/login</span> <span className={YELLOW}>--json</span> \{'\n'}
+    <span className={MUTED}>$</span> <span className={CYAN}>prowlqa</span> analyze <span className={GREEN}>https://app.com/login</span> <span className={YELLOW}>--json</span>{'\n'}
     {'  '}<span className={MUTED}>|</span> <span className={CYAN}>prowlqa</span> generate <span className={YELLOW}>--intent</span> <span className={GREEN}>&quot;test login&quot;</span> <span className={YELLOW}>--stdout</span>{'\n'}
     {'\n'}
     <span className={MUTED}>$</span> <span className={CYAN}>prowlqa</span> run <span className={GREEN}>login</span> <span className={YELLOW}>--json</span>{'\n'}
     <span className={`${GREEN} font-bold`}>PASS</span> login (622ms) 5/5 steps{'\n'}
     <span className={PURPLE}>exitCode</span><span className={MUTED}>:</span> <span className={YELLOW}>0</span>
+  </>
+);
+
+const prowlYaml: ReactNode = (
+  <>
+    <span className={PURPLE}>name</span><span className={MUTED}>:</span> <span className={GREEN}>login</span>{'\n'}
+    <span className={PURPLE}>steps</span><span className={MUTED}>:</span>{'\n'}
+    {'  '}<span className={MUTED}>-</span> <span className={CYAN}>navigate</span><span className={MUTED}>:</span> <span className={GREEN}>&quot;/login&quot;</span>{'\n'}
+    {'  '}<span className={MUTED}>-</span> <span className={CYAN}>fill</span><span className={MUTED}>:</span> <span className={GREEN}>&quot;Email&quot;</span> <span className={GREEN}>&quot;{'{{TEST_EMAIL}}'}&quot;</span>{'\n'}
+    {'  '}<span className={MUTED}>-</span> <span className={CYAN}>fill</span><span className={MUTED}>:</span> <span className={GREEN}>&quot;Password&quot;</span> <span className={GREEN}>&quot;{'{{TEST_PASSWORD}}'}&quot;</span>{'\n'}
+    {'  '}<span className={MUTED}>-</span> <span className={CYAN}>click</span><span className={MUTED}>:</span> <span className={GREEN}>&quot;Sign in&quot;</span>{'\n'}
+    {'  '}<span className={MUTED}>-</span> <span className={CYAN}>assert</span><span className={MUTED}>:</span> <span className={YELLOW}>visible</span> <span className={GREEN}>&quot;Dashboard&quot;</span>
   </>
 );
 
@@ -92,7 +104,7 @@ export default function AgentEfficiency() {
             </p>
           </motion.div>
 
-          {/* Single code panel */}
+          {/* Code panel */}
           <motion.div
             variants={fadeUp}
             className="rounded-xl border border-cyan/30 bg-surface-elevated p-6 ring-1 ring-cyan/10 mb-8"
@@ -102,9 +114,20 @@ export default function AgentEfficiency() {
               <span className="text-xs font-mono text-cyan">analyze → generate → run</span>
             </div>
 
-            <pre className="overflow-x-auto rounded-md border border-border-subtle bg-code-bg p-4 text-xs leading-relaxed text-zinc-300 font-mono mb-4">
-              <code>{prowlCode}</code>
-            </pre>
+            <div className="mb-4 grid gap-4 lg:grid-cols-2">
+              <div>
+                <p className="mb-2 text-xs font-mono text-muted">login.hunt.yaml</p>
+                <pre className="overflow-x-auto rounded-md border border-border-subtle bg-code-bg p-4 text-xs leading-relaxed text-zinc-300 font-mono">
+                  <code>{prowlYaml}</code>
+                </pre>
+              </div>
+              <div>
+                <p className="mb-2 text-xs font-mono text-muted">terminal output</p>
+                <pre className="overflow-x-auto rounded-md border border-border-subtle bg-code-bg p-4 text-xs leading-relaxed text-zinc-300 font-mono">
+                  <code>{prowlCode}</code>
+                </pre>
+              </div>
+            </div>
 
             <ul className="space-y-1.5 text-sm text-muted">
               <li className="flex gap-2"><span className="text-cyan shrink-0">+</span>Deterministic execution — same YAML hunt, same result every time</li>
