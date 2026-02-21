@@ -1,13 +1,3 @@
-import type { ReactNode } from 'react';
-
-export interface ApproachData {
-  label: string;
-  code: ReactNode;
-  tokenCount: string;
-  tokenPercent: number;
-  bullets: string[];
-}
-
 export interface HighlightItem {
   title: string;
   desc: string;
