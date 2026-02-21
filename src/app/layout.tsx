@@ -15,13 +15,13 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://prowlqa.dev"),
-  title: "Prowl QA - YAML-Powered E2E Testing with Visual Regression and AI Generation",
+  title: "Prowl QA - Deterministic E2E Testing with YAML Hunts and Visual Regression",
   description:
-    "Write end-to-end tests in YAML, catch visual regressions automatically, and generate tests with AI. 26 step types, Playwright precision, and rich debugging artifacts — all from the terminal.",
+    "Catch regressions before users do. Write E2E tests in YAML, run them with Playwright precision, and detect visual changes automatically — all from the CLI.",
   openGraph: {
-    title: "Prowl QA - YAML-Powered E2E Testing with Visual Regression and AI Generation",
+    title: "Prowl QA - Deterministic E2E Testing with YAML Hunts and Visual Regression",
     description:
-      "Write end-to-end tests in YAML, catch visual regressions automatically, and generate tests with AI. 26 step types, Playwright precision, and rich debugging artifacts — all from the terminal.",
+      "Catch regressions before users do. Write E2E tests in YAML, run them with Playwright precision, and detect visual changes automatically — all from the CLI.",
     url: "https://prowlqa.dev",
     siteName: "Prowl QA",
     type: "website",
@@ -29,9 +29,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary",
-    title: "Prowl QA - YAML-Powered E2E Testing with Visual Regression and AI Generation",
+    title: "Prowl QA - Deterministic E2E Testing with YAML Hunts and Visual Regression",
     description:
-      "Write end-to-end tests in YAML, catch visual regressions automatically, and generate tests with AI. 26 step types, Playwright precision, and rich debugging artifacts — all from the terminal.",
+      "Catch regressions before users do. Write E2E tests in YAML, run them with Playwright precision, and detect visual changes automatically — all from the CLI.",
     creator: "@prowlqa",
   },
 };

@@ -12,20 +12,7 @@ const PURPLE = 'text-violet-500 dark:text-violet-300';
 const MUTED = 'text-zinc-300 dark:text-zinc-400';
 const YELLOW = 'text-amber-500 dark:text-amber-300';
 
-/* ---------- Code snippets ---------- */
-
-const mcpCode: ReactNode = (
-  <>
-    <span className={MUTED}># login.hunt.yaml</span>{'\n'}
-    <span className={PURPLE}>name</span><span className={MUTED}>:</span> <span className={GREEN}>login-flow</span>{'\n'}
-    <span className={PURPLE}>steps</span><span className={MUTED}>:</span>{'\n'}
-    {'  '}<span className={MUTED}>-</span> <span className={CYAN}>navigate</span><span className={MUTED}>:</span> <span className={GREEN}>&quot;/login&quot;</span>{'\n'}
-    {'  '}<span className={MUTED}>-</span> <span className={CYAN}>fill</span><span className={MUTED}>:</span> <span className={GREEN}>&quot;Email&quot;</span> <span className={GREEN}>&quot;{'{{TEST_EMAIL}}'}&quot;</span>{'\n'}
-    {'  '}<span className={MUTED}>-</span> <span className={CYAN}>fill</span><span className={MUTED}>:</span> <span className={GREEN}>&quot;Password&quot;</span> <span className={GREEN}>&quot;{'{{TEST_PASSWORD}}'}&quot;</span>{'\n'}
-    {'  '}<span className={MUTED}>-</span> <span className={CYAN}>click</span><span className={MUTED}>:</span> <span className={GREEN}>&quot;Sign In&quot;</span>{'\n'}
-    {'  '}<span className={MUTED}>-</span> <span className={CYAN}>assert</span><span className={MUTED}>:</span> <span className={YELLOW}>visible</span> <span className={GREEN}>&quot;Dashboard&quot;</span>
-  </>
-);
+/* ---------- Code snippet ---------- */
 
 const prowlCode: ReactNode = (
   <>
@@ -98,79 +85,34 @@ export default function AgentEfficiency() {
         >
           {/* Header */}
           <motion.div variants={fadeUp} className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold">Built for AI agents</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold">Built for AI-assisted development</h2>
             <p className="mt-4 max-w-2xl mx-auto text-muted">
-              Analyze pages, generate tests, and execute hunts — all through the CLI.
-              No MCP server, no per-step reasoning, no context tax.
+              AI agents can analyze pages, generate hunts, and execute tests through
+              the CLI — deterministic results, structured output, no browser reasoning required.
             </p>
           </motion.div>
 
-          {/* Two-column comparison */}
-          <motion.div variants={staggerContainer} className="grid md:grid-cols-2 gap-6 mb-8">
-            {/* MCP approach */}
-            <motion.div
-              variants={fadeUp}
-              className="rounded-xl border border-border bg-surface-elevated p-6"
-            >
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-base font-semibold">MCP tool-call approach</h3>
-                <span className="text-xs font-mono text-muted">~15,000 tokens</span>
-              </div>
+          {/* Single code panel */}
+          <motion.div
+            variants={fadeUp}
+            className="rounded-xl border border-cyan/30 bg-surface-elevated p-6 ring-1 ring-cyan/10 mb-8"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-base font-semibold">Three-command pipeline</h3>
+              <span className="text-xs font-mono text-cyan">analyze → generate → run</span>
+            </div>
 
-              <pre className="overflow-x-auto rounded-md border border-border-subtle bg-code-bg p-4 text-xs leading-relaxed text-zinc-300 font-mono mb-4">
-                <code>{mcpCode}</code>
-              </pre>
+            <pre className="overflow-x-auto rounded-md border border-border-subtle bg-code-bg p-4 text-xs leading-relaxed text-zinc-300 font-mono mb-4">
+              <code>{prowlCode}</code>
+            </pre>
 
-              {/* Token bar — 100% (MCP baseline) */}
-              <div className="mb-4">
-                <div className="h-2 w-full rounded-full bg-red-500/70" />
-                <p className="mt-1.5 text-xs text-muted">Token budget consumed per test run</p>
-              </div>
-
-              <ul className="space-y-1.5 text-sm text-muted">
-                <li className="flex gap-2"><span className="text-red-400 shrink-0">-</span>MCP tool discovery schemas are loaded every session</li>
-                <li className="flex gap-2"><span className="text-red-400 shrink-0">-</span>Agent issues per-step MCP calls (navigate/fill/click/assert)</li>
-                <li className="flex gap-2"><span className="text-red-400 shrink-0">-</span>Round-trip MCP responses multiply token cost</li>
-                <li className="flex gap-2"><span className="text-red-400 shrink-0">-</span>Flaky when agent misinterprets selectors</li>
-              </ul>
-            </motion.div>
-
-            {/* Prowl approach */}
-            <motion.div
-              variants={fadeUp}
-              className="rounded-xl border border-cyan/30 bg-surface-elevated p-6 ring-1 ring-cyan/10"
-            >
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-base font-semibold">Prowl QA CLI</h3>
-                <span className="text-xs font-mono text-cyan">~1,000 tokens</span>
-              </div>
-
-              <pre className="overflow-x-auto rounded-md border border-border-subtle bg-code-bg p-4 text-xs leading-relaxed text-zinc-300 font-mono mb-4">
-                <code>{prowlCode}</code>
-              </pre>
-
-              {/* Token bar — ~7% (Prowl) */}
-              <div className="mb-4">
-                <div className="flex gap-1 items-center">
-                  <div className="h-2 w-[7%] rounded-full bg-cyan" />
-                  <span className="text-[10px] font-mono text-cyan">~15x fewer</span>
-                </div>
-                <p className="mt-1.5 text-xs text-muted">Token budget consumed per test run</p>
-              </div>
-
-              <ul className="space-y-1.5 text-sm text-muted">
-                <li className="flex gap-2"><span className="text-cyan shrink-0">+</span>Analyze a page, generate a hunt, run it — three commands</li>
-                <li className="flex gap-2"><span className="text-cyan shrink-0">+</span>Zero agent reasoning about browser steps</li>
-                <li className="flex gap-2"><span className="text-cyan shrink-0">+</span>Deterministic — same YAML, same result</li>
-                <li className="flex gap-2"><span className="text-cyan shrink-0">+</span>Structured JSON output and exit codes</li>
-              </ul>
-            </motion.div>
+            <ul className="space-y-1.5 text-sm text-muted">
+              <li className="flex gap-2"><span className="text-cyan shrink-0">+</span>Deterministic execution — same YAML hunt, same result every time</li>
+              <li className="flex gap-2"><span className="text-cyan shrink-0">+</span>Structured JSON output and exit codes for agent branching</li>
+              <li className="flex gap-2"><span className="text-cyan shrink-0">+</span>No browser reasoning — Prowl handles all Playwright interaction</li>
+              <li className="flex gap-2"><span className="text-cyan shrink-0">+</span>Simple CLI interface — no server setup or tool discovery</li>
+            </ul>
           </motion.div>
-
-          {/* Tagline */}
-          <motion.p variants={fadeUp} className="text-center text-muted text-sm mb-14">
-            Made for agents, controlled by humans.
-          </motion.p>
 
           {/* Highlight cards */}
           <motion.div
