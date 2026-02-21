@@ -6,12 +6,12 @@ export default function FinalCta() {
       <div className="mx-auto w-full max-w-6xl overflow-hidden rounded-2xl border border-border bg-surface p-7 sm:p-10">
         <div className="grid items-center gap-8 md:grid-cols-[1.15fr_0.85fr]">
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-muted">Ready to harden your release flow?</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-muted">Start catching regressions today</p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-              Install Prowl QA and start testing entire user journeys today.
+              Deterministic E2E coverage from install to first test in minutes.
             </h2>
             <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">
-              Keep your velocity, reduce blind spots, and make end-to-end coverage a default part of shipping.
+              YAML hunts, Playwright reliability, and rich artifacts — add flow coverage to your workflow without the complexity.
             </p>
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">

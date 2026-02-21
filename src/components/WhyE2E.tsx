@@ -6,16 +6,16 @@ import { fadeUp, staggerContainer } from '@/lib/animations';
 
 const points = [
   {
-    title: 'Most regressions happen between features',
-    text: 'Unit tests can pass while user journeys fail. Prowl QA validates real flow behavior across routes, forms, and state changes.',
+    title: 'Regressions hide in user flows, not units',
+    text: 'Unit tests pass while checkout breaks. Prowl QA validates real user journeys across routes, forms, and state transitions so regressions surface before users hit them.',
   },
   {
-    title: 'Manual QA does not scale with release speed',
-    text: 'As teams ship faster, checklist testing becomes inconsistent. Prowl QA makes critical paths repeatable on every commit.',
+    title: 'Release speed demands repeatable QA',
+    text: 'Manual checklists drift as teams ship faster. Prowl QA gives QA engineers and developers a shared, automated path to verify critical flows on every commit.',
   },
   {
-    title: 'New builders need guardrails, not complexity',
-    text: 'Vibe-coding teams can still ship safely by defining readable hunts and running them in a predictable CLI workflow.',
+    title: 'Test discipline should be easy to adopt',
+    text: 'Teams adopting E2E testing need a low-friction starting point. Readable YAML hunts and a single CLI command make it practical to add flow coverage from day one.',
   },
 ];
 
