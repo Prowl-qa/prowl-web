@@ -1,5 +1,14 @@
 import { getAllPosts } from "@/lib/blog";
 
+function escapeXmlText(value: string | null | undefined) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&apos;");
+}
+
 export function GET() {
   const posts = getAllPosts();
   const siteUrl = "https://prowlqa.dev";
@@ -13,8 +22,10 @@ export function GET() {
       <link>${siteUrl}/blog/${post.slug}</link>
       <guid isPermaLink="true">${siteUrl}/blog/${post.slug}</guid>
       <pubDate>${new Date(post.date).toUTCString()}</pubDate>
-      ${post.tags.map((tag) => `<category>${tag}</category>`).join("\n      ")}
-      <author>info@prowlqa.dev (${post.author})</author>
+      ${post.tags
+        .map((tag) => `<category>${escapeXmlText(tag)}</category>`)
+        .join("\n      ")}
+      <author>info@prowlqa.dev (${escapeXmlText(post.author)})</author>
     </item>`
     )
     .join("");

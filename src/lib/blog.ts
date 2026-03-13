@@ -20,6 +20,72 @@ export type BlogPost = BlogPostFrontmatter & {
 
 const CONTENT_DIR = path.join(process.cwd(), "content", "blog");
 
+function isNonEmptyString(value: unknown): value is string {
+  return typeof value === "string" && value.trim().length > 0;
+}
+
+function getRequiredString(
+  value: unknown,
+  fieldName: keyof BlogPostFrontmatter,
+  slug: string
+): string {
+  if (!isNonEmptyString(value)) {
+    throw new Error(
+      `Invalid frontmatter in content/blog/${slug}/index.mdx: "${fieldName}" must be a non-empty string.`
+    );
+  }
+
+  return value.trim();
+}
+
+function getDateString(value: unknown, slug: string): string {
+  if (value instanceof Date) {
+    if (Number.isNaN(value.getTime())) {
+      throw new Error(
+        `Invalid frontmatter in content/blog/${slug}/index.mdx: "date" must be a valid date.`
+      );
+    }
+
+    return value.toISOString();
+  }
+
+  if (!isNonEmptyString(value)) {
+    throw new Error(
+      `Invalid frontmatter in content/blog/${slug}/index.mdx: "date" must be a valid date string.`
+    );
+  }
+
+  const normalized = value.trim();
+
+  if (Number.isNaN(new Date(normalized).getTime())) {
+    throw new Error(
+      `Invalid frontmatter in content/blog/${slug}/index.mdx: "date" must be a valid date string.`
+    );
+  }
+
+  return normalized;
+}
+
+function getTags(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+
+  return value.filter(isNonEmptyString).map((tag) => tag.trim());
+}
+
+function parseFrontmatter(
+  data: Record<string, unknown>,
+  slug: string
+): BlogPostFrontmatter {
+  return {
+    title: getRequiredString(data.title, "title", slug),
+    description: getRequiredString(data.description, "description", slug),
+    date: getDateString(data.date, slug),
+    author: getRequiredString(data.author, "author", slug),
+    tags: getTags(data.tags),
+    image: isNonEmptyString(data.image) ? data.image.trim() : undefined,
+  };
+}
+
 function getPostSlugs(): string[] {
   if (!fs.existsSync(CONTENT_DIR)) return [];
 
@@ -40,15 +106,11 @@ export function getPostBySlug(slug: string): BlogPost | null {
   const raw = fs.readFileSync(filePath, "utf-8");
   const { data, content } = matter(raw);
   const stats = readingTime(content);
+  const frontmatter = parseFrontmatter(data as Record<string, unknown>, slug);
 
   return {
     slug,
-    title: data.title,
-    description: data.description,
-    date: data.date,
-    author: data.author,
-    tags: data.tags ?? [],
-    image: data.image,
+    ...frontmatter,
     readingTime: stats.text,
     content,
   };

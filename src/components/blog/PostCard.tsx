@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { formatBlogDate } from "@/lib/blog-format";
 import TagBadge from "./TagBadge";
 
 type PostCardProps = {
@@ -18,20 +19,19 @@ export default function PostCard({
   readingTime,
   tags,
 }: PostCardProps) {
-  const formatted = new Date(date).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const formatted = formatBlogDate(date);
 
   return (
     <article className="group rounded-xl border border-border bg-surface p-6 transition-colors hover:border-cyan/40 hover:bg-surface-elevated">
-      <Link href={`/blog/${slug}`} className="block">
-        <div className="flex flex-wrap gap-2 mb-3">
-          {tags.map((tag) => (
-            <TagBadge key={tag} tag={tag} />
-          ))}
-        </div>
+      <div className="mb-3 flex flex-wrap gap-2">
+        {tags.map((tag) => (
+          <TagBadge key={tag} tag={tag} />
+        ))}
+      </div>
+      <Link
+        href={`/blog/${slug}`}
+        className="block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan"
+      >
         <h2 className="text-xl font-semibold mb-2 group-hover:text-cyan transition-colors">
           {title}
         </h2>

@@ -1,3 +1,4 @@
+import { formatBlogDate } from "@/lib/blog-format";
 import TagBadge from "./TagBadge";
 
 type PostHeaderProps = {
@@ -15,11 +16,7 @@ export default function PostHeader({
   readingTime,
   tags,
 }: PostHeaderProps) {
-  const formatted = new Date(date).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const formatted = formatBlogDate(date);
 
   return (
     <header className="mb-10">
