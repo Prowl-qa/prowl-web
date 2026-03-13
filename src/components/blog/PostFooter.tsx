@@ -13,10 +13,15 @@ export default function PostFooter() {
         <form
           action="https://buttondown.com/api/emails/embed-subscribe/prowlqa"
           method="post"
-          target="popupwindow"
+          target="_blank"
+          rel="noopener noreferrer"
           className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
         >
+          <label htmlFor="newsletter-email" className="sr-only">
+            Email address
+          </label>
           <input
+            id="newsletter-email"
             type="email"
             name="email"
             placeholder="you@example.com"

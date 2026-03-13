@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { getAllPosts } from "@/lib/blog";
 import PostCard from "@/components/blog/PostCard";
 
@@ -49,9 +50,9 @@ async function BlogContent({
             Showing posts tagged{" "}
             <span className="text-cyan font-medium">{activeTag}</span>
             {" \u2014 "}
-            <a href="/blog" className="text-cyan hover:underline">
+            <Link href="/blog" className="text-cyan hover:underline">
               clear filter
-            </a>
+            </Link>
           </p>
         )}
       </header>

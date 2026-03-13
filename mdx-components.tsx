@@ -1,5 +1,9 @@
 import type { MDXComponents } from "mdx/types";
 
+function isExternalHref(href?: string) {
+  return /^(https?:)?\/\//i.test(href ?? "");
+}
+
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     h1: ({ children }) => (
@@ -22,8 +26,8 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       <a
         href={href}
         className="text-cyan underline underline-offset-4 hover:text-cyan-light transition-colors"
-        target={href?.startsWith("http") ? "_blank" : undefined}
-        rel={href?.startsWith("http") ? "noopener noreferrer" : undefined}
+        target={isExternalHref(href) ? "_blank" : undefined}
+        rel={isExternalHref(href) ? "noopener noreferrer" : undefined}
       >
         {children}
       </a>
