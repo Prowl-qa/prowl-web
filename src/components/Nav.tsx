@@ -40,6 +40,12 @@ export default function Nav() {
 
         {/* Desktop links */}
         <div className="hidden sm:flex items-center gap-6 text-sm">
+          <Link
+            href="/blog"
+            className="hover:text-cyan transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm"
+          >
+            Blog
+          </Link>
           <a
             href="https://docs.prowlqa.dev"
             target="_blank"
@@ -90,6 +96,12 @@ export default function Nav() {
       {/* Mobile menu */}
       {menuOpen && (
         <div className="sm:hidden border-t border-border bg-background/95 backdrop-blur-lg px-6 py-4 space-y-3 text-sm">
+          <Link
+            href="/blog"
+            className="block hover:text-cyan transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm"
+          >
+            Blog
+          </Link>
           <a
             href="https://docs.prowlqa.dev"
             target="_blank"
