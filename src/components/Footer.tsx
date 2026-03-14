@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Footer() {
   return (
@@ -71,6 +72,11 @@ export default function Footer() {
           <div>
             <h4 className="font-semibold mb-3 text-xs uppercase tracking-wider text-muted">Product</h4>
             <ul className="space-y-2 text-muted">
+              <li>
+                <Link href="/blog" className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
+                  Blog
+                </Link>
+              </li>
               <li>
                 <a href="https://docs.prowlqa.dev" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
                   Docs
