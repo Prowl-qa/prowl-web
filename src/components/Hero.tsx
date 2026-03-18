@@ -18,7 +18,7 @@ export default function Hero() {
       />
 
       <motion.div
-        className="relative mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]"
+        className="relative mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]"
         variants={staggerContainer}
         initial="hidden"
         animate="visible"

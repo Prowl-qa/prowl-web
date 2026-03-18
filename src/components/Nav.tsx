@@ -26,7 +26,7 @@ export default function Nav() {
           : 'bg-transparent border-b border-transparent'
       }`}
     >
-      <div className="flex items-center justify-between px-6 py-4 max-w-6xl mx-auto">
+      <div className="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
         <Link href="/" className="flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
           <Image
             src="/static/img/prowl-logo.png"
