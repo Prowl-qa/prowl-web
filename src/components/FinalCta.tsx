@@ -3,7 +3,7 @@ import Image from 'next/image';
 export default function FinalCta() {
   return (
     <section className="px-6 pb-24">
-      <div className="mx-auto w-full max-w-6xl overflow-hidden rounded-2xl border border-border bg-surface p-7 sm:p-10">
+      <div className="mx-auto w-full max-w-7xl overflow-hidden rounded-2xl border border-border bg-surface p-7 sm:p-10">
         <div className="grid items-center gap-8 md:grid-cols-[1.15fr_0.85fr]">
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-muted">Start catching regressions today</p>
