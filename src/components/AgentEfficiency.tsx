@@ -133,7 +133,7 @@ export default function AgentEfficiency() {
               <li className="flex gap-2"><span className="text-cyan shrink-0">+</span>Deterministic execution — same YAML hunt, same result every time</li>
               <li className="flex gap-2"><span className="text-cyan shrink-0">+</span>Structured JSON output and exit codes for agent branching</li>
               <li className="flex gap-2"><span className="text-cyan shrink-0">+</span>No browser reasoning — Prowl handles all Playwright interaction</li>
-              <li className="flex gap-2"><span className="text-cyan shrink-0">+</span>Simple CLI interface — no server setup or tool discovery</li>
+              <li className="flex gap-2"><span className="text-cyan shrink-0">+</span>Simple CLI interface — works standalone or as part of a larger agent toolchain</li>
             </ul>
           </motion.div>
 
