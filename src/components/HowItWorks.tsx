@@ -62,7 +62,7 @@ export default function HowItWorks() {
   return (
     <SectionReveal>
       <section id="how-it-works" className="px-6 pb-22 scroll-mt-20">
-        <div className="mx-auto w-full max-w-6xl rounded-2xl border border-border bg-surface/80 p-6 sm:p-8">
+        <div className="mx-auto w-full max-w-7xl rounded-2xl border border-border bg-surface/80 p-6 sm:p-8">
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">How it works</h2>
           <p className="mt-3 max-w-2xl text-muted">
             Go from install to your first useful test in under five minutes.
