@@ -22,7 +22,12 @@ export const faqItems: FaqItem[] = [
   {
     question: "Can AI agents use Prowl QA?",
     answer:
-      "Yes. Prowl QA exposes a structured CLI that agents can drive directly. prowlqa analyze extracts page structure as JSON, prowlqa generate turns that into a runnable hunt from a natural language intent, and prowlqa run --json returns structured results with exit codes. You can also import Prowl QA as a Node library. The CLI works standalone or alongside other agent tools in your stack.",
+      "Yes, two ways. Agents can drive the structured CLI directly — prowlqa analyze extracts page structure as JSON, prowlqa generate turns that into a runnable hunt from a natural language intent, and prowlqa run --json returns structured results with exit codes. Or run prowlqa mcp to expose Prowl QA as a native MCP server, so any MCP-capable agent calls it as named tools. You can also import Prowl QA as a Node library.",
+  },
+  {
+    question: "Does Prowl QA have an MCP server?",
+    answer:
+      "Yes. Run prowlqa mcp to start an MCP server (stdio) that exposes QA to any MCP-capable agent — Claude Desktop, Cursor, OpenClaw — as a fixed set of named tools: list_hunts, run_hunt, run_suite, and list_projects. The agent triggers runs and reads structured results without shell access, and your guardrails (allowedDomains, forbiddenSelectors, maxSteps) apply to every run. run_suite also auto-logs failures as deduplicated bug tickets in your backlog, and a project registry lets one server drive multiple repos.",
   },
   {
     question: "Why not rely on manual testing only?",

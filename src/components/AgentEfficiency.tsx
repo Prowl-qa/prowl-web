@@ -37,6 +37,28 @@ const prowlYaml: ReactNode = (
   </>
 );
 
+const mcpConfig: ReactNode = (
+  <>
+    <span className={MUTED}>{'{'}</span>{'\n'}
+    {'  '}<span className={PURPLE}>&quot;mcpServers&quot;</span><span className={MUTED}>: {'{'}</span>{'\n'}
+    {'    '}<span className={PURPLE}>&quot;prowlqa&quot;</span><span className={MUTED}>: {'{'}</span>{'\n'}
+    {'      '}<span className={PURPLE}>&quot;command&quot;</span><span className={MUTED}>:</span> <span className={GREEN}>&quot;prowlqa&quot;</span><span className={MUTED}>,</span>{'\n'}
+    {'      '}<span className={PURPLE}>&quot;args&quot;</span><span className={MUTED}>:</span> <span className={MUTED}>[</span><span className={GREEN}>&quot;mcp&quot;</span><span className={MUTED}>]</span>{'\n'}
+    {'    '}<span className={MUTED}>{'}'}</span>{'\n'}
+    {'  '}<span className={MUTED}>{'}'}</span>{'\n'}
+    <span className={MUTED}>{'}'}</span>
+  </>
+);
+
+/* ---------- MCP tools ---------- */
+
+const mcpTools: { name: string; desc: string }[] = [
+  { name: 'list_hunts', desc: 'Hunt names in run order' },
+  { name: 'run_hunt', desc: 'Run one hunt, get the full result' },
+  { name: 'run_suite', desc: 'Run all hunts, auto-log failures as bugs' },
+  { name: 'list_projects', desc: 'Registered projects in the registry' },
+];
+
 /* ---------- Highlight icons ---------- */
 
 function HighlightIcon({ icon }: { icon: string }) {
@@ -100,7 +122,8 @@ export default function AgentEfficiency() {
             <h2 className="text-3xl sm:text-4xl font-bold">Built for AI-assisted development</h2>
             <p className="mt-4 max-w-2xl mx-auto text-muted">
               AI agents can analyze pages, generate hunts, and execute tests through
-              the CLI — deterministic results, structured output, no browser reasoning required.
+              the CLI or a native MCP server — deterministic results, structured output,
+              no browser reasoning required.
             </p>
           </motion.div>
 
@@ -134,6 +157,51 @@ export default function AgentEfficiency() {
               <li className="flex gap-2"><span className="text-cyan shrink-0">+</span>Structured JSON output and exit codes for agent branching</li>
               <li className="flex gap-2"><span className="text-cyan shrink-0">+</span>No browser reasoning — Prowl handles all Playwright interaction</li>
               <li className="flex gap-2"><span className="text-cyan shrink-0">+</span>Simple CLI interface — works standalone or as part of a larger agent toolchain</li>
+            </ul>
+          </motion.div>
+
+          {/* MCP panel */}
+          <motion.div
+            variants={fadeUp}
+            className="rounded-xl border border-violet-500/30 bg-surface-elevated p-6 ring-1 ring-violet-500/10 mb-8"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-base font-semibold">Native MCP server</h3>
+              <span className="text-xs font-mono text-violet-500 dark:text-violet-300">prowlqa mcp</span>
+            </div>
+
+            <p className="mb-4 text-sm text-muted">
+              Run <code className="font-mono text-violet-500 dark:text-violet-300">prowlqa mcp</code> to
+              expose QA to any MCP-capable agent — Claude Desktop, Cursor, OpenClaw — as a small set of
+              named tools. The agent triggers runs and reads structured results; it never needs shell
+              access to your repo.
+            </p>
+
+            <div className="mb-4 grid gap-4 lg:grid-cols-2">
+              <div>
+                <p className="mb-2 text-xs font-mono text-muted">mcp client config</p>
+                <pre className="overflow-x-auto rounded-md border border-border-subtle bg-code-bg p-4 text-xs leading-relaxed text-zinc-200 dark:text-zinc-300 font-mono">
+                  <code>{mcpConfig}</code>
+                </pre>
+              </div>
+              <div>
+                <p className="mb-2 text-xs font-mono text-muted">exposed tools</p>
+                <ul className="space-y-2.5 rounded-md border border-border-subtle bg-code-bg p-4 text-xs">
+                  {mcpTools.map((tool) => (
+                    <li key={tool.name} className="flex flex-col gap-0.5">
+                      <span className="font-mono text-violet-300">{tool.name}</span>
+                      <span className="text-zinc-400">{tool.desc}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <ul className="space-y-1.5 text-sm text-muted">
+              <li className="flex gap-2"><span className="text-violet-500 dark:text-violet-300 shrink-0">+</span>No shell access — agents call a fixed set of tools, never arbitrary commands</li>
+              <li className="flex gap-2"><span className="text-violet-500 dark:text-violet-300 shrink-0">+</span>Guardrails apply — allowedDomains, forbiddenSelectors, and maxSteps gate every run</li>
+              <li className="flex gap-2"><span className="text-violet-500 dark:text-violet-300 shrink-0">+</span>Auto bug-logging — run_suite logs failures as deduplicated tickets in your backlog</li>
+              <li className="flex gap-2"><span className="text-violet-500 dark:text-violet-300 shrink-0">+</span>Multi-project — one server drives many repos via a project registry</li>
             </ul>
           </motion.div>
 
