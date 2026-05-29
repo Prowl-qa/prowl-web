@@ -10,7 +10,13 @@
 
 ## High Priority
 
-*No active items.*
+{PQW-002} **Add MCP / agent-native messaging to the marketing site (shipped in prowlqa 0.1.1)**
+   ProwlQA 0.1.1 shipped an MCP server (`prowlqa mcp`) that lets any MCP-capable AI agent (Claude Desktop, Cursor, OpenClaw, etc.) drive QA through named tools, plus automated bug-logging and multi-project support. This is a major differentiator for the agent-native positioning but isn't reflected on the site yet.
+
+**Acceptance Criteria**:
+- Feature/landing copy highlighting "agent-native QA via MCP" (run hunts as tools, auto-logged bugs, no shell access required)
+- Update the `/for/ai-agents` use-case page (or equivalent) with the MCP integration story
+- Update any competitor comparison so the MCP/agent integration line reflects what actually shipped (not "planned")
 
 ## Medium Priority
 
