@@ -42,7 +42,7 @@ export const features: Feature[] = [
   },
   {
     title: 'CI & agent ready',
-    desc: 'JSON output, JUnit XML reports, structured exit codes, and parallel execution. Plugs into any CI pipeline or AI agent workflow.',
+    desc: 'JSON output, JUnit XML reports, structured exit codes, parallel execution, and a native MCP server. Plugs into any CI pipeline or AI agent workflow.',
     icon: 'ci',
   },
 ];
