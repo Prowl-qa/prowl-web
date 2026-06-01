@@ -55,6 +55,14 @@ export default function Nav() {
             Docs
           </a>
           <a
+            href="https://hub.prowlqa.dev"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-cyan transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm"
+          >
+            Hub
+          </a>
+          <a
             href="https://github.com/Prowl-qa/prowl"
             target="_blank"
             rel="noopener noreferrer"
@@ -109,6 +117,14 @@ export default function Nav() {
             className="block hover:text-cyan transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm"
           >
             Docs
+          </a>
+          <a
+            href="https://hub.prowlqa.dev"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block hover:text-cyan transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm"
+          >
+            Hub
           </a>
           <a
             href="https://github.com/Prowl-qa/prowl"

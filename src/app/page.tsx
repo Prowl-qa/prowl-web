@@ -6,6 +6,7 @@ import CodeExample from '@/components/CodeExample';
 import AgentEfficiency from '@/components/AgentEfficiency';
 import Features from '@/components/Features';
 import Install from '@/components/Install';
+import Community from '@/components/Community';
 import Faq from '@/components/Faq';
 import FinalCta from '@/components/FinalCta';
 import Footer from '@/components/Footer';
@@ -22,6 +23,7 @@ export default function Home() {
         <AgentEfficiency />
         <Features />
         <Install />
+        <Community />
         <Faq />
         <FinalCta />
       </main>
