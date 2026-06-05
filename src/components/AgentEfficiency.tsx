@@ -16,10 +16,10 @@ const YELLOW = 'text-amber-500 dark:text-amber-300';
 
 const prowlCode: ReactNode = (
   <>
-    <span className={MUTED}>$</span> <span className={CYAN}>prowlqa</span> analyze <span className={GREEN}>https://app.com/login</span> <span className={YELLOW}>--json</span>{'\n'}
-    {'  '}<span className={MUTED}>|</span> <span className={CYAN}>prowlqa</span> generate <span className={YELLOW}>--intent</span> <span className={GREEN}>&quot;test login&quot;</span> <span className={YELLOW}>--stdout</span>{'\n'}
+    <span className={MUTED}>$</span> <span className={CYAN}>prowl</span> analyze <span className={GREEN}>https://app.com/login</span> <span className={YELLOW}>--json</span>{'\n'}
+    {'  '}<span className={MUTED}>|</span> <span className={CYAN}>prowl</span> generate <span className={YELLOW}>--intent</span> <span className={GREEN}>&quot;test login&quot;</span> <span className={YELLOW}>--stdout</span>{'\n'}
     {'\n'}
-    <span className={MUTED}>$</span> <span className={CYAN}>prowlqa</span> run <span className={GREEN}>login</span> <span className={YELLOW}>--json</span>{'\n'}
+    <span className={MUTED}>$</span> <span className={CYAN}>prowl</span> run <span className={GREEN}>login</span> <span className={YELLOW}>--json</span>{'\n'}
     <span className={`${GREEN} font-bold`}>PASS</span> login (622ms) 5/5 steps{'\n'}
     <span className={PURPLE}>exitCode</span><span className={MUTED}>:</span> <span className={YELLOW}>0</span>
   </>
@@ -41,8 +41,8 @@ const mcpConfig: ReactNode = (
   <>
     <span className={MUTED}>{'{'}</span>{'\n'}
     {'  '}<span className={PURPLE}>&quot;mcpServers&quot;</span><span className={MUTED}>: {'{'}</span>{'\n'}
-    {'    '}<span className={PURPLE}>&quot;prowlqa&quot;</span><span className={MUTED}>: {'{'}</span>{'\n'}
-    {'      '}<span className={PURPLE}>&quot;command&quot;</span><span className={MUTED}>:</span> <span className={GREEN}>&quot;prowlqa&quot;</span><span className={MUTED}>,</span>{'\n'}
+    {'    '}<span className={PURPLE}>&quot;prowl&quot;</span><span className={MUTED}>: {'{'}</span>{'\n'}
+    {'      '}<span className={PURPLE}>&quot;command&quot;</span><span className={MUTED}>:</span> <span className={GREEN}>&quot;prowl&quot;</span><span className={MUTED}>,</span>{'\n'}
     {'      '}<span className={PURPLE}>&quot;args&quot;</span><span className={MUTED}>:</span> <span className={MUTED}>[</span><span className={GREEN}>&quot;mcp&quot;</span><span className={MUTED}>]</span>{'\n'}
     {'    '}<span className={MUTED}>{'}'}</span>{'\n'}
     {'  '}<span className={MUTED}>{'}'}</span>{'\n'}
@@ -167,12 +167,12 @@ export default function AgentEfficiency() {
           >
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-base font-semibold">Native MCP server</h3>
-              <span className="text-xs font-mono text-violet-500 dark:text-violet-300">prowlqa mcp</span>
+              <span className="text-xs font-mono text-violet-500 dark:text-violet-300">prowl mcp</span>
             </div>
 
             <p className="mb-4 text-sm text-muted">
-              Run <code className="font-mono text-violet-500 dark:text-violet-300">prowlqa mcp</code> to
-              expose QA to any MCP-capable agent — Claude Desktop, Cursor, OpenClaw — as a small set of
+              Run <code className="font-mono text-violet-500 dark:text-violet-300">prowl mcp</code> to
+              expose Prowl to any MCP-capable agent — Claude Desktop, Cursor, OpenClaw — as a small set of
               named tools. The agent triggers runs and reads structured results; it never needs shell
               access to your repo.
             </p>
@@ -228,7 +228,7 @@ export default function AgentEfficiency() {
           {/* CTA */}
           <motion.div variants={fadeUp} className="mt-10 text-center">
             <a
-              href="https://docs.prowlqa.dev/agents"
+              href="https://docs.prowl.tools/agents"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-sm font-medium text-cyan hover:underline underline-offset-4"

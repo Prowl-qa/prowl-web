@@ -11,7 +11,7 @@ const points = [
   },
   {
     title: 'Plain copy-paste YAML',
-    text: 'Every template is readable YAML with no setup. Drop it into your .prowlqa/ directory and you have coverage in minutes.',
+    text: 'Every template is readable YAML with no setup. Drop it into your .prowl/ directory and you have coverage in minutes.',
   },
   {
     title: 'Contribute back',
@@ -37,7 +37,7 @@ export default function Community() {
             Don&apos;t start from scratch
           </motion.h2>
           <motion.p variants={fadeUp} className="mt-3 max-w-3xl text-muted">
-            The Prowl QA Hub is a growing library of community-contributed hunt templates. Browse
+            The Prowl Hub is a growing library of community-contributed hunt templates. Browse
             real-world flows, copy the YAML, and adapt it to your app — then give back the hunts your
             team builds along the way.
           </motion.p>
@@ -57,7 +57,7 @@ export default function Community() {
 
           <motion.div variants={fadeUp} className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
-              href="https://docs.prowlqa.dev"
+              href="https://hub.prowl.tools"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-md bg-gradient-to-r from-gradient-from to-gradient-to px-6 py-3 text-sm font-semibold text-white transition-shadow hover:shadow-lg hover:shadow-cyan/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan"
@@ -65,7 +65,7 @@ export default function Community() {
               Browse the Hub
             </a>
             <a
-              href="https://github.com/Prowl-qa/prowl"
+              href="https://github.com/prowl-tools/prowl-hub"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-md border border-border bg-background/85 px-6 py-3 text-sm font-semibold transition hover:border-cyan/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan"
