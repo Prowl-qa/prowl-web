@@ -22,7 +22,7 @@ export const highlights: HighlightItem[] = [
   },
   {
     title: 'Library API',
-    desc: 'Import prowl as a Node module. Run hunts programmatically and get typed results — no shell exec needed.',
+    desc: 'Import prowl-tools as a Node module. Run hunts programmatically and get typed results — no shell exec needed.',
     icon: 'api',
   },
 ];

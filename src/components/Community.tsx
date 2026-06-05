@@ -57,7 +57,7 @@ export default function Community() {
 
           <motion.div variants={fadeUp} className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
-              href="https://docs.prowl.tools"
+              href="https://hub.prowl.tools"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-md bg-gradient-to-r from-gradient-from to-gradient-to px-6 py-3 text-sm font-semibold text-white transition-shadow hover:shadow-lg hover:shadow-cyan/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan"
@@ -65,7 +65,7 @@ export default function Community() {
               Browse the Hub
             </a>
             <a
-              href="https://github.com/prowl-tools/prowl"
+              href="https://github.com/prowl-tools/prowl-hub"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-md border border-border bg-background/85 px-6 py-3 text-sm font-semibold transition hover:border-cyan/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan"

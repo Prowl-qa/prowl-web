@@ -172,7 +172,7 @@ export default function AgentEfficiency() {
 
             <p className="mb-4 text-sm text-muted">
               Run <code className="font-mono text-violet-500 dark:text-violet-300">prowl mcp</code> to
-              expose QA to any MCP-capable agent — Claude Desktop, Cursor, OpenClaw — as a small set of
+              expose Prowl to any MCP-capable agent — Claude Desktop, Cursor, OpenClaw — as a small set of
               named tools. The agent triggers runs and reads structured results; it never needs shell
               access to your repo.
             </p>
