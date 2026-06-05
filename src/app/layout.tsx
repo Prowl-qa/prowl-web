@@ -14,22 +14,22 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://prowlqa.dev"),
-  title: "Prowl QA - Deterministic E2E Testing with YAML Hunts and Visual Regression",
+  metadataBase: new URL("https://prowl.tools"),
+  title: "Prowl - Deterministic E2E Testing with YAML Hunts and Visual Regression",
   description:
     "Catch regressions before users do. Write E2E tests in YAML, run them with Playwright precision, and detect visual changes automatically — all from the CLI.",
   openGraph: {
-    title: "Prowl QA - Deterministic E2E Testing with YAML Hunts and Visual Regression",
+    title: "Prowl - Deterministic E2E Testing with YAML Hunts and Visual Regression",
     description:
       "Catch regressions before users do. Write E2E tests in YAML, run them with Playwright precision, and detect visual changes automatically — all from the CLI.",
-    url: "https://prowlqa.dev",
-    siteName: "Prowl QA",
+    url: "https://prowl.tools",
+    siteName: "Prowl",
     type: "website",
     locale: "en_US",
   },
   twitter: {
     card: "summary",
-    title: "Prowl QA - Deterministic E2E Testing with YAML Hunts and Visual Regression",
+    title: "Prowl - Deterministic E2E Testing with YAML Hunts and Visual Regression",
     description:
       "Catch regressions before users do. Write E2E tests in YAML, run them with Playwright precision, and detect visual changes automatically — all from the CLI.",
     creator: "@prowlqa",

@@ -14,7 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }, null);
 
   const blogEntries: MetadataRoute.Sitemap = posts.map((post) => ({
-    url: `https://prowlqa.dev/blog/${post.slug}`,
+    url: `https://prowl.tools/blog/${post.slug}`,
     lastModified: new Date(post.date),
     changeFrequency: "monthly",
     priority: 0.7,
@@ -22,13 +22,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     {
-      url: "https://prowlqa.dev",
+      url: "https://prowl.tools",
       lastModified: new Date(),
       changeFrequency: "weekly",
       priority: 1,
     },
     {
-      url: "https://prowlqa.dev/blog",
+      url: "https://prowl.tools/blog",
       lastModified: latestBlogPostDate ?? new Date(),
       changeFrequency: "weekly",
       priority: 0.8,

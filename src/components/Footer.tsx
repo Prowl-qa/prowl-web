@@ -15,15 +15,27 @@ export default function Footer() {
           <div className="flex items-start gap-3">
             <Image
               src="/static/img/prowl-logo.png"
-              alt="Prowl QA logo"
+              alt="Prowl logo"
               width={36}
               height={36}
               className="h-9 w-9 mt-0.5"
             />
             <div>
-              <span className="text-lg font-bold tracking-tight">Prowl QA</span>
+              <span className="text-lg font-bold tracking-tight">Prowl</span>
               <p className="mt-1 text-muted text-sm">CLI-first QA testing for the web.</p>
               <p className="mt-1 text-muted text-sm">Built for agents, controlled by humans.</p>
+              <p className="mt-2 text-muted text-sm">
+                Brought to you by{' '}
+                <a
+                  href="https://genkeilabs.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm"
+                >
+                  Genkei Labs
+                </a>
+                .
+              </p>
             </div>
           </div>
 
@@ -43,10 +55,10 @@ export default function Footer() {
             </a>
             {/* GitHub */}
             <a
-              href="https://github.com/Prowl-qa/prowl"
+              href="https://github.com/prowl-tools/prowl"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Prowl QA on GitHub"
+              aria-label="Prowl on GitHub"
               className="flex h-9 w-9 items-center justify-center rounded-lg bg-foreground/10 text-muted transition-colors hover:bg-foreground/20 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan"
             >
               <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4" aria-hidden="true">
@@ -55,7 +67,7 @@ export default function Footer() {
             </a>
             {/* Email */}
             <a
-              href="mailto:info@prowlqa.dev"
+              href="mailto:info@prowl.tools"
               aria-label="Email us"
               className="flex h-9 w-9 items-center justify-center rounded-lg bg-foreground/10 text-muted transition-colors hover:bg-foreground/20 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan"
             >
@@ -78,17 +90,17 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <a href="https://docs.prowlqa.dev" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
+                <a href="https://docs.prowl.tools" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
                   Docs
                 </a>
               </li>
               <li>
-                <a href="https://docs.prowlqa.dev" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
+                <a href="https://docs.prowl.tools" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
                   Getting Started
                 </a>
               </li>
               <li>
-                <a href="https://www.npmjs.com/package/prowlqa" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
+                <a href="https://www.npmjs.com/package/prowl-tools" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
                   npm
                 </a>
               </li>
@@ -98,12 +110,12 @@ export default function Footer() {
             <h4 className="font-semibold mb-3 text-xs uppercase tracking-wider text-muted">Community</h4>
             <ul className="space-y-2 text-muted">
               <li>
-                <a href="https://github.com/Prowl-qa/prowl" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
+                <a href="https://github.com/prowl-tools/prowl" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
                   GitHub
                 </a>
               </li>
               <li>
-                <a href="https://hub.prowlqa.dev" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
+                <a href="https://hub.prowl.tools" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
                   Community Hub
                 </a>
               </li>
@@ -113,7 +125,7 @@ export default function Footer() {
       </div>
 
       <div className="max-w-5xl mx-auto mt-10 text-xs text-muted">
-        &copy; {new Date().getFullYear()} Prowl QA
+        &copy; {new Date().getFullYear()} Genkei Labs
       </div>
     </footer>
   );

@@ -11,7 +11,7 @@ function escapeXmlText(value: string | null | undefined) {
 
 export function GET() {
   const posts = getAllPosts();
-  const siteUrl = "https://prowlqa.dev";
+  const siteUrl = "https://prowl.tools";
 
   const items = posts
     .map(
@@ -25,7 +25,7 @@ export function GET() {
       ${post.tags
         .map((tag) => `<category>${escapeXmlText(tag)}</category>`)
         .join("\n      ")}
-      <author>info@prowlqa.dev (${escapeXmlText(post.author)})</author>
+      <author>info@prowl.tools (${escapeXmlText(post.author)})</author>
     </item>`
     )
     .join("");
@@ -33,7 +33,7 @@ export function GET() {
   const feed = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Prowl QA Blog</title>
+    <title>Prowl Blog</title>
     <description>Articles on AI-powered testing, QA automation, and building with agents.</description>
     <link>${siteUrl}/blog</link>
     <atom:link href="${siteUrl}/blog/feed.xml" rel="self" type="application/rss+xml" />

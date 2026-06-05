@@ -10,10 +10,10 @@ interface Step {
 }
 
 const steps: Step[] = [
-  { label: 'Install the CLI', command: 'npm install -g prowlqa', alt: 'brew tap prowl-qa/tap && brew install prowlqa' },
+  { label: 'Install the CLI', command: 'npm install -g prowl-tools', alt: 'brew tap prowl-tools/tap && brew install prowl' },
   { label: 'Install browser engine', command: 'npx playwright install chromium' },
-  { label: 'Initialize your project', command: 'prowlqa init' },
-  { label: 'Run your first hunt', command: 'prowlqa run homepage' },
+  { label: 'Initialize your project', command: 'prowl init' },
+  { label: 'Run your first hunt', command: 'prowl run homepage' },
 ];
 
 function copyToClipboard(text: string): Promise<void> {
