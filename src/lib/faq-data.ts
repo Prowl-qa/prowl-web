@@ -7,42 +7,42 @@ export const faqItems: FaqItem[] = [
   {
     question: "Is this only for QA engineers?",
     answer:
-      "No. Prowl QA is designed for QA, product engineers, and teams new to end-to-end testing who need a simple CLI path to reliable flow coverage.",
+      "No. Prowl is designed for QA, product engineers, and teams new to end-to-end testing who need a simple CLI path to reliable flow coverage.",
   },
   {
     question: "Do I need to know Playwright APIs?",
     answer:
-      "No. You write hunts in YAML while Prowl QA handles browser automation and artifacts under the hood.",
+      "No. You write hunts in YAML while Prowl handles browser automation and artifacts under the hood.",
   },
   {
     question: "Can we run this in CI?",
     answer:
-      "Yes. Prowl QA is built for CI execution with deterministic exit codes and artifact outputs suitable for pipelines and pull requests.",
+      "Yes. Prowl is built for CI execution with deterministic exit codes and artifact outputs suitable for pipelines and pull requests.",
   },
   {
-    question: "Can AI agents use Prowl QA?",
+    question: "Can AI agents use Prowl?",
     answer:
-      "Yes, two ways. Agents can drive the structured CLI directly — prowlqa analyze extracts page structure as JSON, prowlqa generate turns that into a runnable hunt from a natural language intent, and prowlqa run --json returns structured results with exit codes. Or run prowlqa mcp to expose Prowl QA as a native MCP server, so any MCP-capable agent calls it as named tools. You can also import Prowl QA as a Node library.",
+      "Yes, two ways. Agents can drive the structured CLI directly — prowl analyze extracts page structure as JSON, prowl generate turns that into a runnable hunt from a natural language intent, and prowl run --json returns structured results with exit codes. Or run prowl mcp to expose Prowl as a native MCP server, so any MCP-capable agent calls it as named tools. You can also import Prowl as a Node library.",
   },
   {
-    question: "Does Prowl QA have an MCP server?",
+    question: "Does Prowl have an MCP server?",
     answer:
-      "Yes. Run prowlqa mcp to start an MCP server (stdio) that exposes QA to any MCP-capable agent — Claude Desktop, Cursor, OpenClaw — as a fixed set of named tools: list_hunts, run_hunt, run_suite, and list_projects. The agent triggers runs and reads structured results without shell access, and your guardrails (allowedDomains, forbiddenSelectors, maxSteps) apply to every run. run_suite also auto-logs failures as deduplicated bug tickets in your backlog, and a project registry lets one server drive multiple repos.",
+      "Yes. Run prowl mcp to start an MCP server (stdio) that exposes QA to any MCP-capable agent — Claude Desktop, Cursor, OpenClaw — as a fixed set of named tools: list_hunts, run_hunt, run_suite, and list_projects. The agent triggers runs and reads structured results without shell access, and your guardrails (allowedDomains, forbiddenSelectors, maxSteps) apply to every run. run_suite also auto-logs failures as deduplicated bug tickets in your backlog, and a project registry lets one server drive multiple repos.",
   },
   {
     question: "Why not rely on manual testing only?",
     answer:
-      "Manual checks miss regressions in large apps. Prowl QA gives repeatable coverage of critical user journeys on every release.",
+      "Manual checks miss regressions in large apps. Prowl gives repeatable coverage of critical user journeys on every release.",
   },
   {
     question: "What is visual regression testing?",
     answer:
-      "Visual regression compares screenshots against saved baselines to detect unintended visual changes. Prowl QA's assertScreenshot step does pixel-level comparison with a configurable threshold. On first run it saves the baseline automatically. Run prowlqa update-baselines to accept new screenshots as baselines.",
+      "Visual regression compares screenshots against saved baselines to detect unintended visual changes. Prowl's assertScreenshot step does pixel-level comparison with a configurable threshold. On first run it saves the baseline automatically. Run prowl update-baselines to accept new screenshots as baselines.",
   },
   {
-    question: "Can Prowl QA generate tests automatically?",
+    question: "Can Prowl generate tests automatically?",
     answer:
-      "Yes. Run prowlqa analyze <url> --json to extract page elements, then pipe the output to prowlqa generate --intent 'describe the test' to produce a valid hunt file. The generated YAML is validated against Prowl's schema before output.",
+      "Yes. Run prowl analyze <url> --json to extract page elements, then pipe the output to prowl generate --intent 'describe the test' to produce a valid hunt file. The generated YAML is validated against Prowl's schema before output.",
   },
   {
     question: "Does Prowl support network mocking?",

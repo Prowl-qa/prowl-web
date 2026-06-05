@@ -20,12 +20,12 @@ export async function generateMetadata({
   if (!post) return {};
 
   return {
-    title: `${post.title} - Prowl QA Blog`,
+    title: `${post.title} - Prowl Blog`,
     description: post.description,
     openGraph: {
       title: post.title,
       description: post.description,
-      url: `https://prowlqa.dev/blog/${post.slug}`,
+      url: `https://prowl.tools/blog/${post.slug}`,
       type: "article",
       publishedTime: post.date,
       authors: [post.author],
@@ -65,10 +65,10 @@ export default async function BlogPostPage({
     },
     publisher: {
       "@type": "Organization",
-      name: "Prowl QA",
-      url: "https://prowlqa.dev",
+      name: "Prowl",
+      url: "https://prowl.tools",
     },
-    url: `https://prowlqa.dev/blog/${post.slug}`,
+    url: `https://prowl.tools/blog/${post.slug}`,
     keywords: post.tags,
   };
 

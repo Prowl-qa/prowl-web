@@ -7,11 +7,11 @@ export default function PostFooter() {
       <div className="rounded-xl border border-border bg-surface p-6 sm:p-8 text-center">
         <h3 className="text-lg font-semibold mb-2">Stay in the loop</h3>
         <p className="text-muted text-sm mb-5 max-w-md mx-auto">
-          Get the latest on AI-powered testing, ProwlQA updates, and developer
+          Get the latest on AI-powered testing, Prowl updates, and developer
           workflows. No spam, unsubscribe anytime.
         </p>
         <form
-          action="https://buttondown.com/api/emails/embed-subscribe/prowlqa"
+          action="https://buttondown.com/api/emails/embed-subscribe/prowl"
           method="post"
           target="_blank"
           rel="noopener noreferrer"
