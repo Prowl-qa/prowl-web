@@ -24,6 +24,18 @@ export default function Footer() {
               <span className="text-lg font-bold tracking-tight">Prowl</span>
               <p className="mt-1 text-muted text-sm">CLI-first QA testing for the web.</p>
               <p className="mt-1 text-muted text-sm">Built for agents, controlled by humans.</p>
+              <p className="mt-2 text-muted text-sm">
+                Brought to you by{' '}
+                <a
+                  href="https://genkeilabs.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm"
+                >
+                  Genkei Labs
+                </a>
+                .
+              </p>
             </div>
           </div>
 
@@ -113,7 +125,7 @@ export default function Footer() {
       </div>
 
       <div className="max-w-5xl mx-auto mt-10 text-xs text-muted">
-        &copy; {new Date().getFullYear()} Prowl
+        &copy; {new Date().getFullYear()} Genkei Labs
       </div>
     </footer>
   );
