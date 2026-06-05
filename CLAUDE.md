@@ -2,7 +2,7 @@
 
 ## Project
 This is the Prowl marketing landing page built with Next.js 15 + Tailwind CSS.
-Hosted at prowlqa.dev.
+Hosted at prowl.tools.
 
 ## Tech Stack
 - **Framework**: Next.js 15 (App Router)
@@ -21,7 +21,7 @@ Hosted at prowlqa.dev.
 - Dark/light mode support
 - Mobile-first responsive design
 - Code examples should use YAML hunt syntax and terminal output
-- CTAs point to docs site (docs.prowlqa.dev) and GitHub (github.com/Prowl-qa/prowl)
+- CTAs point to docs site (docs.prowl.tools) and GitHub (github.com/prowl-tools/prowl)
 
 ## Commands
 ```bash
@@ -38,9 +38,9 @@ Example: `./repos` or `~/work`.
 
 | Repo | Purpose | Local Path |
 |------|---------|------------|
-| `Prowl-qa/prowl` | CLI tool (source of truth) | `<local_repo_root>/prowl` |
-| `Prowl-qa/prowl-docs` | Docs site (docs.prowlqa.dev) | `<local_repo_root>/prowl-docs` |
-| `Prowl-qa/prowl-hub` | Community hunt templates | `<local_repo_root>/prowl-hub` |
+| `prowl-tools/prowl` | CLI tool (source of truth) | `<local_repo_root>/prowl` |
+| `prowl-tools/prowl-docs` | Docs site (docs.prowl.tools) | `<local_repo_root>/prowl-docs` |
+| `prowl-tools/prowl-hub` | Community hunt templates | `<local_repo_root>/prowl-hub` |
 | `prowltools/prowl-twitter-bot` | Twitter bot (@prowlqa) | `<local_repo_root>/prowl-twitter-bot` |
 
 **Backlogs**: `<local_backlog_root>/Prowl`

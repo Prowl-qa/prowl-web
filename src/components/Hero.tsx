@@ -48,7 +48,7 @@ export default function Hero() {
             variants={fadeUp}
             className="mt-6 max-w-2xl text-base leading-relaxed text-muted sm:text-lg"
           >
-            Prowl QA is a CLI-first E2E testing tool that pairs YAML test
+            Prowl is a CLI-first E2E testing tool that pairs YAML test
             definitions with Playwright execution. QA engineers and developers
             get deterministic flow coverage, visual regression detection, and
             rich debugging artifacts — all from the terminal.
@@ -60,7 +60,7 @@ export default function Hero() {
             className="mt-8 flex flex-col gap-3 sm:flex-row"
           >
             <a
-              href="https://docs.prowlqa.dev"
+              href="https://docs.prowl.tools"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-md bg-gradient-to-r from-gradient-from to-gradient-to px-6 py-3 text-sm font-semibold text-white transition-shadow hover:shadow-lg hover:shadow-cyan/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan"
@@ -68,7 +68,7 @@ export default function Hero() {
               Install the CLI
             </a>
             <a
-              href="https://github.com/Prowl-qa/prowl"
+              href="https://github.com/prowl-tools/prowl"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-md border border-border bg-surface px-6 py-3 text-sm font-semibold transition hover:border-cyan/60 hover:bg-surface-elevated focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan"
@@ -82,7 +82,7 @@ export default function Hero() {
             variants={fadeUp}
             className="mt-6 max-w-md rounded-xl border border-border bg-code-bg/80 px-4 py-3 font-mono text-xs text-zinc-300"
           >
-            <span className="text-muted">$</span> npm install -g prowlqa
+            <span className="text-muted">$</span> npm install -g prowl-tools
           </motion.div>
         </div>
 
@@ -117,7 +117,7 @@ export default function Hero() {
           {/* Mascot */}
           <Image
             src="/static/img/prowl-mascot.png"
-            alt="Prowl QA mascot"
+            alt="Prowl mascot"
             width={144}
             height={144}
             className="absolute -bottom-8 -right-6 h-28 w-28"

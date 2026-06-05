@@ -7,12 +7,12 @@ export interface HighlightItem {
 export const highlights: HighlightItem[] = [
   {
     title: 'Page analysis',
-    desc: 'prowlqa analyze <url> --json extracts interactive elements, selectors, and form structure. Agents get a structured page map without browser interaction.',
+    desc: 'prowl analyze <url> --json extracts interactive elements, selectors, and form structure. Agents get a structured page map without browser interaction.',
     icon: 'analyze',
   },
   {
     title: 'AI hunt generation',
-    desc: 'prowlqa generate turns a page analysis and natural language intent into a valid, runnable YAML hunt file.',
+    desc: 'prowl generate turns a page analysis and natural language intent into a valid, runnable YAML hunt file.',
     icon: 'generate',
   },
   {
@@ -22,7 +22,7 @@ export const highlights: HighlightItem[] = [
   },
   {
     title: 'Library API',
-    desc: 'Import prowlqa as a Node module. Run hunts programmatically and get typed results — no shell exec needed.',
+    desc: 'Import prowl as a Node module. Run hunts programmatically and get typed results — no shell exec needed.',
     icon: 'api',
   },
 ];

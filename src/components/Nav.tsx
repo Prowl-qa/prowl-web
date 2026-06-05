@@ -30,12 +30,12 @@ export default function Nav() {
         <Link href="/" className="flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
           <Image
             src="/static/img/prowl-logo.png"
-            alt="Prowl QA logo"
+            alt="Prowl logo"
             width={32}
             height={32}
             className="h-8 w-8"
           />
-          <span className="text-xl font-bold tracking-tight">Prowl QA</span>
+          <span className="text-xl font-bold tracking-tight">Prowl</span>
         </Link>
 
         {/* Desktop links */}
@@ -47,7 +47,7 @@ export default function Nav() {
             Blog
           </Link>
           <a
-            href="https://docs.prowlqa.dev"
+            href="https://docs.prowl.tools"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-cyan transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm"
@@ -55,7 +55,7 @@ export default function Nav() {
             Docs
           </a>
           <a
-            href="https://hub.prowlqa.dev"
+            href="https://hub.prowl.tools"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-cyan transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm"
@@ -63,7 +63,7 @@ export default function Nav() {
             Hub
           </a>
           <a
-            href="https://github.com/Prowl-qa/prowl"
+            href="https://github.com/prowl-tools/prowl"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-cyan transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm"
@@ -71,7 +71,7 @@ export default function Nav() {
             GitHub
           </a>
           <a
-            href="https://www.npmjs.com/package/prowlqa"
+            href="https://www.npmjs.com/package/prowl-tools"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-cyan transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm"
@@ -111,7 +111,7 @@ export default function Nav() {
             Blog
           </Link>
           <a
-            href="https://docs.prowlqa.dev"
+            href="https://docs.prowl.tools"
             target="_blank"
             rel="noopener noreferrer"
             className="block hover:text-cyan transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm"
@@ -119,7 +119,7 @@ export default function Nav() {
             Docs
           </a>
           <a
-            href="https://hub.prowlqa.dev"
+            href="https://hub.prowl.tools"
             target="_blank"
             rel="noopener noreferrer"
             className="block hover:text-cyan transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm"
@@ -127,7 +127,7 @@ export default function Nav() {
             Hub
           </a>
           <a
-            href="https://github.com/Prowl-qa/prowl"
+            href="https://github.com/prowl-tools/prowl"
             target="_blank"
             rel="noopener noreferrer"
             className="block hover:text-cyan transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm"
@@ -135,7 +135,7 @@ export default function Nav() {
             GitHub
           </a>
           <a
-            href="https://www.npmjs.com/package/prowlqa"
+            href="https://www.npmjs.com/package/prowl-tools"
             target="_blank"
             rel="noopener noreferrer"
             className="block hover:text-cyan transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm"

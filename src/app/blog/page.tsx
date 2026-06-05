@@ -4,14 +4,14 @@ import { getAllPosts } from "@/lib/blog";
 import PostCard from "@/components/blog/PostCard";
 
 export const metadata: Metadata = {
-  title: "Blog - Prowl QA",
+  title: "Blog - Prowl",
   description:
-    "Articles on AI-powered testing, QA automation, and building with agents. From the team behind ProwlQA.",
+    "Articles on AI-powered testing, QA automation, and building with agents. From the team behind Prowl.",
   openGraph: {
-    title: "Blog - Prowl QA",
+    title: "Blog - Prowl",
     description:
       "Articles on AI-powered testing, QA automation, and building with agents.",
-    url: "https://prowlqa.dev/blog",
+    url: "https://prowl.tools/blog",
   },
 };
 

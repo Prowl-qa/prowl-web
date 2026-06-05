@@ -7,11 +7,11 @@ import { fadeUp, staggerContainer } from '@/lib/animations';
 const points = [
   {
     title: 'Regressions hide in user flows, not units',
-    text: 'Unit tests pass while checkout breaks. Prowl QA validates real user journeys across routes, forms, and state transitions so regressions surface before users hit them.',
+    text: 'Unit tests pass while checkout breaks. Prowl validates real user journeys across routes, forms, and state transitions so regressions surface before users hit them.',
   },
   {
     title: 'Release speed demands repeatable QA',
-    text: 'Manual checklists drift as teams ship faster. Prowl QA gives QA engineers and developers a shared, automated path to verify critical flows on every commit.',
+    text: 'Manual checklists drift as teams ship faster. Prowl gives QA engineers and developers a shared, automated path to verify critical flows on every commit.',
   },
   {
     title: 'Test discipline should be easy to adopt',
@@ -34,7 +34,7 @@ export default function WhyE2E() {
             Why end-to-end testing has to be first-class
           </motion.h2>
           <motion.p variants={fadeUp} className="mt-3 max-w-3xl text-muted">
-            Fast shipping only works when critical user flows are always verified. Prowl QA turns that discipline into a lightweight daily habit.
+            Fast shipping only works when critical user flows are always verified. Prowl turns that discipline into a lightweight daily habit.
           </motion.p>
 
           <motion.div variants={staggerContainer} className="mt-8 grid gap-4 md:grid-cols-3">
