@@ -17,7 +17,7 @@ const steps: { step: string; title: string; detail: string; code: ReactNode }[] 
     detail: 'Install the CLI globally and bootstrap your first hunt in one command.',
     code: (
       <>
-        <span className={MUTED}>$</span> <span className={CYAN}>npm</span> install -g <span className={GREEN}>prowl</span>{'\n'}
+        <span className={MUTED}>$</span> <span className={CYAN}>npm</span> install -g <span className={GREEN}>prowl-tools</span>{'\n'}
         <span className={MUTED}>$</span> <span className={CYAN}>prowl</span> init
       </>
     ),
