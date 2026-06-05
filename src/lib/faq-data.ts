@@ -27,7 +27,7 @@ export const faqItems: FaqItem[] = [
   {
     question: "Does Prowl have an MCP server?",
     answer:
-      "Yes. Run prowl mcp to start an MCP server (stdio) that exposes QA to any MCP-capable agent — Claude Desktop, Cursor, OpenClaw — as a fixed set of named tools: list_hunts, run_hunt, run_suite, and list_projects. The agent triggers runs and reads structured results without shell access, and your guardrails (allowedDomains, forbiddenSelectors, maxSteps) apply to every run. run_suite also auto-logs failures as deduplicated bug tickets in your backlog, and a project registry lets one server drive multiple repos.",
+      "Yes. Run prowl mcp to start an MCP server (stdio) that exposes Prowl to any MCP-capable agent — Claude Desktop, Cursor, OpenClaw — as a fixed set of named tools: list_hunts, run_hunt, run_suite, and list_projects. The agent triggers runs and reads structured results without shell access, and your guardrails (allowedDomains, forbiddenSelectors, maxSteps) apply to every run. run_suite also auto-logs failures as deduplicated bug tickets in your backlog, and a project registry lets one server drive multiple repos.",
   },
   {
     question: "Why not rely on manual testing only?",
