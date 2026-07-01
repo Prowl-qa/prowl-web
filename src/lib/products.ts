@@ -17,8 +17,6 @@ export interface SuiteProduct {
   docsHref: string;
   /** Label for the docs/app link (docs sites vs. app catalogs differ). */
   docsLabel: string;
-  /** Emoji stand-in for a per-product glyph (swap for real icons later). */
-  glyph: string;
 }
 
 export const suiteProducts: SuiteProduct[] = [
@@ -34,7 +32,6 @@ export const suiteProducts: SuiteProduct[] = [
     href: "/cli",
     docsHref: "https://docs.prowl.tools",
     docsLabel: "Docs",
-    glyph: "🎯",
   },
   {
     slug: "code-review",
@@ -48,7 +45,6 @@ export const suiteProducts: SuiteProduct[] = [
     href: "/code-review",
     docsHref: "https://review.prowl.tools",
     docsLabel: "Docs",
-    glyph: "🔍",
   },
   {
     slug: "hub",
@@ -62,7 +58,6 @@ export const suiteProducts: SuiteProduct[] = [
     href: "/hub",
     docsHref: "https://hub.prowl.tools",
     docsLabel: "Open the Hub",
-    glyph: "📚",
   },
   {
     slug: "infra",
@@ -76,7 +71,6 @@ export const suiteProducts: SuiteProduct[] = [
     href: "/infra",
     docsHref: "https://infra.prowl.tools",
     docsLabel: "Explore Prowl Infra",
-    glyph: "🛠️",
   },
 ];
 
