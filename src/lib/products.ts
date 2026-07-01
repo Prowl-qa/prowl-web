@@ -1,0 +1,105 @@
+/**
+ * The Prowl suite — single source of truth for product metadata, shared by the
+ * homepage showcase, the product pages, the nav/footer, and the docs hub, so the
+ * suite is marketed consistently everywhere.
+ */
+
+export interface SuiteProduct {
+  slug: string;
+  name: string;
+  /** One-line positioning. */
+  tagline: string;
+  /** 2–3 concrete capabilities for the showcase block. */
+  points: string[];
+  /** Internal marketing page. */
+  href: string;
+  /** Docs / app destination for this product. */
+  docsHref: string;
+  /** Label for the docs/app link (docs sites vs. app catalogs differ). */
+  docsLabel: string;
+  /** Emoji stand-in for a per-product glyph (swap for real icons later). */
+  glyph: string;
+}
+
+export const suiteProducts: SuiteProduct[] = [
+  {
+    slug: "cli",
+    name: "Prowl CLI",
+    tagline: "Deterministic end-to-end testing in readable YAML, run with Playwright precision.",
+    points: [
+      "Write flows as YAML hunts — no brittle test code",
+      "Visual regression detection + rich debugging artifacts",
+      "CLI-first, agent-ready, with an MCP server",
+    ],
+    href: "/cli",
+    docsHref: "https://docs.prowl.tools",
+    docsLabel: "Docs",
+    glyph: "🎯",
+  },
+  {
+    slug: "code-review",
+    name: "Prowl Code Review",
+    tagline: "BYOK AI code review for pull requests — quality-first, with no rate limits.",
+    points: [
+      "Multi-pass specialists + judge, cross-file context",
+      "Linter/SAST grounding + false-positive verification",
+      "Your key, your provider — cents per review",
+    ],
+    href: "/code-review",
+    docsHref: "https://review.prowl.tools",
+    docsLabel: "Docs",
+    glyph: "🔍",
+  },
+  {
+    slug: "hub",
+    name: "Prowl Hub",
+    tagline: "A growing library of community hunt templates — copy real-world flows and adapt them.",
+    points: [
+      "Browse battle-tested YAML flows by category",
+      "Copy, adapt, and contribute back",
+      "Wired into the CLI via the Hub API",
+    ],
+    href: "/hub",
+    docsHref: "https://hub.prowl.tools",
+    docsLabel: "Open the Hub",
+    glyph: "📚",
+  },
+  {
+    slug: "infra",
+    name: "Prowl Infra",
+    tagline: "Infrastructure test playbooks — validate cloud and Terraform environments before you ship.",
+    points: [
+      "Catalog of reusable infra validation playbooks",
+      "Catch misconfigurations pre-deploy",
+      "Same CLI-first, agent-ready philosophy",
+    ],
+    href: "/infra",
+    docsHref: "https://infra.prowl.tools",
+    docsLabel: "Explore Prowl Infra",
+    glyph: "🛠️",
+  },
+];
+
+export function getProduct(slug: string): SuiteProduct | undefined {
+  return suiteProducts.find((p) => p.slug === slug);
+}
+
+/** The suite pillars — what makes these one suite rather than four tools. */
+export const suitePillars: { title: string; text: string }[] = [
+  {
+    title: "Made for agents, controlled by humans",
+    text: "Every tool is safe to point at agent-generated work — deterministic, bounded, and reviewable — without runaway cost or surprises.",
+  },
+  {
+    title: "Own your keys, no lock-in",
+    text: "BYOK where inference is involved (Code Review), open formats everywhere else. Your data goes to your providers, not ours.",
+  },
+  {
+    title: "CLI-first, zero infrastructure",
+    text: "Each tool runs from the terminal or CI with nothing to host. Start in seconds; scale without a control plane.",
+  },
+  {
+    title: "Open source, from Genkei Labs",
+    text: "Apache-2.0, transparent, and built in the open as a cohesive QA suite — not a pile of disconnected utilities.",
+  },
+];

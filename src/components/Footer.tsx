@@ -1,5 +1,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { suiteProducts } from '@/lib/products';
+
+const footerLinkClass =
+  'hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm';
 
 export default function Footer() {
   return (
@@ -22,8 +26,8 @@ export default function Footer() {
             />
             <div>
               <span className="text-lg font-bold tracking-tight">Prowl</span>
-              <p className="mt-1 text-muted text-sm">CLI-first QA testing for the web.</p>
-              <p className="mt-1 text-muted text-sm">Built for agents, controlled by humans.</p>
+              <p className="mt-1 text-muted text-sm">A QA suite for the web.</p>
+              <p className="mt-1 text-muted text-sm">Made for agents, controlled by humans.</p>
               <p className="mt-2 text-muted text-sm">
                 Brought to you by{' '}
                 <a
@@ -82,41 +86,39 @@ export default function Footer() {
         {/* Right: Link groups */}
         <nav aria-label="Footer" className="flex gap-12 sm:gap-16">
           <div>
-            <h4 className="font-semibold mb-3 text-xs uppercase tracking-wider text-muted">Product</h4>
+            <h4 className="font-semibold mb-3 text-xs uppercase tracking-wider text-muted">Products</h4>
             <ul className="space-y-2 text-muted">
-              <li>
-                <Link href="/blog" className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
-                  Blog
-                </Link>
-              </li>
-              <li>
-                <a href="https://docs.prowl.tools" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
-                  Docs
-                </a>
-              </li>
-              <li>
-                <a href="https://docs.prowl.tools" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
-                  Getting Started
-                </a>
-              </li>
-              <li>
-                <a href="https://www.npmjs.com/package/prowl-tools" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
-                  npm
-                </a>
-              </li>
+              {suiteProducts.map((p) => (
+                <li key={p.slug}>
+                  <Link href={p.href} className={footerLinkClass}>{p.name}</Link>
+                </li>
+              ))}
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold mb-3 text-xs uppercase tracking-wider text-muted">Community</h4>
+            <h4 className="font-semibold mb-3 text-xs uppercase tracking-wider text-muted">Docs</h4>
             <ul className="space-y-2 text-muted">
               <li>
-                <a href="https://github.com/prowl-tools/prowl" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
-                  GitHub
-                </a>
+                <Link href="/docs" className={footerLinkClass}>All docs</Link>
+              </li>
+              {suiteProducts.map((p) => (
+                <li key={p.slug}>
+                  <a href={p.docsHref} target="_blank" rel="noopener noreferrer" className={footerLinkClass}>
+                    {p.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-semibold mb-3 text-xs uppercase tracking-wider text-muted">Resources</h4>
+            <ul className="space-y-2 text-muted">
+              <li>
+                <Link href="/blog" className={footerLinkClass}>Blog</Link>
               </li>
               <li>
-                <a href="https://hub.prowl.tools" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm">
-                  Community Hub
+                <a href="https://github.com/prowl-tools" target="_blank" rel="noopener noreferrer" className={footerLinkClass}>
+                  GitHub
                 </a>
               </li>
             </ul>
