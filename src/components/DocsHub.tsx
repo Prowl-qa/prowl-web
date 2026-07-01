@@ -2,6 +2,7 @@
 
 import { motion } from 'motion/react';
 import SectionReveal from '@/components/ui/SectionReveal';
+import ProductIcon from '@/components/icons/ProductIcon';
 import { fadeUp, staggerContainer } from '@/lib/animations';
 import { suiteProducts } from '@/lib/products';
 
@@ -43,7 +44,7 @@ export default function DocsHub({ standalone = false }: { standalone?: boolean }
                 className="group flex items-center justify-between rounded-xl border border-border bg-surface-elevated p-5 transition-colors hover:border-cyan/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan"
               >
                 <div className="flex items-center gap-3">
-                  <span className="text-2xl" aria-hidden="true">{product.glyph}</span>
+                  <ProductIcon slug={product.slug} size={22} />
                   <div>
                     <div className="font-semibold">{product.name}</div>
                     <div className="text-sm text-muted">{product.docsHref.replace('https://', '')}</div>

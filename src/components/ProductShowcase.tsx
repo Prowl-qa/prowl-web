@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { motion } from 'motion/react';
 import SectionReveal from '@/components/ui/SectionReveal';
+import ProductIcon from '@/components/icons/ProductIcon';
 import { fadeUp, staggerContainer } from '@/lib/animations';
 import { suiteProducts } from '@/lib/products';
 
@@ -36,7 +37,7 @@ export default function ProductShowcase() {
                 className="flex flex-col rounded-xl border border-border bg-surface-elevated p-6"
               >
                 <div className="flex items-center gap-3">
-                  <span className="text-2xl" aria-hidden="true">{product.glyph}</span>
+                  <ProductIcon slug={product.slug} size={22} />
                   <h3 className="text-xl font-semibold">{product.name}</h3>
                 </div>
                 <p className="mt-3 text-sm leading-relaxed text-muted">{product.tagline}</p>

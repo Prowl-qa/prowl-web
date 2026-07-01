@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { motion } from 'motion/react';
 import GradientText from '@/components/ui/GradientText';
+import ProductIcon from '@/components/icons/ProductIcon';
 import { fadeUp, staggerContainer } from '@/lib/animations';
 import { suiteProducts } from '@/lib/products';
 
@@ -72,7 +73,7 @@ export default function SuiteHero() {
                 key={p.slug}
                 className="rounded-xl border border-border bg-surface-elevated p-4"
               >
-                <div className="text-2xl" aria-hidden="true">{p.glyph}</div>
+                <ProductIcon slug={p.slug} size={20} />
                 <div className="mt-2 text-sm font-semibold">{p.name}</div>
               </div>
             ))}

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { motion } from 'motion/react';
 import GradientText from '@/components/ui/GradientText';
 import SectionReveal from '@/components/ui/SectionReveal';
+import ProductIcon from '@/components/icons/ProductIcon';
 import { fadeUp, staggerContainer } from '@/lib/animations';
 import { getProduct, suiteProducts } from '@/lib/products';
 
@@ -31,7 +32,9 @@ export default function SatelliteProductLanding({ slug }: { slug: string }) {
           initial="hidden"
           animate="visible"
         >
-          <motion.div variants={fadeUp} className="text-4xl" aria-hidden="true">{product.glyph}</motion.div>
+          <motion.div variants={fadeUp} className="flex justify-center">
+            <ProductIcon slug={product.slug} size={44} />
+          </motion.div>
           <motion.p variants={fadeUp} className="mt-4 text-xs uppercase tracking-[0.2em] text-muted">
             Prowl Suite
           </motion.p>
@@ -97,7 +100,7 @@ export default function SatelliteProductLanding({ slug }: { slug: string }) {
                   className="rounded-xl border border-border p-4 transition-colors hover:border-cyan/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan"
                 >
                   <div className="flex items-center gap-2">
-                    <span aria-hidden="true">{p.glyph}</span>
+                    <ProductIcon slug={p.slug} size={18} />
                     <span className="text-sm font-semibold">{p.name}</span>
                   </div>
                   <p className="mt-1 text-xs text-muted">{p.tagline}</p>

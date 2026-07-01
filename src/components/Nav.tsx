@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import ThemeToggle from '@/components/ui/ThemeToggle';
+import ProductIcon from '@/components/icons/ProductIcon';
 import { suiteProducts } from '@/lib/products';
 
 const linkClass =
@@ -49,7 +50,7 @@ export default function Nav() {
                     href={p.href}
                     className="flex items-start gap-3 rounded-lg px-3 py-2 hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan"
                   >
-                    <span aria-hidden="true" className="text-lg leading-none">{p.glyph}</span>
+                    <ProductIcon slug={p.slug} size={20} className="mt-0.5 shrink-0" />
                     <span>
                       <span className="block font-semibold">{p.name}</span>
                       <span className="block text-xs text-muted">{p.tagline}</span>
