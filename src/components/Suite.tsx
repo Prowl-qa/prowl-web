@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { motion } from 'motion/react';
 import SectionReveal from '@/components/ui/SectionReveal';
 import { fadeUp, staggerContainer } from '@/lib/animations';
@@ -19,9 +20,9 @@ const products = [
   },
   {
     name: 'Prowl Code Review',
-    text: 'Automated, agent-assisted review for your pull requests — catching regressions before they merge.',
-    href: null,
-    cta: 'Coming soon',
+    text: 'BYOK AI code review for pull requests — multi-pass specialists, cross-file context, and committable fixes. Your key, your provider, no rate limits.',
+    href: '/code-review',
+    cta: 'Learn more',
   },
 ];
 
@@ -57,14 +58,23 @@ export default function Suite() {
                 <h3 className="text-lg font-semibold">{product.name}</h3>
                 <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">{product.text}</p>
                 {product.href ? (
-                  <a
-                    href={product.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-4 inline-flex w-fit items-center gap-1 text-sm font-semibold text-cyan transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm"
-                  >
-                    {product.cta} <span aria-hidden="true">→</span>
-                  </a>
+                  product.href.startsWith('/') ? (
+                    <Link
+                      href={product.href}
+                      className="mt-4 inline-flex w-fit items-center gap-1 text-sm font-semibold text-cyan transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm"
+                    >
+                      {product.cta} <span aria-hidden="true">→</span>
+                    </Link>
+                  ) : (
+                    <a
+                      href={product.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-4 inline-flex w-fit items-center gap-1 text-sm font-semibold text-cyan transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm"
+                    >
+                      {product.cta} <span aria-hidden="true">→</span>
+                    </a>
+                  )
                 ) : (
                   <span className="mt-4 inline-flex w-fit items-center rounded-full border border-border px-3 py-1 text-xs font-medium text-muted">
                     {product.cta}

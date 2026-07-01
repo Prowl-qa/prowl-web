@@ -28,6 +28,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
+      url: "https://prowl.tools/code-review",
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
       url: "https://prowl.tools/blog",
       lastModified: latestBlogPostDate ?? new Date(),
       changeFrequency: "weekly",
