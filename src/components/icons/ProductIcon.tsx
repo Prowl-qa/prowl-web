@@ -1,10 +1,9 @@
+import { useId } from 'react';
 import type { JSX } from 'react';
 
 /**
  * Line icons for the four Prowl products — 24×24, stroke-width 2, round caps,
  * flat cyan→green gradient stroke (#2dd4ee → #34d399), no fill/background.
- * Each icon defines its own `prowlGrad` gradient; the ids are identical and
- * visually interchangeable, so repeating them across a page is harmless.
  */
 
 const PATHS: Record<string, JSX.Element> = {
@@ -49,6 +48,7 @@ export default function ProductIcon({
   size?: number;
   className?: string;
 }) {
+  const gradientId = useId();
   const paths = PATHS[slug];
   if (!paths) return null;
   return (
@@ -62,12 +62,12 @@ export default function ProductIcon({
       focusable="false"
     >
       <defs>
-        <linearGradient id="prowlGrad" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stopColor="#2dd4ee" />
           <stop offset="1" stopColor="#34d399" />
         </linearGradient>
       </defs>
-      <g stroke="url(#prowlGrad)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <g stroke={`url(#${gradientId})`} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         {paths}
       </g>
     </svg>

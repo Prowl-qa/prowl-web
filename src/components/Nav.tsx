@@ -63,7 +63,7 @@ export default function Nav() {
 
           <Link href="/docs" className={linkClass}>Docs</Link>
           <Link href="/blog" className={linkClass}>Blog</Link>
-          <a href="https://github.com/prowl-tools" target="_blank" rel="noopener noreferrer" className={linkClass}>
+          <a href="https://github.com/prowl-tools/prowl" target="_blank" rel="noopener noreferrer" className={linkClass}>
             GitHub
           </a>
           <ThemeToggle />
@@ -97,7 +97,7 @@ export default function Nav() {
           <div className="h-px bg-border" />
           <Link href="/docs" className={`block ${linkClass}`}>Docs</Link>
           <Link href="/blog" className={`block ${linkClass}`}>Blog</Link>
-          <a href="https://github.com/prowl-tools" target="_blank" rel="noopener noreferrer" className={`block ${linkClass}`}>
+          <a href="https://github.com/prowl-tools/prowl" target="_blank" rel="noopener noreferrer" className={`block ${linkClass}`}>
             GitHub
           </a>
         </div>

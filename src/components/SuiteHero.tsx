@@ -12,8 +12,7 @@ export default function SuiteHero() {
     <section className="relative overflow-hidden px-6 pb-16 pt-18 sm:pt-22">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-0 h-[520px] w-[820px] -translate-x-1/2 -translate-y-1/3 rounded-full opacity-25 dark:opacity-35 blur-3xl"
-        style={{ background: 'radial-gradient(circle at center, var(--cyan) 0%, transparent 70%)' }}
+        className="pointer-events-none absolute left-1/2 top-0 h-[520px] w-[820px] -translate-x-1/2 -translate-y-1/3 rounded-full bg-[radial-gradient(circle_at_center,var(--cyan)_0%,transparent_70%)] opacity-25 dark:opacity-35 blur-3xl"
       />
 
       <motion.div
@@ -84,7 +83,6 @@ export default function SuiteHero() {
             width={144}
             height={144}
             className="absolute -bottom-10 -right-6 h-24 w-24"
-            priority
           />
         </motion.div>
       </motion.div>
