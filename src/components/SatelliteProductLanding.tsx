@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { motion } from 'motion/react';
 import GradientText from '@/components/ui/GradientText';
 import SectionReveal from '@/components/ui/SectionReveal';
@@ -15,7 +16,7 @@ import { getProduct, suiteProducts } from '@/lib/products';
  */
 export default function SatelliteProductLanding({ slug }: { slug: string }) {
   const product = getProduct(slug);
-  if (!product) return null;
+  if (!product) notFound();
   const others = suiteProducts.filter((p) => p.slug !== slug);
 
   return (
@@ -23,8 +24,7 @@ export default function SatelliteProductLanding({ slug }: { slug: string }) {
       <section className="relative overflow-hidden px-6 pb-16 pt-18 sm:pt-22">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute left-1/2 top-0 h-[440px] w-[720px] -translate-x-1/2 -translate-y-1/3 rounded-full opacity-25 dark:opacity-35 blur-3xl"
-          style={{ background: 'radial-gradient(circle at center, var(--cyan) 0%, transparent 70%)' }}
+          className="pointer-events-none absolute left-1/2 top-0 h-[440px] w-[720px] -translate-x-1/2 -translate-y-1/3 rounded-full bg-[radial-gradient(circle_at_center,var(--cyan)_0%,transparent_70%)] opacity-25 dark:opacity-35 blur-3xl"
         />
         <motion.div
           className="relative mx-auto w-full max-w-4xl text-center"
