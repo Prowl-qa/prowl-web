@@ -13,9 +13,9 @@ export interface SuiteProduct {
   points: string[];
   /** Internal marketing page. */
   href: string;
-  /** Docs / app destination for this product. */
+  /** Approved docs/repo destination for this product CTA. */
   docsHref: string;
-  /** Label for the docs/app link (docs sites vs. app catalogs differ). */
+  /** Label for the docs/repo link. */
   docsLabel: string;
 }
 
@@ -43,7 +43,7 @@ export const suiteProducts: SuiteProduct[] = [
       "Your key, your provider — cents per review",
     ],
     href: "/code-review",
-    docsHref: "https://review.prowl.tools",
+    docsHref: "https://docs.prowl.tools",
     docsLabel: "Docs",
   },
   {
@@ -56,8 +56,8 @@ export const suiteProducts: SuiteProduct[] = [
       "Wired into the CLI via the Hub API",
     ],
     href: "/hub",
-    docsHref: "https://hub.prowl.tools",
-    docsLabel: "Open the Hub",
+    docsHref: "https://docs.prowl.tools",
+    docsLabel: "Docs",
   },
   {
     slug: "infra",
@@ -69,8 +69,8 @@ export const suiteProducts: SuiteProduct[] = [
       "Same CLI-first, agent-ready philosophy",
     ],
     href: "/infra",
-    docsHref: "https://infra.prowl.tools",
-    docsLabel: "Explore Prowl Infra",
+    docsHref: "https://docs.prowl.tools",
+    docsLabel: "Docs",
   },
 ];
 
