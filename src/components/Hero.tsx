@@ -30,7 +30,7 @@ export default function Hero() {
             variants={fadeUp}
             className="inline-flex rounded-full border border-border bg-surface px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-muted"
           >
-            Deterministic Web QA
+            Prowl Suite · CLI
           </motion.p>
 
           {/* Headline */}

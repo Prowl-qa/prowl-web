@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+  <defs>
+    <linearGradient id="prowlGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2dd4ee"></stop>
+      <stop offset="1" stop-color="#34d399"></stop>
+    </linearGradient>
+  </defs>
+  <g stroke="url(#prowlGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="2.5" y="4" width="19" height="13" rx="2.5"></rect>
+  <path d="M7.5 17 L7.5 20.5 L11 17"></path>
+  <polyline points="9.5 8.5 7.5 10.5 9.5 12.5"></polyline>
+  <polyline points="14.5 8.5 16.5 10.5 14.5 12.5"></polyline>
+  </g>
+</svg>
