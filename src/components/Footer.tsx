@@ -28,18 +28,8 @@ export default function Footer() {
               <span className="text-lg font-bold tracking-tight">Prowl</span>
               <p className="mt-1 text-muted text-sm">A QA suite for the web.</p>
               <p className="mt-1 text-muted text-sm">Made for agents, controlled by humans.</p>
-              <p className="mt-2 text-muted text-sm">
-                Brought to you by{' '}
-                <a
-                  href="https://genkeilabs.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm"
-                >
-                  Genkei Labs
-                </a>
-                .
-              </p>
+              {/* TODO(PQW-003): re-link to https://genkeilabs.com once the Genkei Labs site is live */}
+              <p className="mt-2 text-muted text-sm">Brought to you by Genkei Labs.</p>
             </div>
           </div>
 
