@@ -13,15 +13,17 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const SUITE_TITLE = "Prowl QA — the testing suite made for agents, controlled by humans";
+const SUITE_DESCRIPTION =
+  "Prowl is a QA suite from Genkei Labs: deterministic E2E testing in YAML, infrastructure validation, and BYOK AI code review — CLI-first, agent-ready, no runaway cost.";
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://prowl.tools"),
-  title: "Prowl - Deterministic E2E Testing with YAML Hunts and Visual Regression",
-  description:
-    "Catch regressions before users do. Write E2E tests in YAML, run them with Playwright precision, and detect visual changes automatically — all from the CLI.",
+  title: SUITE_TITLE,
+  description: SUITE_DESCRIPTION,
   openGraph: {
-    title: "Prowl - Deterministic E2E Testing with YAML Hunts and Visual Regression",
-    description:
-      "Catch regressions before users do. Write E2E tests in YAML, run them with Playwright precision, and detect visual changes automatically — all from the CLI.",
+    title: SUITE_TITLE,
+    description: SUITE_DESCRIPTION,
     url: "https://prowl.tools",
     siteName: "Prowl",
     type: "website",
@@ -29,9 +31,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary",
-    title: "Prowl - Deterministic E2E Testing with YAML Hunts and Visual Regression",
-    description:
-      "Catch regressions before users do. Write E2E tests in YAML, run them with Playwright precision, and detect visual changes automatically — all from the CLI.",
+    title: SUITE_TITLE,
+    description: SUITE_DESCRIPTION,
     creator: "@prowlqa",
   },
 };
