@@ -5,7 +5,9 @@ import GradientText from '@/components/ui/GradientText';
 import SectionReveal from '@/components/ui/SectionReveal';
 import { fadeUp, staggerContainer } from '@/lib/animations';
 
-const DOCS_URL = 'https://review.prowl.tools';
+// Points at the live suite docs until the dedicated review.prowl.tools site is
+// deployed; flipped to https://review.prowl.tools in the staged docs-flip branch.
+const DOCS_URL = 'https://docs.prowl.tools';
 const REPO_URL = 'https://github.com/prowl-tools/prowl-code-review';
 
 const differentiators = [
