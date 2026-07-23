@@ -27,7 +27,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 1,
     },
-    ...["cli", "code-review", "hub", "infra"].map((slug) => ({
+    ...["cli", "code-review"].map((slug) => ({
       url: `https://prowl.tools/${slug}`,
       lastModified: new Date(),
       changeFrequency: "weekly" as const,

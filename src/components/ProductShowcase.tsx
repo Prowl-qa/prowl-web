@@ -5,7 +5,7 @@ import { motion } from 'motion/react';
 import SectionReveal from '@/components/ui/SectionReveal';
 import ProductIcon from '@/components/icons/ProductIcon';
 import { fadeUp, staggerContainer } from '@/lib/animations';
-import { suiteProducts } from '@/lib/products';
+import { isExternalHref, suiteProducts } from '@/lib/products';
 
 export default function ProductShowcase() {
   return (
@@ -50,20 +50,33 @@ export default function ProductShowcase() {
                   ))}
                 </ul>
                 <div className="mt-6 flex flex-wrap items-center gap-4">
-                  <Link
-                    href={product.href}
-                    className="inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-gradient-from to-gradient-to px-4 py-2 text-sm font-semibold text-white transition-shadow hover:shadow-lg hover:shadow-cyan/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan"
-                  >
-                    Learn more <span aria-hidden="true">→</span>
-                  </Link>
-                  <a
-                    href={product.docsHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-sm font-semibold text-cyan transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm"
-                  >
-                    {product.docsLabel} <span aria-hidden="true">↗</span>
-                  </a>
+                  {isExternalHref(product.href) ? (
+                    <a
+                      href={product.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-gradient-from to-gradient-to px-4 py-2 text-sm font-semibold text-white transition-shadow hover:shadow-lg hover:shadow-cyan/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan"
+                    >
+                      Learn more <span aria-hidden="true">↗</span>
+                    </a>
+                  ) : (
+                    <Link
+                      href={product.href}
+                      className="inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-gradient-from to-gradient-to px-4 py-2 text-sm font-semibold text-white transition-shadow hover:shadow-lg hover:shadow-cyan/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan"
+                    >
+                      Learn more <span aria-hidden="true">→</span>
+                    </Link>
+                  )}
+                  {product.docsHref !== product.href && (
+                    <a
+                      href={product.docsHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-sm font-semibold text-cyan transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm"
+                    >
+                      {product.docsLabel} <span aria-hidden="true">↗</span>
+                    </a>
+                  )}
                 </div>
               </motion.article>
             ))}
