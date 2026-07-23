@@ -1,6 +1,6 @@
 # prowl-web
 
-Marketing landing page for [Prowl](https://github.com/prowl-tools/prowl), built with Next.js 15 + Tailwind CSS.
+Marketing landing page for [Prowl](https://github.com/prowl-tools/prowl), built with Next.js 16 + Tailwind CSS.
 
 Live at [prowl.tools](https://prowl.tools).
 
