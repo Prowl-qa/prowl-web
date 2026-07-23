@@ -26,7 +26,7 @@ export default function SuiteHero() {
             variants={fadeUp}
             className="inline-flex rounded-full border border-border bg-surface px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-muted"
           >
-            The Prowl QA Suite
+            The Prowl Suite
           </motion.p>
 
           <motion.h1
