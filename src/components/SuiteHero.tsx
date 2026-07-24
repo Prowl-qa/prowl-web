@@ -45,7 +45,7 @@ export default function SuiteHero() {
             Prowl is a suite of development tools from Genkei Labs — end-to-end testing,
             AI code review, community templates, and infrastructure validation.
             Each is CLI-first, agent-ready, and free to adopt. Pick one, or run
-            the whole suite.
+            them all.
           </motion.p>
 
           <motion.div variants={fadeUp} className="mt-8 flex flex-col gap-3 sm:flex-row">
