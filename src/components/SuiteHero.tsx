@@ -26,7 +26,7 @@ export default function SuiteHero() {
             variants={fadeUp}
             className="inline-flex rounded-full border border-border bg-surface px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-muted"
           >
-            The Prowl QA Suite
+            The Prowl Suite
           </motion.p>
 
           <motion.h1
@@ -42,10 +42,10 @@ export default function SuiteHero() {
             variants={fadeUp}
             className="mt-6 max-w-2xl text-base leading-relaxed text-muted sm:text-lg"
           >
-            Prowl is a family of QA tools from Genkei Labs — end-to-end testing,
+            Prowl is a suite of development tools from Genkei Labs — end-to-end testing,
             AI code review, community templates, and infrastructure validation.
             Each is CLI-first, agent-ready, and free to adopt. Pick one, or run
-            the whole suite.
+            them all.
           </motion.p>
 
           <motion.div variants={fadeUp} className="mt-8 flex flex-col gap-3 sm:flex-row">

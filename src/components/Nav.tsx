@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import ThemeToggle from '@/components/ui/ThemeToggle';
 import ProductIcon from '@/components/icons/ProductIcon';
-import { suiteProducts } from '@/lib/products';
+import { isExternalHref, suiteProducts } from '@/lib/products';
 
 const linkClass =
   'hover:text-cyan transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm';
@@ -44,19 +44,28 @@ export default function Nav() {
             </button>
             <div className="invisible absolute left-0 top-full z-50 min-w-[16rem] pt-3 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
               <div className="rounded-xl border border-border bg-surface-elevated p-2 shadow-lg">
-                {suiteProducts.map((p) => (
-                  <Link
-                    key={p.slug}
-                    href={p.href}
-                    className="flex items-start gap-3 rounded-lg px-3 py-2 hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan"
-                  >
-                    <ProductIcon slug={p.slug} size={20} className="mt-0.5 shrink-0" />
-                    <span>
-                      <span className="block font-semibold">{p.name}</span>
-                      <span className="block text-xs text-muted">{p.tagline}</span>
-                    </span>
-                  </Link>
-                ))}
+                {suiteProducts.map((p) => {
+                  const itemClass =
+                    'flex items-start gap-3 rounded-lg px-3 py-2 hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan';
+                  const content = (
+                    <>
+                      <ProductIcon slug={p.slug} size={20} className="mt-0.5 shrink-0" />
+                      <span>
+                        <span className="block font-semibold">{p.name}</span>
+                        <span className="block text-xs text-muted">{p.tagline}</span>
+                      </span>
+                    </>
+                  );
+                  return isExternalHref(p.href) ? (
+                    <a key={p.slug} href={p.href} target="_blank" rel="noopener noreferrer" className={itemClass}>
+                      {content}
+                    </a>
+                  ) : (
+                    <Link key={p.slug} href={p.href} className={itemClass}>
+                      {content}
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -89,11 +98,17 @@ export default function Nav() {
       {menuOpen && (
         <div className="sm:hidden border-t border-border bg-background/95 backdrop-blur-lg px-6 py-4 space-y-3 text-sm">
           <p className="text-xs uppercase tracking-wider text-muted">Products</p>
-          {suiteProducts.map((p) => (
-            <Link key={p.slug} href={p.href} className={`block ${linkClass}`}>
-              {p.name}
-            </Link>
-          ))}
+          {suiteProducts.map((p) =>
+            isExternalHref(p.href) ? (
+              <a key={p.slug} href={p.href} target="_blank" rel="noopener noreferrer" className={`block ${linkClass}`}>
+                {p.name}
+              </a>
+            ) : (
+              <Link key={p.slug} href={p.href} className={`block ${linkClass}`}>
+                {p.name}
+              </Link>
+            )
+          )}
           <div className="h-px bg-border" />
           <Link href="/docs" className={`block ${linkClass}`}>Docs</Link>
           <Link href="/blog" className={`block ${linkClass}`}>Blog</Link>

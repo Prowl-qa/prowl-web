@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const SUITE_TITLE = "Prowl QA — the testing suite made for agents, controlled by humans";
+const SUITE_TITLE = "Prowl — the testing suite made for agents, controlled by humans";
 const SUITE_DESCRIPTION =
   "Prowl is a QA suite from Genkei Labs: deterministic E2E testing in YAML, infrastructure validation, and BYOK AI code review — CLI-first, agent-ready, no runaway cost.";
 
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     card: "summary",
     title: SUITE_TITLE,
     description: SUITE_DESCRIPTION,
-    creator: "@prowlqa",
+    creator: "@prowl",
   },
 };
 

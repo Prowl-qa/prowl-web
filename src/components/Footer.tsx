@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { suiteProducts } from '@/lib/products';
+import { isExternalHref, suiteProducts } from '@/lib/products';
 
 const footerLinkClass =
   'hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm';
@@ -37,7 +37,7 @@ export default function Footer() {
           <div className="mt-5 flex items-center gap-3">
             {/* X / Twitter */}
             <a
-              href="https://x.com/prowlqa"
+              href="https://x.com/prowl"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Follow us on X"
@@ -80,7 +80,13 @@ export default function Footer() {
             <ul className="space-y-2 text-muted">
               {suiteProducts.map((p) => (
                 <li key={p.slug}>
-                  <Link href={p.href} className={footerLinkClass}>{p.name}</Link>
+                  {isExternalHref(p.href) ? (
+                    <a href={p.href} target="_blank" rel="noopener noreferrer" className={footerLinkClass}>
+                      {p.name}
+                    </a>
+                  ) : (
+                    <Link href={p.href} className={footerLinkClass}>{p.name}</Link>
+                  )}
                 </li>
               ))}
             </ul>
