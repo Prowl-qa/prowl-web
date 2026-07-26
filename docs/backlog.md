@@ -1,8 +1,6 @@
 # Prowl Web - Product Backlog
 
 **Repo**: `prowl-tools/prowl-web`
-**Local path**: `Prowl Tools/Repositories/prowl-web` (workspace)
-**Branch**: `main`
 **Stack**: Next.js 16 + Tailwind CSS v4 + TypeScript + Motion
 **Hosting**: Vercel at prowl.tools
 
@@ -34,7 +32,7 @@
 
 ### PQW-009: RSS feed improvements (autodiscovery, escaping, sitemap)
 **Priority**: Medium
-**Description**: For `src/app/blog/feed.xml/route.ts`: (1) no `<link rel="alternate" type="application/rss+xml">` is emitted anywhere, so readers/browsers can't auto-detect the feed — add `alternates.types` to the blog metadata; (2) `<link>`/`<guid>` URLs are interpolated without XML-escaping (harmless today, inconsistent with `escapeXmlText` used elsewhere); (3) `lastBuildDate` uses `new Date()` in a statically generated route, so it's frozen at build time — accept it explicitly or mark the route `force-static`; (4) optionally list `/blog/feed.xml` in the sitemap.
+**Description**: For `src/app/blog/feed.xml/route.ts`: (1) no `<link rel="alternate" type="application/rss+xml">` is emitted anywhere, so readers/browsers can't auto-detect the feed — add `alternates.types` to the blog metadata; (2) `<link>`/`<guid>` URLs are interpolated without XML-escaping (harmless today, inconsistent with `escapeXmlText` used elsewhere); (3) `lastBuildDate` uses `new Date()` in a statically generated route, so it's frozen at build time — either explicitly accept a build-time timestamp (optionally with `force-static`) or make the route dynamic/revalidated if freshness matters; (4) optionally list `/blog/feed.xml` in the sitemap.
 
 ### PQW-010: Add canonical URLs to /, /blog, and blog posts
 **Priority**: Medium
