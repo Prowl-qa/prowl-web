@@ -11,9 +11,11 @@ export interface SuiteProduct {
   tagline: string;
   /** 2–3 concrete capabilities for the showcase block. */
   points: string[];
-  /** Internal marketing page. */
+  /** Canonical product destination for nav/footer links. */
   href: string;
-  /** Approved docs/repo destination for this product CTA. */
+  /** Optional homepage card CTA destination when it differs from the product destination. */
+  ctaHref?: string;
+  /** Approved docs/app destination for this product CTA. */
   docsHref: string;
   /** Label for the docs/repo link. */
   docsLabel: string;
@@ -55,9 +57,10 @@ export const suiteProducts: SuiteProduct[] = [
       "Copy, adapt, and contribute back",
       "Wired into the CLI via the Hub API",
     ],
-    href: "/hub",
-    docsHref: "https://docs.prowl.tools",
-    docsLabel: "Docs",
+    href: "https://hub.prowl.tools",
+    ctaHref: "https://docs.prowl.tools",
+    docsHref: "https://hub.prowl.tools",
+    docsLabel: "Visit the Hub",
   },
   {
     slug: "infra",
@@ -68,14 +71,20 @@ export const suiteProducts: SuiteProduct[] = [
       "Catch misconfigurations pre-deploy",
       "Same CLI-first, agent-ready philosophy",
     ],
-    href: "/infra",
-    docsHref: "https://docs.prowl.tools",
-    docsLabel: "Docs",
+    href: "https://infra.prowl.tools",
+    ctaHref: "https://docs.prowl.tools",
+    docsHref: "https://infra.prowl.tools",
+    docsLabel: "Visit Infra",
   },
 ];
 
 export function getProduct(slug: string): SuiteProduct | undefined {
   return suiteProducts.find((p) => p.slug === slug);
+}
+
+/** True for products whose primary destination is an external live site (Hub, Infra). */
+export function isExternalHref(href: string): boolean {
+  return href.startsWith("http://") || href.startsWith("https://");
 }
 
 /** The suite pillars — what makes these one suite rather than four tools. */

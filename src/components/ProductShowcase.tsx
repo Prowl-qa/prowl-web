@@ -5,7 +5,7 @@ import { motion } from 'motion/react';
 import SectionReveal from '@/components/ui/SectionReveal';
 import ProductIcon from '@/components/icons/ProductIcon';
 import { fadeUp, staggerContainer } from '@/lib/animations';
-import { suiteProducts } from '@/lib/products';
+import { isExternalHref, suiteProducts } from '@/lib/products';
 
 export default function ProductShowcase() {
   return (
@@ -30,43 +30,61 @@ export default function ProductShowcase() {
           </motion.p>
 
           <motion.div variants={staggerContainer} className="mt-8 grid gap-4 md:grid-cols-2">
-            {suiteProducts.map((product) => (
-              <motion.article
-                key={product.slug}
-                variants={fadeUp}
-                className="flex flex-col rounded-xl border border-border bg-surface-elevated p-6"
-              >
-                <div className="flex items-center gap-3">
-                  <ProductIcon slug={product.slug} size={22} />
-                  <h3 className="text-xl font-semibold">{product.name}</h3>
-                </div>
-                <p className="mt-3 text-sm leading-relaxed text-muted">{product.tagline}</p>
-                <ul className="mt-4 flex-1 space-y-2 text-sm text-muted">
-                  {product.points.map((point) => (
-                    <li key={point} className="flex gap-2">
-                      <span className="mt-0.5 text-cyan" aria-hidden="true">▸</span>
-                      <span>{point}</span>
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-6 flex flex-wrap items-center gap-4">
-                  <Link
-                    href={product.href}
-                    className="inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-gradient-from to-gradient-to px-4 py-2 text-sm font-semibold text-white transition-shadow hover:shadow-lg hover:shadow-cyan/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan"
-                  >
-                    Learn more <span aria-hidden="true">→</span>
-                  </Link>
-                  <a
-                    href={product.docsHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-sm font-semibold text-cyan transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm"
-                  >
-                    {product.docsLabel} <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </motion.article>
-            ))}
+            {suiteProducts.map((product) => {
+              const ctaHref = product.ctaHref ?? product.href;
+              const ctaIsExternal = isExternalHref(ctaHref);
+
+              return (
+                <motion.article
+                  key={product.slug}
+                  variants={fadeUp}
+                  className="flex flex-col rounded-xl border border-border bg-surface-elevated p-6"
+                >
+                  <div className="flex items-center gap-3">
+                    <ProductIcon slug={product.slug} size={22} />
+                    <h3 className="text-xl font-semibold">{product.name}</h3>
+                  </div>
+                  <p className="mt-3 text-sm leading-relaxed text-muted">{product.tagline}</p>
+                  <ul className="mt-4 flex-1 space-y-2 text-sm text-muted">
+                    {product.points.map((point) => (
+                      <li key={point} className="flex gap-2">
+                        <span className="mt-0.5 text-cyan" aria-hidden="true">▸</span>
+                        <span>{point}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-6 flex flex-wrap items-center gap-4">
+                    {ctaIsExternal ? (
+                      <a
+                        href={ctaHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-gradient-from to-gradient-to px-4 py-2 text-sm font-semibold text-white transition-shadow hover:shadow-lg hover:shadow-cyan/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan"
+                      >
+                        Learn more <span aria-hidden="true">↗</span>
+                      </a>
+                    ) : (
+                      <Link
+                        href={ctaHref}
+                        className="inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-gradient-from to-gradient-to px-4 py-2 text-sm font-semibold text-white transition-shadow hover:shadow-lg hover:shadow-cyan/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan"
+                      >
+                        Learn more <span aria-hidden="true">→</span>
+                      </Link>
+                    )}
+                    {product.docsHref !== ctaHref && (
+                      <a
+                        href={product.docsHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-sm font-semibold text-cyan transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm"
+                      >
+                        {product.docsLabel} <span aria-hidden="true">↗</span>
+                      </a>
+                    )}
+                  </div>
+                </motion.article>
+              );
+            })}
           </motion.div>
         </motion.div>
       </section>
