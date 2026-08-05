@@ -50,6 +50,14 @@
 **Priority**: Medium
 **Description**: The site says "Prowl Code Review," but the workspace's canonical product name is **"Prowl Review"** (npm `prowl-review`). The site says "Prowl Infra," while the live satellite site titles itself **"Prowl Infra Hub."** Decide the customer-facing names, then update `name` in `src/lib/products.ts` (propagates to nav, footer, showcase) plus page titles in `src/app/code-review/page.tsx` and the `Prowl Suite · Code Review` badge in `src/components/CodeReview.tsx`.
 
+### PQW-017: Correct X/Twitter handle links and metadata
+**Priority**: Medium
+**Description**: Production QA on 2026-08-05 found the site points social identity at `@prowl` / `https://x.com/prowl` in metadata and footer links, while project context and the prior rebrand note say the dedicated Prowl Tools X account is `@prowlqa`. This affects `src/app/layout.tsx`, `src/app/cli/page.tsx`, `src/app/docs/page.tsx`, `src/app/code-review/page.tsx`, and `src/components/Footer.tsx`. Expected behavior: footer social link and `twitter.creator` values should use the approved live Prowl Tools handle, or Michael should explicitly approve switching the public account handle.
+
+### PQW-018: Add page-specific Twitter metadata for the blog index
+**Priority**: Medium
+**Description**: Production QA on 2026-08-05 found `/blog` emits page-specific Open Graph metadata, but no page-specific `twitter` block. As a result, the rendered `/blog` HTML inherits the homepage Twitter title and description: `Prowl — the testing suite made for agents, controlled by humans` and the homepage suite description, even though the page title/OG metadata correctly say `Blog - Prowl`. Add a `twitter` block in `src/app/blog/page.tsx` matching the blog index title/description and approved creator handle so X/social shares describe the blog instead of the homepage.
+
 ## Low Priority
 
 ### PQW-003: Re-link the Genkei Labs footer to genkeilabs.com
