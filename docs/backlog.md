@@ -24,6 +24,22 @@
 **Priority**: High
 **Description**: `/docs` renders `DocsHub`, whose top heading is an `<h2>` ("Docs for every tool"), so the page has no `<h1>` — broken heading hierarchy for assistive tech and a weak SEO signal. Promote the heading to `<h1>` when `DocsHub` renders with `standalone`, or add a page-level `<h1>` in `src/app/docs/page.tsx`.
 
+### PQW-017: Install and initialize the Prowl CLI (dogfooding)
+**Priority**: High
+**Description**: As a Prowl Tools developer, I want the Prowl CLI installed and initialized in this repo so we dogfood our own QA product on our own marketing site. Add `prowl-tools` as a devDependency (pinned, reproducible in CI — not just a global install), run `prowl init` to scaffold `.prowl/` (config + starter hunts), point `.prowl/config.yml` at `http://localhost:3000`, install the Playwright Chromium browser (`npx playwright install chromium`), and gitignore `.prowl/runs/` (run artifacts) while committing config and hunts. Prune the starter hunts that don't apply to a static marketing site (login, signup, checkout, CRUD, onboarding). Docs reference: `prowl-docs/docs/getting-started.md`.
+
+### PQW-018: Author hunts covering the marketing site
+**Priority**: High
+**Description**: As a Prowl Tools developer, I want a suite of hunts that exercises every user-facing surface of prowl.tools so regressions are caught before deploy. Cover: homepage load + hero + `noConsoleErrors`; nav including the Products dropdown and mobile nav; `/cli`, `/code-review`, and `/docs` pages (headings, key content, CTAs resolving to docs.prowl.tools / review.prowl.tools / GitHub); `/blog` index, tag filtering via `?tag=`, and an individual post page; theme (dark/light) toggle; footer links; newsletter form presence. Tag hunts (`smoke` for the fast core set, `full` for everything) so CI can filter with `--include-tags`. Depends on PQW-017.
+
+### PQW-019: CI workflow running lint, build, and Prowl hunts
+**Priority**: High
+**Description**: As a Prowl Tools developer, I want a GitHub Actions workflow (`.github/workflows/ci.yml`) that runs on PRs and pushes to `main`: `npm ci`, `npm run lint`, `npm run build`, then serve the production build (`npm run start`), wait for readiness, and run the Prowl hunt suite against it. Upload `.prowl/runs/` artifacts on failure for debugging. Cache npm and Playwright browser downloads to keep runs fast. Depends on PQW-017/PQW-018.
+
+### PQW-020: Gate production deploys on CI passing
+**Priority**: High
+**Description**: As a Prowl Tools developer, I want deploys to prowl.tools to only happen after the CI pipeline (including hunts) passes. Vercel currently auto-deploys every push to `main`. Recommended approach: enable GitHub branch protection on `main` requiring the PQW-019 checks to pass before merge, so anything that lands on `main` (and therefore auto-deploys) has already passed hunts. Evaluate as a follow-up whether to also gate the Vercel build itself (ignored-build-step or GitHub-Actions-driven deploys) for pushes that bypass PRs. Depends on PQW-019.
+
 ## Medium Priority
 
 ### PQW-008: Wire blog post `image` frontmatter into metadata
