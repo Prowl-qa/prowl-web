@@ -13,6 +13,9 @@
 # testing
 /coverage
 
+# prowl run artifacts (config + hunts stay committed)
+/.prowl/runs/
+
 # next.js
 /.next/
 /out/
