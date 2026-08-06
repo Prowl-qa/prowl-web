@@ -1,0 +1,20 @@
+name: blog-tag-filter
+description: Blog index filters posts via the ?tag= query param
+tags:
+  - full
+
+steps:
+  # A real tag keeps the post visible
+  - navigate: "/blog?tag=announcements"
+
+  - assert:
+      visible: "Introducing the Prowl Blog"
+
+  # A tag with no posts hides it
+  - navigate: "/blog?tag=nonexistent-tag"
+
+  - assert:
+      notVisible: "Introducing the Prowl Blog"
+
+assertions:
+  - urlIncludes: "/blog"

@@ -1,0 +1,27 @@
+name: docs-page
+description: Docs hub lists every tool and CTAs resolve to the right docs sites
+tags:
+  - smoke
+  - full
+
+steps:
+  - navigate: "/docs"
+
+  - waitForNetworkIdle:
+      timeout: 5000
+
+  - assert:
+      visible: "Docs for every tool"
+
+  - assert:
+      visible: "Prowl CLI"
+
+  - assert:
+      visible: "Prowl Code Review"
+
+assertions:
+  # CLI docs card -> docs.prowl.tools, Code Review card -> review.prowl.tools
+  - selectorExists: "a[href^='https://docs.prowl.tools']"
+  - selectorExists: "a[href^='https://review.prowl.tools']"
+  - selectorExists: "a[href^='https://hub.prowl.tools']"
+  - selectorExists: "a[href^='https://infra.prowl.tools']"
