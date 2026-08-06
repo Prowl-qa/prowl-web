@@ -45,7 +45,7 @@ export const suiteProducts: SuiteProduct[] = [
       "Your key, your provider — cents per review",
     ],
     href: "/code-review",
-    docsHref: "https://docs.prowl.tools",
+    docsHref: "https://review.prowl.tools",
     docsLabel: "Docs",
   },
   {

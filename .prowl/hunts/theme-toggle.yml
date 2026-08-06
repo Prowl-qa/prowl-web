@@ -1,0 +1,41 @@
+name: theme-toggle
+description: Dark/light theme toggle flips the theme regardless of starting state
+tags:
+  - full
+
+steps:
+  - navigate: "/"
+
+  # Theme toggling needs React hydration; settle the page before interacting
+  - waitForNetworkIdle:
+      timeout: 5000
+
+  # The toggle's aria-label always names the theme it will switch TO,
+  # so clicking must flip the label - works from either starting theme.
+  - if:
+      visible: "button[aria-label='Switch to dark mode']:visible"
+      then:
+        - click:
+            selector: "button[aria-label='Switch to dark mode']:visible"
+        - waitForSelector:
+            selector: "button[aria-label='Switch to light mode']:visible"
+            timeout: 5000
+        - click:
+            selector: "button[aria-label='Switch to light mode']:visible"
+        - waitForSelector:
+            selector: "button[aria-label='Switch to dark mode']:visible"
+            timeout: 5000
+      else:
+        - click:
+            selector: "button[aria-label='Switch to light mode']:visible"
+        - waitForSelector:
+            selector: "button[aria-label='Switch to dark mode']:visible"
+            timeout: 5000
+        - click:
+            selector: "button[aria-label='Switch to dark mode']:visible"
+        - waitForSelector:
+            selector: "button[aria-label='Switch to light mode']:visible"
+            timeout: 5000
+
+assertions:
+  - noConsoleErrors: true

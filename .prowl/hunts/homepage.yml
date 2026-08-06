@@ -1,0 +1,25 @@
+name: homepage
+description: Homepage loads with the suite hero and all four product tiles
+tags:
+  - smoke
+  - full
+
+steps:
+  - navigate: "/"
+
+  - waitForNetworkIdle:
+      timeout: 5000
+
+  - assert:
+      visible: "A testing suite made for agents, controlled by humans."
+
+  - assert:
+      visible: "Four tools, one testing philosophy"
+
+  - assert:
+      visible: "Docs for every tool"
+
+assertions:
+  - selectorExists: "h1"
+  - selectorExists: "a[href='https://github.com/prowl-tools/prowl']"
+  - noConsoleErrors: true
