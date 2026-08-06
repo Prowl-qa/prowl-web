@@ -24,10 +24,6 @@
 **Priority**: High
 **Description**: `/docs` renders `DocsHub`, whose top heading is an `<h2>` ("Docs for every tool"), so the page has no `<h1>` — broken heading hierarchy for assistive tech and a weak SEO signal. Promote the heading to `<h1>` when `DocsHub` renders with `standalone`, or add a page-level `<h1>` in `src/app/docs/page.tsx`.
 
-### PQW-018: Author hunts covering the marketing site
-**Priority**: High
-**Description**: As a Prowl Tools developer, I want a suite of hunts that exercises every user-facing surface of prowl.tools so regressions are caught before deploy. Cover: homepage load + hero + `noConsoleErrors`; nav including the Products dropdown and mobile nav; `/cli`, `/code-review`, and `/docs` pages (headings, key content, CTAs resolving to docs.prowl.tools / review.prowl.tools / GitHub); `/blog` index, tag filtering via `?tag=`, and an individual post page; theme (dark/light) toggle; footer links; newsletter form presence. Tag hunts (`smoke` for the fast core set, `full` for everything) so CI can filter with `--include-tags`. Depends on PQW-017.
-
 ### PQW-019: CI workflow running lint, build, and Prowl hunts
 **Priority**: High
 **Description**: As a Prowl Tools developer, I want a GitHub Actions workflow (`.github/workflows/ci.yml`) that runs on PRs and pushes to `main`: `npm ci`, `npm run lint`, `npm run build`, then serve the production build (`npm run start`), wait for readiness, run `npx playwright install --with-deps chromium` before `npx prowl run`, and run the Prowl hunt suite against it. Upload `.prowl/runs/` artifacts on failure for debugging. Cache npm and `~/.cache/ms-playwright` browser downloads to keep runs fast. Depends on PQW-017/PQW-018.
