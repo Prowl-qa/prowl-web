@@ -1,0 +1,113 @@
+# Drive prowl-review from PR comments (@prowl-review review, pause, questions…).
+# Adapted from prowl-tools/prowl-code-review/examples/workflows/.
+name: prowl-review command
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+
+# Serialize commands with auto reviews for the same PR so review publishing and
+# inline finding dedupe cannot race. The PR number comes from `issue`
+# (issue_comment) or `pull_request` (pull_request_review_comment).
+concurrency:
+  group: prowl-review-${{ github.event.issue.number || github.event.pull_request.number }}
+  cancel-in-progress: false
+
+permissions:
+  pull-requests: write
+  issues: write
+  checks: write
+  contents: read
+
+jobs:
+  command:
+    # Only PR comments (top-level or inline) from a trusted commenter
+    # (owner/member/collaborator) that mention the bot; never bot comments.
+    if: |
+      (github.event.issue.pull_request || github.event.pull_request) &&
+      github.event.comment.user.type != 'Bot' &&
+      (
+        github.event.comment.author_association == 'OWNER' ||
+        github.event.comment.author_association == 'MEMBER' ||
+        github.event.comment.author_association == 'COLLABORATOR'
+      ) &&
+      contains(github.event.comment.body, '@prowl-review') &&
+      !contains(github.event.comment.body, '<!-- prowl-review:summary -->') &&
+      !contains(github.event.comment.body, '<!-- prowl-review:finding ')
+    runs-on: ubuntu-latest
+    env:
+      PROWL_APP_CONFIGURED: ${{ secrets.PROWL_APP_ID != '' && secrets.PROWL_APP_PRIVATE_KEY != '' }}
+    steps:
+      # Branded identity: post the command reply as prowl-review[bot] when the
+      # App secrets are set; falls back to github-actions[bot].
+      - name: Mint prowl-review app token
+        id: app-token
+        if: env.PROWL_APP_CONFIGURED == 'true'
+        continue-on-error: true
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.PROWL_APP_ID }}
+          private-key: ${{ secrets.PROWL_APP_PRIVATE_KEY }}
+          permission-contents: read
+          permission-issues: write
+          permission-pull-requests: write
+          permission-checks: write
+
+      - name: Resolve PR metadata
+        id: pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          pr_number="${{ github.event.issue.number || github.event.pull_request.number }}"
+          IFS=$'\t' read -r base_sha head_sha head_repo < <(
+            gh api "repos/${GITHUB_REPOSITORY}/pulls/${pr_number}" --jq '[.base.sha, .head.sha, .head.repo.full_name] | @tsv'
+          )
+          if [ -z "${base_sha}" ] || [ -z "${head_sha}" ] || [ -z "${head_repo}" ]; then
+            echo "Failed to resolve complete PR metadata for #${pr_number}." >&2
+            exit 1
+          fi
+          echo "base_sha=${base_sha}" >> "$GITHUB_OUTPUT"
+          echo "head_sha=${head_sha}" >> "$GITHUB_OUTPUT"
+          echo "head_repo=${head_repo}" >> "$GITHUB_OUTPUT"
+          if [ "${head_repo}" = "${GITHUB_REPOSITORY}" ]; then
+            echo "trusted_head=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "trusted_head=false" >> "$GITHUB_OUTPUT"
+            echo "Skipping command from fork PR head ${head_repo}."
+          fi
+
+      # Trusted base checkout: config + guidelines come from base, never PR code.
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.pr.outputs.base_sha }}
+          path: prowl-base
+          persist-credentials: false
+
+      # Only check out the PR head when it's from this repo (not a fork).
+      - uses: actions/checkout@v4
+        if: steps.pr.outputs.trusted_head == 'true'
+        with:
+          ref: ${{ steps.pr.outputs.head_sha }}
+          path: pr-head
+          persist-credentials: false
+
+      - uses: prowl-tools/prowl-code-review@v1
+        if: steps.pr.outputs.trusted_head == 'true'
+        env:
+          PROWL_REVIEWED_HEAD_SHA: ${{ steps.pr.outputs.head_sha }}
+          PROWL_REVIEWED_HEAD_REPOSITORY: ${{ steps.pr.outputs.head_repo }}
+        with:
+          mode: command
+          # Same ensemble keys/config as auto reviews, so an @prowl-review
+          # review command produces the cross-provider result too.
+          ai-key-anthropic: ${{ secrets.PROWL_AI_KEY_ANTHROPIC }}
+          ai-key-gemini: ${{ secrets.PROWL_AI_KEY_GEMINI }}
+          config-path: ${{ github.workspace }}/prowl-base/.prowl-review.yml
+          workspace-path: ${{ github.workspace }}/pr-head
+          guidelines-path: ${{ github.workspace }}/prowl-base
+          github-token: ${{ steps.app-token.outputs.token || github.token }}
+          bot-login: ${{ steps.app-token.outputs.app-slug != '' && format('{0}[bot]', steps.app-token.outputs.app-slug) || '' }}
