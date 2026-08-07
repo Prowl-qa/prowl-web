@@ -1,0 +1,9 @@
+# Run artifacts (screenshots, logs, reports)
+runs/
+history.json
+
+# Auth state (tokens, cookies)
+auth-state.json
+
+# Environment variables (credentials)
+.env
