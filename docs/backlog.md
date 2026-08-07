@@ -62,6 +62,10 @@
 **Priority**: Medium
 **Description**: Production QA on 2026-08-05 found `/blog` emits page-specific Open Graph metadata, but no page-specific `twitter` block. As a result, the rendered `/blog` HTML inherits the homepage Twitter title and description: `Prowl — the testing suite made for agents, controlled by humans` and the homepage suite description, even though the page title/OG metadata correctly say `Blog - Prowl`. Add a `twitter` block in `src/app/blog/page.tsx` matching the blog index title/description and approved creator handle so X/social shares describe the blog instead of the homepage.
 
+### PQW-022: Point X/Twitter links and metadata at @prowltools
+**Priority**: Medium
+**Description**: The live Prowl Tools X account is **@prowltools** (renamed from `@prowlqa` in 2026-08; `@prowl` was unavailable). The site currently uses `@prowl` / `https://x.com/prowl` — an account we don't own — in `twitter.creator` (`src/app/layout.tsx:36`, `src/app/cli/page.tsx:31`, `src/app/docs/page.tsx:15`, `src/app/code-review/page.tsx:26`) and the footer social link (`src/components/Footer.tsx:40`). Update all five to `@prowltools` / `https://x.com/prowltools`. (Reinstates the qa-prowl-web-e2e-20260805 finding briefly ledgered as a false positive — the symptom was real; only the QA agent's expected handle `@prowlqa` was stale.)
+
 ## Low Priority
 
 ### PQW-003: Re-link the Genkei Labs footer to genkeilabs.com
@@ -79,7 +83,3 @@
 ### PQW-016: Footer copyright year is baked at build time
 **Priority**: Low
 **Description**: `new Date().getFullYear()` in `src/components/Footer.tsx` runs at build time in a static page, so the year only advances on redeploy. Harmless for an actively deployed site — fix opportunistically or accept.
-
-## Known non-issues (QA-triaged)
-
-- metadata/footer X handle `@prowl` vs `@prowlqa` — FALSE POSITIVE: `@prowl` is the canonical handle per workspace branding ("Do not use `@prowlqa` — legacy"); the site already matches (`src/app/layout.tsx:36`, `src/components/Footer.tsx:40`). Source: qa-prowl-web-e2e-20260805, 2026-08-05.
