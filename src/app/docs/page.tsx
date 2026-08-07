@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description: DESCRIPTION,
   alternates: { canonical: "/docs" },
   openGraph: { title: TITLE, description: DESCRIPTION, url: "https://prowl.tools/docs", siteName: "Prowl", type: "website", locale: "en_US" },
-  twitter: { card: "summary", title: TITLE, description: DESCRIPTION, creator: "@prowl" },
+  twitter: { card: "summary", title: TITLE, description: DESCRIPTION, creator: "@prowltools" },
 };
 
 export default function DocsPage() {
