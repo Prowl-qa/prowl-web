@@ -1,47 +1,19 @@
-# CLAUDE.md - Prowl Marketing Site
+# CLAUDE.md — Prowl Tools Marketing Site
+
+> Workspace-wide conventions (mission, branding, repo map, stack baseline, git/backlog policy)
+> live in the **workspace `CLAUDE.md`** (`../../CLAUDE.md`) and load automatically. This file
+> covers only what is specific to `prowl-web`.
 
 ## Project
-This is the Prowl marketing landing page built with Next.js 15 + Tailwind CSS.
-Hosted at prowl.tools.
-
-## Tech Stack
-- **Framework**: Next.js 15 (App Router)
-- **Styling**: Tailwind CSS
-- **Language**: TypeScript
-- **Deployment**: Vercel
-
-## Structure
-- `src/app/` — App Router pages and layouts
-- `src/app/page.tsx` — Main landing page
-- `src/app/layout.tsx` — Root layout
-- `public/` — Static assets
+The Prowl Tools marketing landing page. Hosted at **prowl.tools** (Vercel). This is the site
+being rebranded to present the full Prowl product family (see the workspace repo map), not just
+the CLI.
 
 ## Design Principles
 - Clean, modern aesthetic with generous whitespace
 - Dark/light mode support
 - Mobile-first responsive design
-- Code examples should use YAML hunt syntax and terminal output
-- CTAs point to docs site (docs.prowl.tools) and GitHub (github.com/prowl-tools/prowl)
-
-## Commands
-```bash
-npm run dev     # Dev server on localhost:3000
-npm run build   # Production build
-npm run start   # Start production server
-npm run lint    # Run ESLint
-```
-
-## Related Repos
-
-Use `<local_repo_root>` as a placeholder and replace it with your own local base path.
-Example: `./repos` or `~/work`.
-
-| Repo | Purpose | Local Path |
-|------|---------|------------|
-| `prowl-tools/prowl` | CLI tool (source of truth) | `<local_repo_root>/prowl` |
-| `prowl-tools/prowl-docs` | Docs site (docs.prowl.tools) | `<local_repo_root>/prowl-docs` |
-| `prowl-tools/prowl-hub` | Community hunt templates | `<local_repo_root>/prowl-hub` |
-| `mtookes/prowl-twitter-bot` | Twitter bot (@prowlqa) | `<local_repo_root>/prowl-twitter-bot` |
-
-**Backlogs**: `<local_backlog_root>/Prowl`
-**Assets**: `<local_assets_root>/Prowl-QA`
+- Code examples use YAML hunt syntax and terminal output
+- Lead with the mission (self-sovereign data, BYOK/model choice, no lock-in or metered pricing)
+- CTAs point to the docs sites (`docs.prowl.tools`, `review.prowl.tools`) and GitHub
+  (`github.com/prowl-tools`)
