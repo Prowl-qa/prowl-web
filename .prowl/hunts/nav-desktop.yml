@@ -1,0 +1,41 @@
+name: nav-desktop
+description: Desktop nav works - Products dropdown opens on hover, Docs link navigates
+tags:
+  - smoke
+  - full
+
+steps:
+  - navigate: "/"
+
+  # Dropdown items are CSS visibility:hidden until the trigger is hovered
+  - hover:
+      selector: "button[aria-haspopup='true']"
+
+  # Scope to the dropdown container so footer duplicates don't satisfy the check
+  - assert:
+      visible: "css=nav.sticky .group a[href='/cli']:visible"
+
+  - assert:
+      visible: "css=nav.sticky .group a[href='/code-review']:visible"
+
+  - assert:
+      visible: "css=nav.sticky .group a[href='https://hub.prowl.tools']:visible"
+
+  - assert:
+      visible: "css=nav.sticky .group a[href='https://infra.prowl.tools']:visible"
+
+  # Internal nav link actually navigates (client-side routing).
+  # Scoped to the sticky top nav so the docs-section "All docs" link doesn't collide.
+  - click:
+      selector: "nav.sticky a[href='/docs']"
+
+  - waitForUrl:
+      value: "/docs"
+      timeout: 10000
+
+  - assert:
+      visible: "Docs for every tool"
+
+assertions:
+  - urlIncludes: "/docs"
+  - selectorExists: "a[href='https://github.com/prowl-tools/prowl']"
