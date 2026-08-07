@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     card: "summary",
     title: SUITE_TITLE,
     description: SUITE_DESCRIPTION,
-    creator: "@prowl",
+    creator: "@prowltools",
   },
 };
 

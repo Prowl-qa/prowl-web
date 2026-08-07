@@ -25,8 +25,10 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
   marketing pages.
 
 ### Fixed
-- Replaced the legacy `@prowlqa` social handle with `@prowl` everywhere (footer X link and
-  all page `twitter.creator` metadata).
+- Pointed all X/Twitter links and metadata at the live `@prowltools` account (PQW-022):
+  the footer X link (`https://x.com/prowltools`) and every page's `twitter.creator`. Replaces
+  the earlier `@prowl` handle, which is not ours (`@prowl` was unavailable when the account was
+  renamed from the legacy `@prowlqa`). Does not touch the `@prowl-review` PR bot name.
 - Removed legacy "Prowl QA" branding from the site title metadata and hero badge; README now
   says Next.js 16.
 

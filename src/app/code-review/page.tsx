@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     card: "summary",
     title: TITLE,
     description: DESCRIPTION,
-    creator: "@prowl",
+    creator: "@prowltools",
   },
 };
 
