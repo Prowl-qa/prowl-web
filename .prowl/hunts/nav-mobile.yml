@@ -13,10 +13,10 @@ steps:
       visible: "button[aria-label='Close menu']"
 
   - assert:
-      visible: "Prowl CLI"
+      visible: "css=nav.sticky > div[class*='sm:hidden'] a[href='/cli']:visible"
 
   - assert:
-      visible: "Prowl Hub"
+      visible: "css=nav.sticky > div[class*='sm:hidden'] a[href='https://hub.prowl.tools']:visible"
 
   - click:
       selector: "button[aria-label='Close menu']"
