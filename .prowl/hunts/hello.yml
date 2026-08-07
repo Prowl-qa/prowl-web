@@ -3,7 +3,7 @@
 # This minimal hunt verifies your target app is running and the page loads.
 # Customize the URL path and expected text to match your app.
 #
-# Run it:  prowl run hello
+# Run it:  npx prowl run hello
 #
 # Browse more hunt templates at https://hub.prowl.tools
 

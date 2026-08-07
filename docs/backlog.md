@@ -30,7 +30,7 @@
 
 ### PQW-019: CI workflow running lint, build, and Prowl hunts
 **Priority**: High
-**Description**: As a Prowl Tools developer, I want a GitHub Actions workflow (`.github/workflows/ci.yml`) that runs on PRs and pushes to `main`: `npm ci`, `npm run lint`, `npm run build`, then serve the production build (`npm run start`), wait for readiness, and run the Prowl hunt suite against it. Upload `.prowl/runs/` artifacts on failure for debugging. Cache npm and Playwright browser downloads to keep runs fast. Depends on PQW-017/PQW-018.
+**Description**: As a Prowl Tools developer, I want a GitHub Actions workflow (`.github/workflows/ci.yml`) that runs on PRs and pushes to `main`: `npm ci`, `npm run lint`, `npm run build`, then serve the production build (`npm run start`), wait for readiness, run `npx playwright install --with-deps chromium` before `npx prowl run`, and run the Prowl hunt suite against it. Upload `.prowl/runs/` artifacts on failure for debugging. Cache npm and `~/.cache/ms-playwright` browser downloads to keep runs fast. Depends on PQW-017/PQW-018.
 
 ### PQW-020: Gate production deploys on CI passing
 **Priority**: High
