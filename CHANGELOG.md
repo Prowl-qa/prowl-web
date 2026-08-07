@@ -6,9 +6,9 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
 
 ### Added
 - Prowl CLI dogfooding setup (PQW-017): `prowl-tools` pinned as a devDependency, `.prowl/`
-  scaffolded via `prowl init` (config targets `http://localhost:3000`, starter `hello` hunt),
-  Playwright Chromium installed, and `.prowl/runs/` gitignored while config and hunts stay
-  committed.
+  scaffolded via `prowl init` (config targets `http://localhost:3002`, starter `hello` hunt),
+  Chromium provisioned during install, and `.prowl/runs/` gitignored while config and hunts
+  stay committed.
 
 ### Changed
 - Prowl Hub and Prowl Infra links (homepage tiles, nav, footer, docs hub) now point at the
