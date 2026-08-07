@@ -14,5 +14,5 @@ steps:
 
 assertions:
   - selectorExists: "footer a[href='https://github.com/prowl-tools']"
-  - selectorExists: "footer a[href='https://x.com/prowl']"
+  - selectorExists: "footer a[href='https://x.com/prowltools']"
   - selectorExists: "footer a[href^='https://docs.prowl.tools']"
