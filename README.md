@@ -18,14 +18,14 @@ Prowl keeps web QA self-sovereign: data stays under your control, BYOK/model cho
 Keep the development server running in one terminal:
 
 ```console
-$ npm run dev
+npm run dev
 ```
 
 Then install the browser and run the starter hunt in a second terminal:
 
 ```console
-$ npm run prowl:install-browsers
-$ npx prowl run hello
+npm run prowl:install-browsers
+npx prowl run hello
 ```
 
 Starter hunts are plain YAML:
