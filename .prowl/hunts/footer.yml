@@ -1,0 +1,18 @@
+name: footer
+description: Footer carries GitHub, X, docs links and the Genkei Labs attribution
+tags:
+  - full
+
+steps:
+  - navigate: "/"
+
+  - scrollTo:
+      selector: "footer"
+
+  - assert:
+      visible: "Brought to you by Genkei Labs"
+
+assertions:
+  - selectorExists: "footer a[href='https://github.com/prowl-tools']"
+  - selectorExists: "footer a[href='https://x.com/prowl']"
+  - selectorExists: "footer a[href^='https://docs.prowl.tools']"

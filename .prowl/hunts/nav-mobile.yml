@@ -1,0 +1,28 @@
+name: nav-mobile
+description: Mobile hamburger menu opens and lists products and site links (run with --viewport mobile)
+tags:
+  - mobile
+
+steps:
+  - navigate: "/"
+
+  - click:
+      selector: "button[aria-label='Open menu']"
+
+  - assert:
+      visible: "button[aria-label='Close menu']"
+
+  - assert:
+      visible: "css=nav.sticky > div[class*='sm:hidden'] a[href='/cli']:visible"
+
+  - assert:
+      visible: "css=nav.sticky > div[class*='sm:hidden'] a[href='https://hub.prowl.tools']:visible"
+
+  - click:
+      selector: "button[aria-label='Close menu']"
+
+  - assert:
+      visible: "button[aria-label='Open menu']"
+
+assertions:
+  - noConsoleErrors: true

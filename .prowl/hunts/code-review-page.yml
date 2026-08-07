@@ -1,0 +1,21 @@
+name: code-review-page
+description: Code Review product page renders with CTAs to review.prowl.tools and GitHub
+tags:
+  - full
+
+steps:
+  - navigate: "/code-review"
+
+  - waitForNetworkIdle:
+      timeout: 5000
+
+  - assert:
+      visible: "AI code review that catches real bugs, on your own key."
+
+  - assert:
+      visible: "Your key. Your provider. No rate limits."
+
+assertions:
+  - selectorExists: "h1"
+  - selectorExists: "a[href^='https://review.prowl.tools']"
+  - selectorExists: "a[href='https://github.com/prowl-tools/prowl-code-review']"

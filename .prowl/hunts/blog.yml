@@ -1,0 +1,35 @@
+name: blog
+description: Blog index lists posts, a post page renders, and the newsletter form is present
+tags:
+  - smoke
+  - full
+
+steps:
+  - navigate: "/blog"
+
+  - assert:
+      visible: "Blog"
+
+  - click: "Introducing the Prowl Blog"
+
+  - waitForUrl:
+      value: "/blog/introducing-prowl-qa-blog"
+      timeout: 10000
+
+  - waitForNetworkIdle:
+      timeout: 5000
+
+  - assert:
+      visible: "Introducing the Prowl Blog"
+
+  # Newsletter signup lives in the post footer
+  - scrollTo:
+      selector: "form[action*='buttondown']"
+
+  - assert:
+      visible: "form[action*='buttondown'] input[type='email']"
+
+assertions:
+  - urlIncludes: "/blog/introducing-prowl-qa-blog"
+  - selectorExists: "h1"
+  - selectorExists: "form[action*='buttondown']"
