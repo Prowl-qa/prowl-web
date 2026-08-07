@@ -11,6 +11,13 @@ npm install
 npm run dev
 ```
 
+## Prowl Hunts
+
+```bash
+npm run prowl:install-browsers
+npx prowl run hello
+```
+
 ## Build
 
 ```bash
