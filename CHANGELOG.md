@@ -15,6 +15,9 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
   theme toggle, and footer links. Hunts are tagged `smoke` (fast core set), `full`, and
   `mobile` (run with `--viewport mobile`) for CI filtering; the starter `hello` hunt is
   superseded by `homepage` and removed.
+- Page-specific Twitter metadata for the blog index (PQW-021): `/blog` now emits its own
+  `twitter` card (title, description, `creator`) instead of inheriting the root layout's
+  homepage Twitter tags.
 
 ### Changed
 - Prowl Hub and Prowl Infra links (homepage tiles, nav, footer, docs hub) now point at the
