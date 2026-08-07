@@ -82,3 +82,11 @@
 ### ~~PQW-018: Author hunts covering the marketing site~~
 **Resolved**: 2026-08-06 (commit 06bff10, branch: prowl-hunts)
 **Description**: Authored a 10-hunt suite exercising every user-facing surface of prowl.tools: homepage hero, desktop nav (Products dropdown verified opening via hover), mobile hamburger nav, `/cli`, `/code-review`, and `/docs` pages with heading and CTA checks (docs.prowl.tools / product satellite links / GitHub), blog index + `?tag=` filtering + post page, newsletter form presence, dark/light theme toggle (hydration-aware, works from either starting theme), and footer links. Hunts tagged `smoke` (4-hunt fast set, ~3s), `full`, and `mobile` (run with `--viewport mobile`) for CI filtering via `--include-tags`; starter `hello` hunt superseded and removed. All 10 verified passing against the production build.
+
+### ~~PQW-021: Add page-specific Twitter metadata for the blog index~~
+**Resolved**: 2026-08-07 (commit 6b97f07, branch: twitter-updates)
+**Description**: Added a `twitter` block to the `/blog` metadata in `src/app/blog/page.tsx` so the blog index emits its own Twitter card (title `Blog - Prowl`, blog description, `card: "summary"`, `creator: "@prowltools"`) instead of inheriting the root layout's homepage Twitter title/description. lint + build green.
+
+### ~~PQW-022: Point X/Twitter links and metadata at @prowltools~~
+**Resolved**: 2026-08-07 (commit 65aabb1, branch: twitter-updates)
+**Description**: Repointed every X/Twitter reference from the unowned `@prowl` handle to the live `@prowltools` account: `twitter.creator` in `src/app/layout.tsx`, `src/app/cli/page.tsx`, `src/app/docs/page.tsx`, and `src/app/code-review/page.tsx`; the footer social link in `src/components/Footer.tsx` (`https://x.com/prowltools`); and the matching footer hunt assertion in `.prowl/hunts/footer.yml`. The `@prowl-review` PR-bot name was deliberately left untouched. lint + build green.

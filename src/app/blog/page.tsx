@@ -13,6 +13,13 @@ export const metadata: Metadata = {
       "Articles on AI-powered testing, QA automation, and building with agents.",
     url: "https://prowl.tools/blog",
   },
+  twitter: {
+    card: "summary",
+    title: "Blog - Prowl",
+    description:
+      "Articles on AI-powered testing, QA automation, and building with agents.",
+    creator: "@prowltools",
+  },
 };
 
 export default function BlogPage({

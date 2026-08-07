@@ -37,7 +37,7 @@ export default function Footer() {
           <div className="mt-5 flex items-center gap-3">
             {/* X / Twitter */}
             <a
-              href="https://x.com/prowl"
+              href="https://x.com/prowltools"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Follow us on X"
