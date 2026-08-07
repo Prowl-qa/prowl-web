@@ -1,0 +1,65 @@
+# Automatic prowl-review on pull requests — Claude + Gemini ensemble, posting
+# under the branded prowl-review[bot] identity when the App secrets are present.
+# Adapted from prowl-tools/prowl-code-review/examples/workflows/.
+name: prowl-review
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review, reopened]
+
+# Serialize auto reviews with @prowl-review commands for the same PR;
+# prowl-review re-checks the PR head before publishing and skips superseded runs.
+concurrency:
+  group: prowl-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+permissions:
+  pull-requests: write # post the review + inline comments
+  issues: write        # create/update the summary comment
+  checks: write        # branded "Prowl Review" check run
+  contents: read
+
+jobs:
+  review:
+    # Fork PRs don't receive secrets; prowl-review also skips a keyless fork run
+    # safely if this guard is removed.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    env:
+      PROWL_APP_CONFIGURED: ${{ secrets.PROWL_APP_ID != '' && secrets.PROWL_APP_PRIVATE_KEY != '' }}
+    steps:
+      # Branded identity: mint an App installation token when PROWL_APP_ID is set
+      # so the review posts as prowl-review[bot] with the App avatar. Falls back
+      # to github-actions[bot] when unset or when token minting fails.
+      - name: Mint prowl-review app token
+        id: app-token
+        if: env.PROWL_APP_CONFIGURED == 'true'
+        continue-on-error: true
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.PROWL_APP_ID }}
+          private-key: ${{ secrets.PROWL_APP_PRIVATE_KEY }}
+          permission-contents: read
+          permission-issues: write
+          permission-pull-requests: write
+          permission-checks: write
+
+      - uses: actions/checkout@v4
+
+      # Load .prowl-review.yml from the TRUSTED base branch, never from PR code.
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: prowl-review-config
+          persist-credentials: false
+
+      - uses: prowl-tools/prowl-code-review@v1
+        with:
+          # Claude + Gemini ensemble; provider/model pinned in the trusted
+          # base-branch .prowl-review.yml, not in workflow inputs.
+          ai-key-anthropic: ${{ secrets.PROWL_AI_KEY_ANTHROPIC }}
+          ai-key-gemini: ${{ secrets.PROWL_AI_KEY_GEMINI }}
+          config-path: prowl-review-config/.prowl-review.yml
+          # Branded App token when configured; otherwise the default Actions token.
+          github-token: ${{ steps.app-token.outputs.token || github.token }}
+          bot-login: ${{ steps.app-token.outputs.app-slug != '' && format('{0}[bot]', steps.app-token.outputs.app-slug) || '' }}

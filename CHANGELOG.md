@@ -5,6 +5,13 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
 ## [Unreleased]
 
 ### Added
+- Prowl Review dogfooding: `.github/workflows/prowl-review.yml` (auto review on PRs) and
+  `prowl-review-command.yml` (`@prowl-review` chat/commands) run the Claude + Gemini ensemble
+  via `prowl-tools/prowl-code-review@v1`, configured by a base-branch-trusted
+  `.prowl-review.yml`; posts as `prowl-review[bot]` when the App secrets are set. Requires the
+  `PROWL_AI_KEY_ANTHROPIC` / `PROWL_AI_KEY_GEMINI` repo secrets. The placeholder
+  `anthropics/claude-code-action` workflows (`claude.yml`, `claude-code-review.yml`) are
+  retired, mirroring prowl-code-review.
 - Prowl CLI dogfooding setup (PQW-017): `prowl-tools` pinned as a devDependency, `.prowl/`
   scaffolded via `prowl init` (config targets `http://localhost:3002`, starter `hello` hunt),
   an explicit Chromium install script, and `.prowl/runs/` gitignored while config and hunts stay
