@@ -18,6 +18,14 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
 - Page-specific Twitter metadata for the blog index (PQW-021): `/blog` now emits its own
   `twitter` card (title, description, `creator`) instead of inheriting the root layout's
   homepage Twitter tags.
+- CI workflow (PQW-019): `.github/workflows/ci.yml` runs on pull requests and pushes to
+  `main` — `npm ci`, `npm run lint`, `npm run build`, then serves the production build
+  (`npm run start` on port 3002) and polls it for readiness before running the Prowl hunt
+  suite via `prowl ci` against `http://localhost:3002` (desktop hunts tagged `full`, plus the
+  `mobile`-tagged hunt with `--viewport mobile`). Chromium is provisioned with
+  `playwright install --with-deps chromium`; npm and `~/.cache/ms-playwright` (keyed on the
+  installed Playwright version) are cached, and `.prowl/runs/` plus the server log upload as
+  artifacts on failure.
 
 ### Changed
 - Prowl Hub and Prowl Infra links (homepage tiles, nav, footer, docs hub) now point at the
