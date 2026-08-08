@@ -24,10 +24,6 @@
 **Priority**: High
 **Description**: `/docs` renders `DocsHub`, whose top heading is an `<h2>` ("Docs for every tool"), so the page has no `<h1>` — broken heading hierarchy for assistive tech and a weak SEO signal. Promote the heading to `<h1>` when `DocsHub` renders with `standalone`, or add a page-level `<h1>` in `src/app/docs/page.tsx`.
 
-### PQW-019: CI workflow running lint, build, and Prowl hunts
-**Priority**: High
-**Description**: As a Prowl Tools developer, I want a GitHub Actions workflow (`.github/workflows/ci.yml`) that runs on PRs and pushes to `main`: `npm ci`, `npm run lint`, `npm run build`, then serve the production build (`npm run start`), wait for readiness, run `npx playwright install --with-deps chromium` before `npx prowl run`, and run the Prowl hunt suite against it. Upload `.prowl/runs/` artifacts on failure for debugging. Cache npm and `~/.cache/ms-playwright` browser downloads to keep runs fast. Depends on PQW-017/PQW-018.
-
 ### PQW-020: Gate production deploys on CI passing
 **Priority**: High
 **Description**: As a Prowl Tools developer, I want deploys to prowl.tools to only happen after the CI pipeline (including hunts) passes. Vercel currently auto-deploys every push to `main`. Recommended approach: enable GitHub branch protection on `main` requiring the PQW-019 checks to pass before merge, so anything that lands on `main` (and therefore auto-deploys) has already passed hunts. Evaluate as a follow-up whether to also gate the Vercel build itself (ignored-build-step or GitHub-Actions-driven deploys) for pushes that bypass PRs. Depends on PQW-019.
