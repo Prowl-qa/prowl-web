@@ -1,0 +1,111 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Cancel superseded runs on the same ref to keep the queue lean.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-hunt:
+    name: Lint, build & Prowl hunts
+    runs-on: ubuntu-latest
+
+    env:
+      # Must match the port in the `start` script and .prowl/config.yml target.
+      BASE_URL: http://localhost:3002
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+      # Key the Playwright browser cache on the exact installed version so a
+      # dependency bump busts the cache instead of reusing stale browsers.
+      - name: Resolve Playwright version
+        id: playwright
+        run: echo "version=$(node -e "console.log(require('playwright-core/package.json').version)")" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ steps.playwright.outputs.version }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
+      # Always run install so OS-level deps (--with-deps) are present even on a
+      # browser-cache hit; the cached binaries make this fast when they match.
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Start production server
+        run: |
+          npm run start > server.log 2>&1 &
+          echo "SERVER_PID=$!" >> "$GITHUB_ENV"
+
+      - name: Wait for server to be ready
+        run: |
+          for i in $(seq 1 60); do
+            if curl -sSf "$BASE_URL" > /dev/null; then
+              echo "Server is ready after $((i * 2))s"
+              exit 0
+            fi
+            echo "Waiting for server at $BASE_URL... attempt $i/60"
+            sleep 2
+          done
+          echo "::error::Server did not become ready within 120s"
+          echo "----- server.log -----"
+          cat server.log || true
+          exit 1
+
+      # Desktop suite: every hunt tagged `full` at the default viewport.
+      - name: Run Prowl hunts (desktop)
+        run: npx prowl ci --url "$BASE_URL" --include-tags full
+
+      # Mobile suite: hunts tagged `mobile` are authored for the mobile viewport.
+      - name: Run Prowl hunts (mobile)
+        run: npx prowl ci --url "$BASE_URL" --include-tags mobile --viewport mobile
+
+      # Preserve run artifacts (screenshots, console logs, results) for triage.
+      - name: Upload Prowl run artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: prowl-runs
+          path: .prowl/runs/
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Upload server log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: server-log
+          path: server.log
+          if-no-files-found: ignore
+          retention-days: 7
