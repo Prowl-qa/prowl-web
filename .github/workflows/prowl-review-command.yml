@@ -77,10 +77,18 @@ jobs:
             echo "trusted_head=true" >> "$GITHUB_OUTPUT"
           else
             echo "trusted_head=false" >> "$GITHUB_OUTPUT"
-            echo "Skipping command from fork PR head ${head_repo}."
+            echo "::notice title=Fork PR command skipped::Skipping command from fork PR head ${head_repo}."
           fi
 
-      # Trusted base checkout: config + guidelines come from base, never PR code.
+      - name: Reject fork PR command
+        if: steps.pr.outputs.trusted_head != 'true'
+        shell: bash
+        run: |
+          echo "::error title=Fork PR command unsupported::Skipping @prowl-review because the PR head repository '${{ steps.pr.outputs.head_repo }}' does not match '${{ github.repository }}'."
+          exit 1
+
+      # Prefer trusted base config/guidelines; fall back to the PR config only
+      # while bootstrapping onto a base branch that does not have the config yet.
       - uses: actions/checkout@v4
         with:
           ref: ${{ steps.pr.outputs.base_sha }}
@@ -95,6 +103,25 @@ jobs:
           path: pr-head
           persist-credentials: false
 
+      - name: Resolve prowl-review config
+        id: review-config
+        if: steps.pr.outputs.trusted_head == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          base_config="${GITHUB_WORKSPACE}/prowl-base/.prowl-review.yml"
+          pr_config="${GITHUB_WORKSPACE}/pr-head/.prowl-review.yml"
+          if [ -f "${base_config}" ]; then
+            config_path="${base_config}"
+          elif [ -f "${pr_config}" ]; then
+            echo "::notice title=Using bootstrap config::Base branch has no .prowl-review.yml; using the PR copy."
+            config_path="${pr_config}"
+          else
+            echo "::error title=Missing prowl-review config::No .prowl-review.yml found in the base checkout or PR checkout."
+            exit 1
+          fi
+          echo "path=${config_path}" >> "$GITHUB_OUTPUT"
+
       - uses: prowl-tools/prowl-code-review@v1
         if: steps.pr.outputs.trusted_head == 'true'
         env:
@@ -106,7 +133,7 @@ jobs:
           # review command produces the cross-provider result too.
           ai-key-anthropic: ${{ secrets.PROWL_AI_KEY_ANTHROPIC }}
           ai-key-gemini: ${{ secrets.PROWL_AI_KEY_GEMINI }}
-          config-path: ${{ github.workspace }}/prowl-base/.prowl-review.yml
+          config-path: ${{ steps.review-config.outputs.path }}
           workspace-path: ${{ github.workspace }}/pr-head
           guidelines-path: ${{ github.workspace }}/prowl-base
           github-token: ${{ steps.app-token.outputs.token || github.token }}
