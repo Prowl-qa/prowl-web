@@ -1,0 +1,94 @@
+# Automatic prowl-review on pull requests — Claude + Gemini ensemble, posting
+# under the branded prowl-review[bot] identity when the App secrets are present.
+# Adapted from prowl-tools/prowl-code-review/examples/workflows/.
+name: prowl-review
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review, reopened]
+
+# Serialize auto reviews with @prowl-review commands for the same PR;
+# prowl-review re-checks the PR head before publishing and skips superseded runs.
+concurrency:
+  group: prowl-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+permissions:
+  pull-requests: write # post the review + inline comments
+  issues: write        # create/update the summary comment
+  checks: write        # branded "Prowl Review" check run
+  contents: read
+
+jobs:
+  review:
+    # Fork PRs don't receive secrets; prowl-review also skips a keyless fork run
+    # safely if this guard is removed.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    env:
+      PROWL_APP_CONFIGURED: ${{ secrets.PROWL_APP_ID != '' && secrets.PROWL_APP_PRIVATE_KEY != '' }}
+      PROWL_REVIEW_KEYS_CONFIGURED: ${{ secrets.PROWL_AI_KEY_ANTHROPIC != '' && secrets.PROWL_AI_KEY_GEMINI != '' }}
+    steps:
+      # Branded identity: mint an App installation token when PROWL_APP_ID is set
+      # so the review posts as prowl-review[bot] with the App avatar. Falls back
+      # to github-actions[bot] when unset or when token minting fails.
+      - name: Mint prowl-review app token
+        id: app-token
+        if: env.PROWL_APP_CONFIGURED == 'true'
+        continue-on-error: true
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.PROWL_APP_ID }}
+          private-key: ${{ secrets.PROWL_APP_PRIVATE_KEY }}
+          permission-contents: read
+          permission-issues: write
+          permission-pull-requests: write
+          permission-checks: write
+
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      # Prefer the trusted base config; fall back to the PR copy only while
+      # bootstrapping the workflow onto a base branch that does not have it yet.
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: prowl-review-config
+          persist-credentials: false
+
+      - name: Resolve prowl-review config
+        id: review-config
+        shell: bash
+        run: |
+          set -euo pipefail
+          base_config="prowl-review-config/.prowl-review.yml"
+          pr_config=".prowl-review.yml"
+          if [ -f "${base_config}" ]; then
+            config_path="${base_config}"
+          elif [ -f "${pr_config}" ]; then
+            echo "::notice title=Using bootstrap config::Base branch has no .prowl-review.yml; using the PR copy."
+            config_path="${pr_config}"
+          else
+            echo "::error title=Missing prowl-review config::No .prowl-review.yml found in the base checkout or PR checkout."
+            exit 1
+          fi
+          echo "path=${config_path}" >> "$GITHUB_OUTPUT"
+
+      - name: Skip prowl-review when AI keys are missing
+        if: env.PROWL_REVIEW_KEYS_CONFIGURED != 'true'
+        shell: bash
+        run: |
+          echo "::notice title=Prowl Review skipped::Configure PROWL_AI_KEY_ANTHROPIC and PROWL_AI_KEY_GEMINI repository secrets to enable Claude + Gemini reviews."
+
+      - uses: prowl-tools/prowl-code-review@v1
+        if: env.PROWL_REVIEW_KEYS_CONFIGURED == 'true'
+        with:
+          # Claude + Gemini ensemble; provider/model pinned in the trusted
+          # .prowl-review.yml config, not in workflow inputs.
+          ai-key-anthropic: ${{ secrets.PROWL_AI_KEY_ANTHROPIC }}
+          ai-key-gemini: ${{ secrets.PROWL_AI_KEY_GEMINI }}
+          config-path: ${{ steps.review-config.outputs.path }}
+          # Branded App token when configured; otherwise the default Actions token.
+          github-token: ${{ steps.app-token.outputs.token || github.token }}
+          bot-login: ${{ steps.app-token.outputs.app-slug != '' && format('{0}[bot]', steps.app-token.outputs.app-slug) || '' }}
