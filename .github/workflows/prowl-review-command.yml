@@ -81,12 +81,14 @@ jobs:
             echo "::notice title=Fork PR command skipped::Skipping command from fork PR head ${head_repo}."
           fi
 
-      - name: Reject fork PR command
+      - name: Skip fork PR command
         if: steps.pr.outputs.trusted_head != 'true'
+        env:
+          HEAD_REPO: ${{ steps.pr.outputs.head_repo }}
+          BASE_REPOSITORY: ${{ github.repository }}
         shell: bash
         run: |
-          echo "::error title=Fork PR command unsupported::Skipping @prowl-review because the PR head repository '${{ steps.pr.outputs.head_repo }}' does not match '${{ github.repository }}'."
-          exit 1
+          echo "::notice title=Fork PR command unsupported::Skipping @prowl-review because the PR head repository '${HEAD_REPO}' does not match '${BASE_REPOSITORY}'."
 
       # Prefer trusted base config/guidelines; fall back to the PR config only
       # while bootstrapping onto a base branch that does not have the config yet.
