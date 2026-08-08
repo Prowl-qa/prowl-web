@@ -45,21 +45,42 @@ jobs:
           permission-checks: write
 
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
-      # Load .prowl-review.yml from the TRUSTED base branch, never from PR code.
+      # Prefer the trusted base config; fall back to the PR copy only while
+      # bootstrapping the workflow onto a base branch that does not have it yet.
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.base.sha }}
           path: prowl-review-config
           persist-credentials: false
 
+      - name: Resolve prowl-review config
+        id: review-config
+        shell: bash
+        run: |
+          set -euo pipefail
+          base_config="prowl-review-config/.prowl-review.yml"
+          pr_config=".prowl-review.yml"
+          if [ -f "${base_config}" ]; then
+            config_path="${base_config}"
+          elif [ -f "${pr_config}" ]; then
+            echo "::notice title=Using bootstrap config::Base branch has no .prowl-review.yml; using the PR copy."
+            config_path="${pr_config}"
+          else
+            echo "::error title=Missing prowl-review config::No .prowl-review.yml found in the base checkout or PR checkout."
+            exit 1
+          fi
+          echo "path=${config_path}" >> "$GITHUB_OUTPUT"
+
       - uses: prowl-tools/prowl-code-review@v1
         with:
           # Claude + Gemini ensemble; provider/model pinned in the trusted
-          # base-branch .prowl-review.yml, not in workflow inputs.
+          # .prowl-review.yml config, not in workflow inputs.
           ai-key-anthropic: ${{ secrets.PROWL_AI_KEY_ANTHROPIC }}
           ai-key-gemini: ${{ secrets.PROWL_AI_KEY_GEMINI }}
-          config-path: prowl-review-config/.prowl-review.yml
+          config-path: ${{ steps.review-config.outputs.path }}
           # Branded App token when configured; otherwise the default Actions token.
           github-token: ${{ steps.app-token.outputs.token || github.token }}
           bot-login: ${{ steps.app-token.outputs.app-slug != '' && format('{0}[bot]', steps.app-token.outputs.app-slug) || '' }}
