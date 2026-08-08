@@ -27,6 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PROWL_APP_CONFIGURED: ${{ secrets.PROWL_APP_ID != '' && secrets.PROWL_APP_PRIVATE_KEY != '' }}
+      PROWL_REVIEW_KEYS_CONFIGURED: ${{ secrets.PROWL_AI_KEY_ANTHROPIC != '' && secrets.PROWL_AI_KEY_GEMINI != '' }}
     steps:
       # Branded identity: mint an App installation token when PROWL_APP_ID is set
       # so the review posts as prowl-review[bot] with the App avatar. Falls back
@@ -74,7 +75,14 @@ jobs:
           fi
           echo "path=${config_path}" >> "$GITHUB_OUTPUT"
 
+      - name: Skip prowl-review when AI keys are missing
+        if: env.PROWL_REVIEW_KEYS_CONFIGURED != 'true'
+        shell: bash
+        run: |
+          echo "::notice title=Prowl Review skipped::Configure PROWL_AI_KEY_ANTHROPIC and PROWL_AI_KEY_GEMINI repository secrets to enable Claude + Gemini reviews."
+
       - uses: prowl-tools/prowl-code-review@v1
+        if: env.PROWL_REVIEW_KEYS_CONFIGURED == 'true'
         with:
           # Claude + Gemini ensemble; provider/model pinned in the trusted
           # .prowl-review.yml config, not in workflow inputs.

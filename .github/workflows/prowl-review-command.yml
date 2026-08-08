@@ -39,6 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PROWL_APP_CONFIGURED: ${{ secrets.PROWL_APP_ID != '' && secrets.PROWL_APP_PRIVATE_KEY != '' }}
+      PROWL_REVIEW_KEYS_CONFIGURED: ${{ secrets.PROWL_AI_KEY_ANTHROPIC != '' && secrets.PROWL_AI_KEY_GEMINI != '' }}
     steps:
       # Branded identity: post the command reply as prowl-review[bot] when the
       # App secrets are set; falls back to github-actions[bot].
@@ -122,8 +123,15 @@ jobs:
           fi
           echo "path=${config_path}" >> "$GITHUB_OUTPUT"
 
+      - name: Reject command when AI keys are missing
+        if: steps.pr.outputs.trusted_head == 'true' && env.PROWL_REVIEW_KEYS_CONFIGURED != 'true'
+        shell: bash
+        run: |
+          echo "::error title=Prowl Review AI keys missing::Configure PROWL_AI_KEY_ANTHROPIC and PROWL_AI_KEY_GEMINI repository secrets before running @prowl-review commands."
+          exit 1
+
       - uses: prowl-tools/prowl-code-review@v1
-        if: steps.pr.outputs.trusted_head == 'true'
+        if: steps.pr.outputs.trusted_head == 'true' && env.PROWL_REVIEW_KEYS_CONFIGURED == 'true'
         env:
           PROWL_REVIEWED_HEAD_SHA: ${{ steps.pr.outputs.head_sha }}
           PROWL_REVIEWED_HEAD_REPOSITORY: ${{ steps.pr.outputs.head_repo }}
