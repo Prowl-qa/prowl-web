@@ -20,19 +20,58 @@ export type RevealMotionProps = Pick<MotionProps, 'initial' | 'animate' | 'while
  */
 export const revealVisible: RevealMotionProps = { initial: false, animate: 'visible' };
 
-const noopSubscribe = () => () => {};
-const getHydratedSnapshot = () => true;
-const getServerHydratedSnapshot = () => false;
+let hydratedSnapshot = false;
+let hydrationQueued = false;
+const hydrationListeners = new Set<() => void>();
+
+function emitHydrationChange() {
+  for (const listener of hydrationListeners) {
+    listener();
+  }
+}
+
+function markHydrated() {
+  hydrationQueued = false;
+
+  if (hydratedSnapshot) {
+    return;
+  }
+
+  hydratedSnapshot = true;
+  emitHydrationChange();
+}
+
+function subscribeHydration(listener: () => void) {
+  hydrationListeners.add(listener);
+
+  if (typeof window !== 'undefined' && !hydratedSnapshot && !hydrationQueued) {
+    hydrationQueued = true;
+    queueMicrotask(markHydrated);
+  }
+
+  return () => {
+    hydrationListeners.delete(listener);
+  };
+}
+
+function getHydratedSnapshot() {
+  return hydratedSnapshot;
+}
+
+function getServerHydratedSnapshot() {
+  return false;
+}
+
 const RevealHydrationContext = createContext(false);
 
 /**
  * Provides the one post-hydration signal shared by every reveal consumer on the
- * page. Keeping the store subscription here avoids repeating it for each section
- * while still preserving an SSR-safe first client render.
+ * page. The store emits once after the first client subscription so the initial
+ * render matches SSR, then reveal sections can remount into scroll animation.
  */
 export function RevealHydrationProvider({ children }: { children: ReactNode }) {
   const hydrated = useSyncExternalStore(
-    noopSubscribe,
+    subscribeHydration,
     getHydratedSnapshot,
     getServerHydratedSnapshot,
   );
