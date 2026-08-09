@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     locale: "en_US",
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: SUITE_TITLE,
     description: SUITE_DESCRIPTION,
     creator: "@prowltools",
