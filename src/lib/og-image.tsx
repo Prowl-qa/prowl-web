@@ -1,6 +1,6 @@
-import { readFile } from "node:fs/promises";
-import path from "node:path";
+import type { CSSProperties } from "react";
 import { ImageResponse } from "next/og";
+import { OG_LOGO_DATA_URI } from "@/lib/og-logo-data";
 
 /**
  * Shared Open Graph / Twitter card generator for the Prowl marketing site.
@@ -15,22 +15,18 @@ import { ImageResponse } from "next/og";
 export const OG_SIZE = { width: 1200, height: 630 } as const;
 export const OG_CONTENT_TYPE = "image/png";
 
-const LOGO_PATH = path.join(
-  process.cwd(),
-  "public",
-  "static",
-  "img",
-  "prowl-logo.png"
-);
+// @vercel/og's pinned Tailwind-to-Satori parser handles layout, spacing, color,
+// and typography here, but logs gradient utilities as invalid. Keep only these
+// generated-image gradients in scoped CSS properties so the visual card stays
+// stable while avoiding broad inline style objects.
+const CARD_BACKGROUND: CSSProperties = {
+  backgroundImage:
+    "radial-gradient(1100px circle at 18% -10%, rgba(34,211,238,0.20), transparent 45%), radial-gradient(1000px circle at 108% 118%, rgba(74,222,128,0.18), transparent 45%)",
+};
 
-let cachedLogo: string | null = null;
-
-async function getLogoDataUri(): Promise<string> {
-  if (cachedLogo) return cachedLogo;
-  const bytes = await readFile(LOGO_PATH);
-  cachedLogo = `data:image/png;base64,${bytes.toString("base64")}`;
-  return cachedLogo;
-}
+const ACCENT_BACKGROUND: CSSProperties = {
+  backgroundImage: "linear-gradient(90deg, #22d3ee, #4ade80)",
+};
 
 export type OgImageOptions = {
   /** Small uppercase label above the headline, e.g. "PROWL CLI". */
@@ -39,89 +35,42 @@ export type OgImageOptions = {
   headline: string;
 };
 
-export async function renderOgImage({
+/**
+ * Render a branded social preview image for a page or section.
+ */
+export function renderOgImage({
   eyebrow,
   headline,
-}: OgImageOptions): Promise<ImageResponse> {
-  const logoSrc = await getLogoDataUri();
-
+}: OgImageOptions): ImageResponse {
   return new ImageResponse(
     (
       <div
-        style={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          padding: "72px 80px",
-          backgroundColor: "#09090b",
-          backgroundImage:
-            "radial-gradient(1100px circle at 18% -10%, rgba(34,211,238,0.20), transparent 45%), radial-gradient(1000px circle at 108% 118%, rgba(74,222,128,0.18), transparent 45%)",
-          color: "#fafafa",
-          fontFamily: "sans-serif",
-        }}
+        tw="w-full h-full flex flex-col justify-between px-20 py-[72px] bg-[#09090b] text-[#fafafa] font-sans"
+        style={CARD_BACKGROUND}
       >
         {/* Brand row: mascot logo + wordmark */}
-        <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
+        <div tw="flex items-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={logoSrc} width={132} height={132} alt="" />
-          <span
-            style={{
-              fontSize: 76,
-              fontWeight: 700,
-              letterSpacing: "-0.03em",
-              color: "#fafafa",
-            }}
-          >
+          <img src={OG_LOGO_DATA_URI} width={132} height={132} alt="" />
+          <span tw="ml-6 text-[76px] font-bold tracking-tight text-[#fafafa]">
             Prowl
           </span>
         </div>
 
         {/* Message block */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-          <span
-            style={{
-              fontSize: 28,
-              letterSpacing: "0.18em",
-              textTransform: "uppercase",
-              color: "#22d3ee",
-            }}
-          >
+        <div tw="flex flex-col">
+          <span tw="mb-5 text-[28px] tracking-widest uppercase text-[#22d3ee]">
             {eyebrow}
           </span>
-          <span
-            style={{
-              fontSize: 58,
-              lineHeight: 1.15,
-              letterSpacing: "-0.02em",
-              color: "#fafafa",
-              // clamp very long headlines so they stay on ~3 lines max
-              display: "flex",
-              maxWidth: 1000,
-            }}
-          >
+          <span tw="flex max-w-[1000px] text-[58px] leading-[1.15] tracking-tight text-[#fafafa]">
             {headline}
           </span>
         </div>
 
         {/* Footer: accent bar + domain */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <div
-            style={{
-              width: 220,
-              height: 12,
-              borderRadius: 999,
-              backgroundImage: "linear-gradient(90deg, #22d3ee, #4ade80)",
-            }}
-          />
-          <span style={{ fontSize: 30, color: "#a1a1aa" }}>prowl.tools</span>
+        <div tw="flex items-center justify-between">
+          <div tw="w-[220px] h-3 rounded-full" style={ACCENT_BACKGROUND} />
+          <span tw="text-[30px] text-[#a1a1aa]">prowl.tools</span>
         </div>
       </div>
     ),

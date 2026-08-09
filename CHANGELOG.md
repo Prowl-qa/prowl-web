@@ -18,8 +18,9 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
   root (`src/app/opengraph-image.tsx`) and per-section variants for `/cli`,
   `/code-review`, and `/docs`. Each route now emits `og:image` and
   `twitter:image` (1200x630) and every page's `twitter.card` is
-  `summary_large_image`; `/blog` references the site-wide card explicitly since
-  file-convention images do not cascade into child segments.
+  `summary_large_image`; the root file-convention image applies to descendants,
+  while `/blog` references the site-wide card explicitly because its own
+  shallow-merged metadata object replaces the parent `openGraph` object.
 - Prowl Review dogfooding: `.github/workflows/prowl-review.yml` (auto review on PRs) and
   `prowl-review-command.yml` (`@prowl-review` chat/commands) run the Claude + Gemini ensemble
   via `prowl-tools/prowl-code-review@v1`, configured by a base-branch-trusted

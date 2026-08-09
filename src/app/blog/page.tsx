@@ -12,8 +12,8 @@ export const metadata: Metadata = {
     description:
       "Articles on AI-powered testing, QA automation, and building with agents.",
     url: "https://prowl.tools/blog",
-    // Site-wide social card (PQW-004); set explicitly since file-convention
-    // images do not inherit into this segment.
+    // Root opengraph-image applies to descendants, but this segment replaces
+    // the parent openGraph object through shallow metadata merging.
     images: ["/opengraph-image"],
   },
   twitter: {

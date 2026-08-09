@@ -7,9 +7,9 @@ import PostFooter from "@/components/blog/PostFooter";
 type Params = { slug: string };
 
 // Site-wide social card (PQW-004) served by src/app/opengraph-image.tsx.
-// File-convention images do not cascade into descendant segments, so blog
-// posts reference it explicitly as their fallback. Resolved against
-// metadataBase (https://prowl.tools/opengraph-image).
+// Root file-convention images apply to descendant routes, but blog posts define
+// their own shallow-merged metadata objects, so they restate this fallback.
+// Resolved against metadataBase (https://prowl.tools/opengraph-image).
 const SITE_OG_IMAGE = "/opengraph-image";
 
 export function generateStaticParams(): Params[] {
@@ -27,8 +27,8 @@ export async function generateMetadata({
 
   // Per-post social image from `image` frontmatter (resolved against
   // metadataBase when relative), falling back to the site-wide card (PQW-004)
-  // when a post declares none. Set explicitly because file-convention images
-  // do not inherit into this segment.
+  // when a post declares none. More-specific images take precedence; the
+  // fallback stays explicit because this route defines its own metadata objects.
   const images = [post.image ?? SITE_OG_IMAGE];
 
   return {
