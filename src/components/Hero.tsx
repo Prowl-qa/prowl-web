@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { motion } from 'motion/react';
 import GradientText from '@/components/ui/GradientText';
 import { fadeUp, staggerContainer } from '@/lib/animations';
+import { revealVisible } from '@/lib/reveal';
 
 export default function Hero() {
   return (
@@ -20,8 +21,7 @@ export default function Hero() {
       <motion.div
         className="relative mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]"
         variants={staggerContainer}
-        initial="hidden"
-        animate="visible"
+        {...revealVisible}
       >
         {/* Left column: text content */}
         <div>

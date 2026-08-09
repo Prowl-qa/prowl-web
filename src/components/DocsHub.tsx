@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import SectionReveal from '@/components/ui/SectionReveal';
 import ProductIcon from '@/components/icons/ProductIcon';
 import { fadeUp, staggerContainer } from '@/lib/animations';
+import { useScrollReveal } from '@/lib/reveal';
 import { suiteProducts } from '@/lib/products';
 
 /**
@@ -12,15 +13,15 @@ import { suiteProducts } from '@/lib/products';
  * as one system. Used both as a homepage section and as the /docs page body.
  */
 export default function DocsHub({ standalone = false }: { standalone?: boolean }) {
+  const reveal = useScrollReveal();
+
   return (
     <SectionReveal>
       <section id="docs" className={`px-6 scroll-mt-20 ${standalone ? 'pt-16 pb-20' : 'pb-20'}`}>
         <motion.div
           className="mx-auto w-full max-w-7xl"
           variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-80px' }}
+          {...reveal}
         >
           <motion.p variants={fadeUp} className="text-xs uppercase tracking-[0.2em] text-muted">
             Documentation

@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import GradientText from '@/components/ui/GradientText';
 import SectionReveal from '@/components/ui/SectionReveal';
 import { fadeUp, staggerContainer } from '@/lib/animations';
+import { revealVisible, useScrollReveal } from '@/lib/reveal';
 
 const DOCS_URL = 'https://review.prowl.tools';
 const REPO_URL = 'https://github.com/prowl-tools/prowl-code-review';
@@ -34,6 +35,8 @@ const byok = [
 ];
 
 export default function CodeReview() {
+  const reveal = useScrollReveal();
+
   return (
     <>
       {/* Hero */}
@@ -46,8 +49,7 @@ export default function CodeReview() {
         <motion.div
           className="relative mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]"
           variants={staggerContainer}
-          initial="hidden"
-          animate="visible"
+          {...revealVisible}
         >
           <div>
             <motion.p
@@ -121,9 +123,7 @@ export default function CodeReview() {
           <motion.div
             className="mx-auto w-full max-w-7xl"
             variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-80px' }}
+            {...reveal}
           >
             <motion.p variants={fadeUp} className="text-xs uppercase tracking-[0.2em] text-muted">
               Not another diff-only reviewer

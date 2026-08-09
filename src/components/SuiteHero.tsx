@@ -5,6 +5,7 @@ import { motion } from 'motion/react';
 import GradientText from '@/components/ui/GradientText';
 import ProductIcon from '@/components/icons/ProductIcon';
 import { fadeUp, staggerContainer } from '@/lib/animations';
+import { revealVisible } from '@/lib/reveal';
 import { suiteProducts } from '@/lib/products';
 
 export default function SuiteHero() {
@@ -18,8 +19,7 @@ export default function SuiteHero() {
       <motion.div
         className="relative mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-[1.15fr_0.85fr]"
         variants={staggerContainer}
-        initial="hidden"
-        animate="visible"
+        {...revealVisible}
       >
         <div>
           <motion.p
