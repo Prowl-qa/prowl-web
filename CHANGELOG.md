@@ -35,6 +35,13 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
   artifacts on failure.
 
 ### Changed
+- Single branded checks row for reviews: the prowl-review auto-review now triggers off the CI
+  workflow completing (`workflow_run`) instead of `pull_request`, so the PR checks list shows
+  only the branded "Prowl Review" check run (no extra `prowl-review / review` Actions row) and
+  reviews only run once CI is green. The workflow resolves exactly one open PR from the
+  completed CI run (with an API fallback), gates out forks, and hands the PR number and draft
+  state to the action explicitly; CI now subscribes to `ready_for_review` so draft→ready still
+  triggers a review. Provider keys are read from org-level secrets.
 - Prowl Hub and Prowl Infra links (homepage tiles, nav, footer, docs hub) now point at the
   live satellite sites `hub.prowl.tools` and `infra.prowl.tools` instead of internal
   marketing pages.
