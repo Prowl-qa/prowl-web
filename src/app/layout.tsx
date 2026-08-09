@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { RevealHydrationProvider } from "@/lib/reveal";
+import { rssAlternateTypes } from "@/lib/rss";
 import { ThemeProvider } from "@/lib/theme";
 import "./globals.css";
 
@@ -22,6 +23,16 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://prowl.tools"),
   title: SUITE_TITLE,
   description: SUITE_DESCRIPTION,
+  // Site-wide RSS autodiscovery for the single blog feed (PQW-009). Placed in
+  // the root layout as the conventional default so any route inherits it.
+  // NOTE: Next shallow-merges `alternates`, so pages that set their own
+  // `alternates.canonical` (PQW-010: /, /blog, blog posts, and the product
+  // pages) replace this object; those we control re-include `rssAlternateTypes`
+  // to keep the feed link. Deliberately no layout-level `canonical` here — that
+  // would be inherited by every child and stamp `/` onto unrelated pages.
+  alternates: {
+    types: rssAlternateTypes,
+  },
   openGraph: {
     title: SUITE_TITLE,
     description: SUITE_DESCRIPTION,

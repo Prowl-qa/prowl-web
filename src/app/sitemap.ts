@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/blog";
+import { BLOG_FEED_PATH } from "@/lib/rss";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const posts = getAllPosts();
@@ -44,6 +45,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: latestBlogPostDate ?? new Date(),
       changeFrequency: "weekly",
       priority: 0.8,
+    },
+    {
+      // Blog RSS feed (PQW-009). Included so the feed is a discoverable,
+      // crawlable resource alongside the HTML pages; low priority since it is
+      // a machine-readable mirror of /blog rather than a landing page.
+      url: `https://prowl.tools${BLOG_FEED_PATH}`,
+      lastModified: latestBlogPostDate ?? new Date(),
+      changeFrequency: "weekly",
+      priority: 0.4,
     },
     ...blogEntries,
   ];

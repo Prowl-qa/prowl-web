@@ -5,6 +5,16 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
 ## [Unreleased]
 
 ### Added
+- RSS feed improvements (PQW-009): the blog feed builder moved to a pure,
+  unit-tested `src/lib/rss.ts` (`escapeXml`, `buildBlogFeed`,
+  `rssAlternateTypes`). `<link>`/`<guid>`/`<atom:link>` URLs are now
+  XML-escaped (previously interpolated raw); `src/app/blog/feed.xml/route.ts`
+  declares `export const dynamic = "force-static"` documenting that
+  `lastBuildDate` is intentionally the build timestamp (the site redeploys on
+  content changes); the feed is added to `src/app/sitemap.ts`; and site-wide
+  RSS autodiscovery (`<link rel="alternate" type="application/rss+xml">`) is
+  emitted via `alternates.types` on the root layout, re-included on pages that
+  set their own canonical.
 - Blog post social images (PQW-008): `generateMetadata` in
   `src/app/blog/[slug]/page.tsx` now sets `openGraph.images` and
   `twitter.images` from the post's `image` frontmatter (resolved against
