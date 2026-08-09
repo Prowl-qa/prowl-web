@@ -38,6 +38,10 @@ test('focus-out closes when the next target is outside the container', () => {
   assert.equal(shouldCloseOnFocusOut(outside, contains), true);
 });
 
-test('focus-out with no relatedTarget closes (focus left the document/blur to null)', () => {
-  assert.equal(shouldCloseOnFocusOut(null, () => false), true);
+test('focus-out with no relatedTarget stays open (Safari blurs to null on link clicks)', () => {
+  // Safari does not focus links/buttons on click, so clicking a menu item
+  // blurs the trigger with relatedTarget null — closing here would hide the
+  // menu before mouseup and swallow the click. Outside interactions are
+  // handled by the document-level pointerdown listener instead.
+  assert.equal(shouldCloseOnFocusOut(null, () => false), false);
 });
