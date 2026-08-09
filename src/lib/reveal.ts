@@ -3,7 +3,9 @@
 import { useSyncExternalStore } from 'react';
 import { useReducedMotion, type MotionProps } from 'motion/react';
 
-type RevealMotionProps = Pick<MotionProps, 'initial' | 'animate' | 'whileInView' | 'viewport'>;
+export type RevealMotionProps = Pick<MotionProps, 'initial' | 'animate' | 'whileInView' | 'viewport'> & {
+  key?: string;
+};
 
 /**
  * Renders an element at its `visible` variant with no hidden initial state and no
@@ -40,10 +42,13 @@ function useHydrated(): boolean {
  * and when `prefers-reduced-motion` is set, it returns {@link revealVisible} so
  * the content is always visible — nothing ships as `opacity:0`. Only once the
  * component has hydrated with motion allowed does it enable the `hidden` ->
- * `visible` scroll-triggered entrance. Because these sections are off-screen at
- * the moment hydration runs, gating the hidden state on hydration causes no
- * visible flash; if a section happens to be in view, motion's viewport observer
- * fires immediately and it simply plays its entrance rather than getting stuck.
+ * `visible` scroll-triggered entrance. The returned `key` intentionally remounts
+ * the Motion element at that point, because Motion only applies `initial` on
+ * mount; changing `initial` after the SSR-visible mount would leave the element
+ * visible and skip the reveal. Because these sections are off-screen at the
+ * moment hydration runs, the remount is not visible to users; if a section
+ * happens to be in view, motion's viewport observer fires immediately and it
+ * simply plays its entrance rather than getting stuck.
  *
  * @param margin IntersectionObserver root margin passed through to motion's
  *   `viewport.margin` (e.g. `'-80px'` to trigger slightly before fully in view).
@@ -57,6 +62,7 @@ export function useScrollReveal(margin = '-80px'): RevealMotionProps {
   }
 
   return {
+    key: `scroll-reveal:${margin}`,
     initial: 'hidden',
     whileInView: 'visible',
     viewport: { once: true, margin },
