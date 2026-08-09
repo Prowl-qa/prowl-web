@@ -92,3 +92,33 @@ test('queues one client hydration signal and notifies active subscribers once', 
   unsubscribeSecond();
   unsubscribeLate();
 });
+
+test('unsubscribe removes a listener before the hydration notification', () => {
+  const scheduled = [];
+  const store = createRevealHydrationStore({
+    hasWindow: () => true,
+    schedule: (callback) => {
+      scheduled.push(callback);
+    },
+  });
+  let calls = 0;
+
+  const unsubscribeFirst = store.subscribe(() => {
+    calls += 1;
+  });
+
+  assert.equal(typeof unsubscribeFirst, 'function');
+  unsubscribeFirst();
+
+  const unsubscribeSecond = store.subscribe(() => {
+    calls += 1;
+  });
+
+  assert.equal(scheduled.length, 1);
+  scheduled[0]();
+
+  assert.equal(calls, 1);
+  assert.equal(store.getSnapshot(), true);
+
+  unsubscribeSecond();
+});
