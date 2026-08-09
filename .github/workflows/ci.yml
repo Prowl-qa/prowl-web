@@ -3,7 +3,11 @@ name: CI
 on:
   push:
     branches: [main]
+  # The prowl-review workflow triggers off CI completing (`workflow_run`), which
+  # does not preserve the PR action — so CI itself must subscribe to every PR
+  # transition that should start a review (ready_for_review is not a default).
   pull_request:
+    types: [opened, synchronize, ready_for_review, reopened]
 
 # Cancel superseded runs on the same ref to keep the queue lean.
 concurrency:
