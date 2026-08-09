@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllPosts, getPostBySlug } from "@/lib/blog";
+import { createBlogPostMetadata } from "@/lib/blog-metadata";
 import PostHeader from "@/components/blog/PostHeader";
 import PostFooter from "@/components/blog/PostFooter";
 
@@ -19,25 +20,7 @@ export async function generateMetadata({
   const post = getPostBySlug(slug);
   if (!post) return {};
 
-  return {
-    title: `${post.title} - Prowl Blog`,
-    description: post.description,
-    openGraph: {
-      title: post.title,
-      description: post.description,
-      url: `https://prowl.tools/blog/${post.slug}`,
-      type: "article",
-      publishedTime: post.date,
-      authors: [post.author],
-      tags: post.tags,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: post.title,
-      description: post.description,
-      creator: "@prowltools",
-    },
-  };
+  return createBlogPostMetadata(post);
 }
 
 export default async function BlogPostPage({

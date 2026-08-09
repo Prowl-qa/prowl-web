@@ -8,10 +8,6 @@
 
 ## High Priority
 
-### PQW-004: Add Open Graph / Twitter social preview images
-**Priority**: High
-**Description**: No page defines `openGraph.images` or `twitter.images`, and there is no `opengraph-image.*` file or social image in `public/` — links shared on X, Slack, LinkedIn, iMessage, etc. render with no preview image. Add a 1200×630 `src/app/opengraph-image.png` (or generate with `ImageResponse`), set `openGraph.images` globally in `src/app/layout.tsx`, switch `twitter.card` to `summary_large_image`, and add per-section variants where worthwhile.
-
 ### PQW-006: Make the nav Products dropdown keyboard/screen-reader accessible
 **Priority**: High
 **Description**: The Products menu in `src/components/Nav.tsx` is CSS-hover/`group-focus-within` only. The trigger button has no `aria-expanded`/`aria-controls`, no click or keyboard handler, no Escape-to-close, and defaults to `type="submit"`. Fails WCAG 2.1 (4.1.2 Name/Role/Value, 1.4.13). Convert to a JS-controlled disclosure: managed open state, `aria-expanded`, `type="button"`, toggle on click, close on Escape/outside-click.
@@ -21,10 +17,6 @@
 **Description**: `/docs` renders `DocsHub`, whose top heading is an `<h2>` ("Docs for every tool"), so the page has no `<h1>` — broken heading hierarchy for assistive tech and a weak SEO signal. Promote the heading to `<h1>` when `DocsHub` renders with `standalone`, or add a page-level `<h1>` in `src/app/docs/page.tsx`.
 
 ## Medium Priority
-
-### PQW-008: Wire blog post `image` frontmatter into metadata
-**Priority**: Medium
-**Description**: `src/lib/blog.ts` parses an `image` frontmatter field, but `generateMetadata` in `src/app/blog/[slug]/page.tsx` never uses it — posts can never get a social preview image even when one is set. Set `openGraph.images` and `twitter.images` from `post.image` (with a site-wide fallback once PQW-004 lands).
 
 ### PQW-009: RSS feed improvements (autodiscovery, escaping, sitemap)
 **Priority**: Medium
