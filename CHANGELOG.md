@@ -63,6 +63,22 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
   marketing pages.
 
 ### Fixed
+- Accessible nav Products menu (PQW-006): the desktop "Products" dropdown was
+  CSS-hover / `group-focus-within` only — the trigger had no `aria-expanded`/`aria-controls`,
+  no click or keyboard handling, no Escape-to-close, and defaulted to `type="submit"`, failing
+  WCAG 2.1 SC 4.1.2 and 1.4.13. It is now a JS-controlled disclosure (WAI-ARIA APG disclosure
+  pattern): the trigger is `type="button"` with `aria-expanded` + `aria-controls`, toggles on
+  click/Enter/Space, and the menu is dismissible via Escape (returning focus to the trigger) and
+  outside-click, and closes when focus leaves it or an item is selected. Visibility is driven by
+  React state so the menu links are only in the tab order while it is open, while hover-to-open
+  is preserved for mouse users. Open/close decision logic is extracted to a DOM-free
+  `src/lib/disclosure.ts` with unit coverage; the `nav-desktop` hunt now asserts `aria-expanded`
+  toggling alongside hover-open.
+- `/docs` page now has an `<h1>` (PQW-007): `DocsHub` renders its "Docs for every tool"
+  heading as an `<h1>` when `standalone` (the `/docs` page body) and keeps it an `<h2>` when
+  embedded on the homepage, where the hero owns the page's single `<h1>`. Fixes the broken
+  heading hierarchy and weak SEO signal on `/docs` without introducing a duplicate top-level
+  heading on `/`.
 - Render marketing content visible without JS and fix the LCP/FCP regression (PQW-005):
   every section (heroes, section reveals, and all `whileInView` sections) previously shipped
   its SSR HTML behind motion's inline `opacity:0` `hidden` variant, so content — including the
