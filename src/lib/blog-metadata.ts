@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
 import type { BlogPost } from "@/lib/blog";
+// Relative, extension-ful import (not the "@/" alias) so the node --test
+// runner — which strips types but resolves neither tsconfig path aliases nor
+// extensionless ESM specifiers — can load this value import when tests import
+// blog-metadata. `allowImportingTsExtensions` keeps tsc/Next happy.
+import { rssAlternateTypes } from "./rss.ts";
 
 // Site-wide social card (PQW-004) served by src/app/opengraph-image.tsx.
 // Root file-convention images apply to descendant routes, but blog posts define
@@ -17,6 +22,13 @@ export function createBlogPostMetadata(post: BlogPost): Metadata {
   return {
     title: `${post.title} - Prowl Blog`,
     description: post.description,
+    // Per-post canonical to its own URL (PQW-010), resolved against
+    // metadataBase. `types` re-included so RSS autodiscovery survives Next's
+    // shallow alternates merge on this self-defined metadata object.
+    alternates: {
+      canonical: `/blog/${post.slug}`,
+      types: rssAlternateTypes,
+    },
     openGraph: {
       title: post.title,
       description: post.description,

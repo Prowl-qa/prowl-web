@@ -5,6 +5,12 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
 ## [Unreleased]
 
 ### Added
+- Canonical URLs for the remaining routes (PQW-010): `alternates.canonical` is
+  now set for `/` (in `src/app/page.tsx`, deliberately not the root layout so it
+  is not inherited by unrelated pages), `/blog` (which also collapses `?tag=`
+  filter URLs onto `/blog`, removing the duplicate-content risk), and each blog
+  post (per-post canonical in `createBlogPostMetadata`). Follows the existing
+  product/docs pattern of relative paths resolved against `metadataBase`.
 - RSS feed improvements (PQW-009): the blog feed builder moved to a pure,
   unit-tested `src/lib/rss.ts` (`escapeXml`, `buildBlogFeed`,
   `rssAlternateTypes`). `<link>`/`<guid>`/`<atom:link>` URLs are now
