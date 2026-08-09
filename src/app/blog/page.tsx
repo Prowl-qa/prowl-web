@@ -12,13 +12,17 @@ export const metadata: Metadata = {
     description:
       "Articles on AI-powered testing, QA automation, and building with agents.",
     url: "https://prowl.tools/blog",
+    // Root opengraph-image applies to descendants, but this segment replaces
+    // the parent openGraph object through shallow metadata merging.
+    images: ["/opengraph-image"],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Blog - Prowl",
     description:
       "Articles on AI-powered testing, QA automation, and building with agents.",
     creator: "@prowltools",
+    images: ["/opengraph-image"],
   },
 };
 

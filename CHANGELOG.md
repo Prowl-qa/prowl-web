@@ -5,6 +5,22 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
 ## [Unreleased]
 
 ### Added
+- Blog post social images (PQW-008): `generateMetadata` in
+  `src/app/blog/[slug]/page.tsx` now sets `openGraph.images` and
+  `twitter.images` from the post's `image` frontmatter (resolved against
+  `metadataBase`), falling back to the site-wide card (PQW-004) when a post
+  declares none. Previously the parsed `image` field was never used and posts
+  had no preview image.
+- Open Graph / Twitter social preview cards (PQW-004): a shared 1200x630
+  `ImageResponse` generator (`src/lib/og-image.tsx`) — dark brand background with
+  the Prowl mascot logo, wordmark, section eyebrow, one-line headline, and the
+  `prowl.tools` domain — wired through the `opengraph-image` file convention at the
+  root (`src/app/opengraph-image.tsx`) and per-section variants for `/cli`,
+  `/code-review`, and `/docs`. Each route now emits `og:image` and
+  `twitter:image` (1200x630) and every page's `twitter.card` is
+  `summary_large_image`; the root file-convention image applies to descendants,
+  while `/blog` references the site-wide card explicitly because its own
+  shallow-merged metadata object replaces the parent `openGraph` object.
 - Prowl Review dogfooding: `.github/workflows/prowl-review.yml` (auto review on PRs) and
   `prowl-review-command.yml` (`@prowl-review` chat/commands) run the Claude + Gemini ensemble
   via `prowl-tools/prowl-code-review@v1`, configured by a base-branch-trusted
