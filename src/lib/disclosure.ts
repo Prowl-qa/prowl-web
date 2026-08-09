@@ -40,16 +40,21 @@ export function isDismissKey(key: string): boolean {
 
 /**
  * Whether a focus-out to `next` should close the region: true when focus moved
- * outside the disclosure container (e.g. Tab past the last link), false when it
- * stayed within or the relatedTarget is unknown-but-inside. `contains` mirrors
- * `Node.contains` and is injected so this stays DOM-free and testable.
+ * to another element outside the disclosure container (e.g. Tab past the last
+ * link), false when it stayed within — or when `next` is null. A null
+ * relatedTarget is NOT treated as leaving: Safari does not focus links/buttons
+ * on click, so clicking a menu item blurs the trigger with relatedTarget null
+ * at mousedown — closing then would hide the menu before mouseup and swallow
+ * the click. Genuine outside interactions are already dismissed by the
+ * document-level pointerdown listener, and Escape always closes. `contains`
+ * mirrors `Node.contains` and is injected so this stays DOM-free and testable.
  */
 export function shouldCloseOnFocusOut(
   next: unknown | null,
   contains: (node: unknown) => boolean,
 ): boolean {
   if (next == null) {
-    return true;
+    return false;
   }
   return !contains(next);
 }
