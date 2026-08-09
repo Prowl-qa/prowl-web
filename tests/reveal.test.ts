@@ -52,7 +52,7 @@ test('does not queue hydration work on the server', () => {
 });
 
 test('queues one client hydration signal and notifies active subscribers once', () => {
-  const scheduled = [];
+  const scheduled: Array<() => void> = [];
   const store = createRevealHydrationStore({
     hasWindow: () => true,
     schedule: (callback) => {
@@ -94,7 +94,7 @@ test('queues one client hydration signal and notifies active subscribers once', 
 });
 
 test('unsubscribe removes a listener before the hydration notification', () => {
-  const scheduled = [];
+  const scheduled: Array<() => void> = [];
   const store = createRevealHydrationStore({
     hasWindow: () => true,
     schedule: (callback) => {
