@@ -24,10 +24,6 @@
 **Priority**: High
 **Description**: `/docs` renders `DocsHub`, whose top heading is an `<h2>` ("Docs for every tool"), so the page has no `<h1>` — broken heading hierarchy for assistive tech and a weak SEO signal. Promote the heading to `<h1>` when `DocsHub` renders with `standalone`, or add a page-level `<h1>` in `src/app/docs/page.tsx`.
 
-### PQW-020: Gate production deploys on CI passing
-**Priority**: High
-**Description**: As a Prowl Tools developer, I want deploys to prowl.tools to only happen after the CI pipeline (including hunts) passes. Vercel currently auto-deploys every push to `main`. Recommended approach: enable GitHub branch protection on `main` requiring the PQW-019 checks to pass before merge, so anything that lands on `main` (and therefore auto-deploys) has already passed hunts. Evaluate as a follow-up whether to also gate the Vercel build itself (ignored-build-step or GitHub-Actions-driven deploys) for pushes that bypass PRs. Depends on PQW-019.
-
 ## Medium Priority
 
 ### PQW-008: Wire blog post `image` frontmatter into metadata
