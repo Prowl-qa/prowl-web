@@ -3,6 +3,7 @@
 import { motion } from 'motion/react';
 import { features } from '@/lib/features-data';
 import { fadeUp, staggerContainer } from '@/lib/animations';
+import { useScrollReveal } from '@/lib/reveal';
 
 function FeatureIcon({ icon }: { icon: string }) {
   const cls = 'w-6 h-6 text-cyan';
@@ -77,12 +78,12 @@ function FeatureIcon({ icon }: { icon: string }) {
 }
 
 export default function Features() {
+  const reveal = useScrollReveal();
+
   return (
     <section className="px-6 pb-24 max-w-5xl mx-auto">
       <motion.div
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: '-80px' }}
+        {...reveal}
         variants={staggerContainer}
       >
         <motion.h2 variants={fadeUp} className="text-3xl sm:text-4xl font-bold text-center mb-14">

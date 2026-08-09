@@ -40,6 +40,23 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
   marketing pages.
 
 ### Fixed
+- Render marketing content visible without JS and fix the LCP/FCP regression (PQW-005):
+  every section (heroes, section reveals, and all `whileInView` sections) previously shipped
+  its SSR HTML behind motion's inline `opacity:0` `hidden` variant, so content — including the
+  hero headline, the LCP element — was invisible until hydration and hidden entirely for no-JS
+  visitors and crawlers. A new shared `src/lib/reveal.ts` utility now renders content visible by
+  default and applies the entrance animation as a progressive enhancement: `revealVisible`
+  (`{ initial: 'visible', animate: 'visible' }`) keeps above-the-fold heroes visible on first
+  paint with no re-hide (correct for LCP), and
+  `useScrollReveal` (backed by a shared one-shot hydration store and also respecting
+  `prefers-reduced-motion`) only enables the `hidden` → `visible` scroll entrance after
+  hydration, when below-the-fold sections are off-screen. The post-hydration scroll-reveal props
+  include a stable remount key so Motion applies the hidden initial state on the enhanced mount,
+  while standalone `/docs` content stays on the visible hero path. Applied across `Hero`,
+  `SuiteHero`, `CodeReview`, `SectionReveal`, `TypingEffect`, and every section component. SSR
+  HTML now ships zero inline `opacity:0` on content across `/`, `/cli`, `/code-review`, `/docs`,
+  `/blog`, with focused `src/lib/reveal.ts` unit coverage for visible, reduced-motion,
+  post-hydration, and hydration-store behavior.
 - Pointed all X/Twitter links and metadata at the live `@prowltools` account (PQW-022):
   the footer X link (`https://x.com/prowltools`) and every page's `twitter.creator`. Replaces
   the earlier `@prowl` handle, which is not ours (`@prowl` was unavailable when the account was

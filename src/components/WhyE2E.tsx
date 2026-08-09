@@ -3,6 +3,7 @@
 import { motion } from 'motion/react';
 import SectionReveal from '@/components/ui/SectionReveal';
 import { fadeUp, staggerContainer } from '@/lib/animations';
+import { useScrollReveal } from '@/lib/reveal';
 
 const points = [
   {
@@ -20,15 +21,15 @@ const points = [
 ];
 
 export default function WhyE2E() {
+  const reveal = useScrollReveal();
+
   return (
     <SectionReveal>
       <section className="px-6 pb-20">
         <motion.div
           className="mx-auto w-full max-w-7xl"
           variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-80px' }}
+          {...reveal}
         >
           <motion.h2 variants={fadeUp} className="text-3xl font-semibold tracking-tight sm:text-4xl">
             Why end-to-end testing has to be first-class
