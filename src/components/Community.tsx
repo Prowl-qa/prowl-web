@@ -3,6 +3,7 @@
 import { motion } from 'motion/react';
 import SectionReveal from '@/components/ui/SectionReveal';
 import { fadeUp, staggerContainer } from '@/lib/animations';
+import { useScrollReveal } from '@/lib/reveal';
 
 const points = [
   {
@@ -20,15 +21,15 @@ const points = [
 ];
 
 export default function Community() {
+  const reveal = useScrollReveal();
+
   return (
     <SectionReveal>
       <section id="community" className="px-6 pb-20 scroll-mt-20">
         <motion.div
           className="mx-auto w-full max-w-7xl"
           variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-80px' }}
+          {...reveal}
         >
           <motion.p variants={fadeUp} className="text-xs uppercase tracking-[0.2em] text-muted">
             Community Hub

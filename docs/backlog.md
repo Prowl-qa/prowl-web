@@ -12,10 +12,6 @@
 **Priority**: High
 **Description**: No page defines `openGraph.images` or `twitter.images`, and there is no `opengraph-image.*` file or social image in `public/` — links shared on X, Slack, LinkedIn, iMessage, etc. render with no preview image. Add a 1200×630 `src/app/opengraph-image.png` (or generate with `ImageResponse`), set `openGraph.images` globally in `src/app/layout.tsx`, switch `twitter.card` to `summary_large_image`, and add per-section variants where worthwhile.
 
-### PQW-005: Render page content visible without JS (opacity-0 animation / LCP fix)
-**Priority**: High
-**Description**: Every marketing section is a client component animated from `hidden: { opacity: 0, y: 24 }` via motion/react (`src/lib/animations.ts`), including the hero headline — the LCP element. SSR HTML ships with inline `opacity:0`, so content is invisible until hydration, hurting LCP/FCP and the no-JS/crawler experience. Render content visible by default and apply animation only as a progressive enhancement; respect `prefers-reduced-motion`. Affects `Hero.tsx`, `SuiteHero.tsx`, `SectionReveal.tsx`, and all section components.
-
 ### PQW-006: Make the nav Products dropdown keyboard/screen-reader accessible
 **Priority**: High
 **Description**: The Products menu in `src/components/Nav.tsx` is CSS-hover/`group-focus-within` only. The trigger button has no `aria-expanded`/`aria-controls`, no click or keyboard handler, no Escape-to-close, and defaults to `type="submit"`. Fails WCAG 2.1 (4.1.2 Name/Role/Value, 1.4.13). Convert to a JS-controlled disclosure: managed open state, `aria-expanded`, `type="button"`, toggle on click, close on Escape/outside-click.

@@ -4,6 +4,7 @@ import { type ReactNode } from 'react';
 import { motion } from 'motion/react';
 import { highlights } from '@/lib/agent-data';
 import { fadeUp, staggerContainer } from '@/lib/animations';
+import { useScrollReveal } from '@/lib/reveal';
 import SectionReveal from '@/components/ui/SectionReveal';
 
 const CYAN = 'text-cyan-500 dark:text-cyan-300';
@@ -108,13 +109,13 @@ function HighlightIcon({ icon }: { icon: string }) {
 /* ---------- Component ---------- */
 
 export default function AgentEfficiency() {
+  const reveal = useScrollReveal();
+
   return (
     <SectionReveal>
       <section id="agent-efficiency" className="px-6 pb-24 max-w-5xl mx-auto scroll-mt-20">
         <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-80px' }}
+          {...reveal}
           variants={staggerContainer}
         >
           {/* Header */}
