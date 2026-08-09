@@ -1,6 +1,6 @@
 'use client';
 
-import { useSyncExternalStore } from 'react';
+import { createContext, createElement, useContext, useSyncExternalStore, type ReactNode } from 'react';
 import { useReducedMotion, type MotionProps } from 'motion/react';
 
 export type RevealMotionProps = Pick<MotionProps, 'initial' | 'animate' | 'whileInView' | 'viewport'> & {
@@ -21,18 +21,31 @@ export type RevealMotionProps = Pick<MotionProps, 'initial' | 'animate' | 'while
 export const revealVisible: RevealMotionProps = { initial: false, animate: 'visible' };
 
 const noopSubscribe = () => () => {};
+const getHydratedSnapshot = () => true;
+const getServerHydratedSnapshot = () => false;
+const RevealHydrationContext = createContext(false);
+
+/**
+ * Provides the one post-hydration signal shared by every reveal consumer on the
+ * page. Keeping the store subscription here avoids repeating it for each section
+ * while still preserving an SSR-safe first client render.
+ */
+export function RevealHydrationProvider({ children }: { children: ReactNode }) {
+  const hydrated = useSyncExternalStore(
+    noopSubscribe,
+    getHydratedSnapshot,
+    getServerHydratedSnapshot,
+  );
+
+  return createElement(RevealHydrationContext.Provider, { value: hydrated }, children);
+}
 
 /**
  * Returns `false` on the server and on the first client render (so hydration
- * matches the server markup), then `true` once hydration has completed. Built on
- * `useSyncExternalStore` so it needs no `setState`-in-effect and stays SSR-safe.
+ * matches the server markup), then `true` once hydration has completed.
  */
 function useHydrated(): boolean {
-  return useSyncExternalStore(
-    noopSubscribe,
-    () => true,
-    () => false,
-  );
+  return useContext(RevealHydrationContext);
 }
 
 /**

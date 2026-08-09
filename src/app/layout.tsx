@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { RevealHydrationProvider } from "@/lib/reveal";
 import { ThemeProvider } from "@/lib/theme";
 import "./globals.css";
 
@@ -65,7 +66,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ThemeProvider>
-          {children}
+          <RevealHydrationProvider>
+            {children}
+          </RevealHydrationProvider>
         </ThemeProvider>
       </body>
     </html>
