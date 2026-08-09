@@ -45,8 +45,9 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
   its SSR HTML behind motion's inline `opacity:0` `hidden` variant, so content — including the
   hero headline, the LCP element — was invisible until hydration and hidden entirely for no-JS
   visitors and crawlers. A new shared `src/lib/reveal.ts` utility now renders content visible by
-  default and applies the entrance animation as a progressive enhancement: `revealVisible` keeps
-  above-the-fold heroes visible on first paint with no re-hide (correct for LCP), and
+  default and applies the entrance animation as a progressive enhancement: `revealVisible`
+  (`{ initial: 'visible', animate: 'visible' }`) keeps above-the-fold heroes visible on first
+  paint with no re-hide (correct for LCP), and
   `useScrollReveal` (backed by a shared one-shot hydration store and also respecting
   `prefers-reduced-motion`) only enables the `hidden` → `visible` scroll entrance after
   hydration, when below-the-fold sections are off-screen. The post-hydration scroll-reveal props
