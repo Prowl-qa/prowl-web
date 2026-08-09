@@ -6,6 +6,12 @@ import PostFooter from "@/components/blog/PostFooter";
 
 type Params = { slug: string };
 
+// Site-wide social card (PQW-004) served by src/app/opengraph-image.tsx.
+// File-convention images do not cascade into descendant segments, so blog
+// posts reference it explicitly as their fallback. Resolved against
+// metadataBase (https://prowl.tools/opengraph-image).
+const SITE_OG_IMAGE = "/opengraph-image";
+
 export function generateStaticParams(): Params[] {
   return getAllPosts().map((post) => ({ slug: post.slug }));
 }
@@ -19,6 +25,12 @@ export async function generateMetadata({
   const post = getPostBySlug(slug);
   if (!post) return {};
 
+  // Per-post social image from `image` frontmatter (resolved against
+  // metadataBase when relative), falling back to the site-wide card (PQW-004)
+  // when a post declares none. Set explicitly because file-convention images
+  // do not inherit into this segment.
+  const images = [post.image ?? SITE_OG_IMAGE];
+
   return {
     title: `${post.title} - Prowl Blog`,
     description: post.description,
@@ -30,12 +42,14 @@ export async function generateMetadata({
       publishedTime: post.date,
       authors: [post.author],
       tags: post.tags,
+      images,
     },
     twitter: {
       card: "summary_large_image",
       title: post.title,
       description: post.description,
       creator: "@prowltools",
+      images,
     },
   };
 }
