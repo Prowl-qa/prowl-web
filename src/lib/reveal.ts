@@ -7,6 +7,25 @@ export type RevealMotionProps = Pick<MotionProps, 'initial' | 'animate' | 'while
   key?: string;
 };
 
+type HydrationScheduler = (callback: () => void) => void;
+
+type CreateRevealHydrationStoreOptions = {
+  hasWindow?: () => boolean;
+  schedule?: HydrationScheduler;
+};
+
+export type RevealHydrationStore = {
+  subscribe: (listener: () => void) => () => void;
+  getSnapshot: () => boolean;
+  getServerSnapshot: () => false;
+};
+
+type ScrollRevealState = {
+  hydrated: boolean;
+  reducedMotion: boolean | null;
+  margin?: string;
+};
+
 /**
  * Renders an element at its `visible` variant with no hidden initial state and no
  * entrance animation. This is the SSR / no-JS / reduced-motion baseline: content
@@ -20,49 +39,61 @@ export type RevealMotionProps = Pick<MotionProps, 'initial' | 'animate' | 'while
  */
 export const revealVisible: RevealMotionProps = { initial: false, animate: 'visible' };
 
-let hydratedSnapshot = false;
-let hydrationQueued = false;
-const hydrationListeners = new Set<() => void>();
+export function createRevealHydrationStore({
+  hasWindow = () => typeof window !== 'undefined',
+  schedule = queueMicrotask,
+}: CreateRevealHydrationStoreOptions = {}): RevealHydrationStore {
+  let hydratedSnapshot = false;
+  let hydrationQueued = false;
+  const hydrationListeners = new Set<() => void>();
 
-function emitHydrationChange() {
-  for (const listener of hydrationListeners) {
-    listener();
-  }
-}
-
-function markHydrated() {
-  hydrationQueued = false;
-
-  if (hydratedSnapshot) {
-    return;
+  function emitHydrationChange() {
+    for (const listener of hydrationListeners) {
+      listener();
+    }
   }
 
-  hydratedSnapshot = true;
-  emitHydrationChange();
-}
+  function markHydrated() {
+    hydrationQueued = false;
 
-function subscribeHydration(listener: () => void) {
-  hydrationListeners.add(listener);
+    if (hydratedSnapshot) {
+      return;
+    }
 
-  if (typeof window !== 'undefined' && !hydratedSnapshot && !hydrationQueued) {
-    hydrationQueued = true;
-    queueMicrotask(markHydrated);
+    hydratedSnapshot = true;
+    emitHydrationChange();
   }
 
-  return () => {
-    hydrationListeners.delete(listener);
+  function subscribe(listener: () => void) {
+    hydrationListeners.add(listener);
+
+    if (hasWindow() && !hydratedSnapshot && !hydrationQueued) {
+      hydrationQueued = true;
+      schedule(markHydrated);
+    }
+
+    return () => {
+      hydrationListeners.delete(listener);
+    };
+  }
+
+  function getSnapshot() {
+    return hydratedSnapshot;
+  }
+
+  function getServerSnapshot(): false {
+    return false;
+  }
+
+  return {
+    subscribe,
+    getSnapshot,
+    getServerSnapshot,
   };
 }
 
-function getHydratedSnapshot() {
-  return hydratedSnapshot;
-}
-
-function getServerHydratedSnapshot() {
-  return false;
-}
-
 const RevealHydrationContext = createContext(false);
+const revealHydrationStore = createRevealHydrationStore();
 
 /**
  * Provides the one post-hydration signal shared by every reveal consumer on the
@@ -71,9 +102,9 @@ const RevealHydrationContext = createContext(false);
  */
 export function RevealHydrationProvider({ children }: { children: ReactNode }) {
   const hydrated = useSyncExternalStore(
-    subscribeHydration,
-    getHydratedSnapshot,
-    getServerHydratedSnapshot,
+    revealHydrationStore.subscribe,
+    revealHydrationStore.getSnapshot,
+    revealHydrationStore.getServerSnapshot,
   );
 
   return createElement(RevealHydrationContext.Provider, { value: hydrated }, children);
@@ -105,10 +136,11 @@ function useHydrated(): boolean {
  * @param margin IntersectionObserver root margin passed through to motion's
  *   `viewport.margin` (e.g. `'-80px'` to trigger slightly before fully in view).
  */
-export function useScrollReveal(margin = '-80px'): RevealMotionProps {
-  const hydrated = useHydrated();
-  const reducedMotion = useReducedMotion();
-
+export function getScrollRevealProps({
+  hydrated,
+  reducedMotion,
+  margin = '-80px',
+}: ScrollRevealState): RevealMotionProps {
   if (!hydrated || reducedMotion) {
     return revealVisible;
   }
@@ -119,4 +151,11 @@ export function useScrollReveal(margin = '-80px'): RevealMotionProps {
     whileInView: 'visible',
     viewport: { once: true, margin },
   };
+}
+
+export function useScrollReveal(margin = '-80px'): RevealMotionProps {
+  const hydrated = useHydrated();
+  const reducedMotion = useReducedMotion();
+
+  return getScrollRevealProps({ hydrated, reducedMotion, margin });
 }
