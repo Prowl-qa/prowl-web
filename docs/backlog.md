@@ -8,14 +8,6 @@
 
 ## High Priority
 
-### PQW-006: Make the nav Products dropdown keyboard/screen-reader accessible
-**Priority**: High
-**Description**: The Products menu in `src/components/Nav.tsx` is CSS-hover/`group-focus-within` only. The trigger button has no `aria-expanded`/`aria-controls`, no click or keyboard handler, no Escape-to-close, and defaults to `type="submit"`. Fails WCAG 2.1 (4.1.2 Name/Role/Value, 1.4.13). Convert to a JS-controlled disclosure: managed open state, `aria-expanded`, `type="button"`, toggle on click, close on Escape/outside-click.
-
-### PQW-007: Add an `<h1>` to the /docs page
-**Priority**: High
-**Description**: `/docs` renders `DocsHub`, whose top heading is an `<h2>` ("Docs for every tool"), so the page has no `<h1>` — broken heading hierarchy for assistive tech and a weak SEO signal. Promote the heading to `<h1>` when `DocsHub` renders with `standalone`, or add a page-level `<h1>` in `src/app/docs/page.tsx`.
-
 ## Medium Priority
 
 ### PQW-009: RSS feed improvements (autodiscovery, escaping, sitemap)
