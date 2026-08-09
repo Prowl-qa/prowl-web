@@ -86,6 +86,7 @@ test('queues one client hydration signal and notifies active subscribers once', 
     throw new Error('already-hydrated subscriptions should not be notified again');
   });
 
+  assert.equal(store.getSnapshot(), true);
   assert.equal(scheduled.length, 1);
 
   unsubscribeSecond();

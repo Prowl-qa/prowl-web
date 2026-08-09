@@ -27,9 +27,10 @@ type ScrollRevealState = {
 };
 
 /**
- * Renders an element at its `visible` variant with no hidden initial state and no
- * entrance animation. This is the SSR / no-JS / reduced-motion baseline: content
- * ships in the HTML fully visible instead of behind an inline `opacity:0`.
+ * Renders an element at its `visible` variant from the first paint with no
+ * hidden initial state and no entrance animation. This is the SSR / no-JS /
+ * reduced-motion baseline: content ships in the HTML fully visible instead of
+ * behind an inline `opacity:0`.
  *
  * Use for above-the-fold content — heroes and the LCP element. The entrance
  * animation is intentionally skipped there: hiding the LCP element and then
@@ -37,7 +38,7 @@ type ScrollRevealState = {
  * trade-off is that heroes appear on the first server-rendered paint rather than
  * animating in, which is the correct call for the largest contentful paint.
  */
-export const revealVisible: RevealMotionProps = { initial: false, animate: 'visible' };
+export const revealVisible: RevealMotionProps = { initial: 'visible', animate: 'visible' };
 
 export function createRevealHydrationStore({
   hasWindow = () => typeof window !== 'undefined',
