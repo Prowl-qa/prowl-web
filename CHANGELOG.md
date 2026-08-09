@@ -5,6 +5,15 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
 ## [Unreleased]
 
 ### Added
+- Open Graph / Twitter social preview cards (PQW-004): a shared 1200x630
+  `ImageResponse` generator (`src/lib/og-image.tsx`) — dark brand background with
+  the Prowl mascot logo, wordmark, section eyebrow, one-line headline, and the
+  `prowl.tools` domain — wired through the `opengraph-image` file convention at the
+  root (`src/app/opengraph-image.tsx`) and per-section variants for `/cli`,
+  `/code-review`, and `/docs`. Each route now emits `og:image` and
+  `twitter:image` (1200x630) and every page's `twitter.card` is
+  `summary_large_image`; `/blog` references the site-wide card explicitly since
+  file-convention images do not cascade into child segments.
 - Prowl Review dogfooding: `.github/workflows/prowl-review.yml` (auto review on PRs) and
   `prowl-review-command.yml` (`@prowl-review` chat/commands) run the Claude + Gemini ensemble
   via `prowl-tools/prowl-code-review@v1`, configured by a base-branch-trusted

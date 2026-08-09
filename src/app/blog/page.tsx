@@ -12,13 +12,17 @@ export const metadata: Metadata = {
     description:
       "Articles on AI-powered testing, QA automation, and building with agents.",
     url: "https://prowl.tools/blog",
+    // Site-wide social card (PQW-004); set explicitly since file-convention
+    // images do not inherit into this segment.
+    images: ["/opengraph-image"],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Blog - Prowl",
     description:
       "Articles on AI-powered testing, QA automation, and building with agents.",
     creator: "@prowltools",
+    images: ["/opengraph-image"],
   },
 };
 
