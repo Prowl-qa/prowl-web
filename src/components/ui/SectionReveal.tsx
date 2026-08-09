@@ -2,6 +2,7 @@
 
 import { motion } from 'motion/react';
 import { fadeUp } from '@/lib/animations';
+import { useScrollReveal } from '@/lib/reveal';
 
 interface SectionRevealProps {
   children: React.ReactNode;
@@ -10,12 +11,12 @@ interface SectionRevealProps {
 }
 
 export default function SectionReveal({ children, className, delay = 0 }: SectionRevealProps) {
+  const reveal = useScrollReveal();
+
   return (
     <motion.div
       variants={fadeUp}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: '-80px' }}
+      {...reveal}
       transition={{ delay }}
       className={className}
     >

@@ -5,18 +5,19 @@ import { motion } from 'motion/react';
 import SectionReveal from '@/components/ui/SectionReveal';
 import ProductIcon from '@/components/icons/ProductIcon';
 import { fadeUp, staggerContainer } from '@/lib/animations';
+import { useScrollReveal } from '@/lib/reveal';
 import { isExternalHref, suiteProducts } from '@/lib/products';
 
 export default function ProductShowcase() {
+  const reveal = useScrollReveal();
+
   return (
     <SectionReveal>
       <section id="products" className="px-6 pb-20 scroll-mt-20">
         <motion.div
           className="mx-auto w-full max-w-7xl"
           variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-80px' }}
+          {...reveal}
         >
           <motion.p variants={fadeUp} className="text-xs uppercase tracking-[0.2em] text-muted">
             The tools

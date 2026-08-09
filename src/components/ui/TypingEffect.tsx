@@ -2,6 +2,7 @@
 
 import { motion } from 'motion/react';
 import type { Variants } from 'motion/react';
+import { useScrollReveal } from '@/lib/reveal';
 
 interface TerminalLine {
   text: string;
@@ -27,12 +28,12 @@ const lineVariants: Variants = {
 };
 
 export default function TypingEffect({ lines }: TypingEffectProps) {
+  const reveal = useScrollReveal('-40px');
+
   return (
     <motion.span
       className="block"
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: '-40px' }}
+      {...reveal}
       variants={containerVariants}
     >
       {lines.map((line, i) => (
