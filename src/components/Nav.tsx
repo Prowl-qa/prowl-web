@@ -6,7 +6,13 @@ import Link from 'next/link';
 import ThemeToggle from '@/components/ui/ThemeToggle';
 import ProductIcon from '@/components/icons/ProductIcon';
 import { isExternalHref, suiteProducts } from '@/lib/products';
-import { disclosureReducer, isDismissKey, shouldCloseOnFocusOut } from '@/lib/disclosure';
+import {
+  disclosureReducer,
+  isDismissKey,
+  isHoverPointer,
+  shouldCloseOnFocusOut,
+  type DisclosureAction,
+} from '@/lib/disclosure';
 
 const linkClass =
   'hover:text-cyan transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm';
@@ -21,9 +27,15 @@ export default function Nav() {
   // Products menu: a JS-controlled disclosure (WAI-ARIA APG disclosure pattern).
   // State drives visibility so the menu is keyboard-operable and screen-reader
   // announced, while hover still opens it for mouse users.
-  const [productsOpen, dispatchProducts] = useReducer(disclosureReducer, false);
+  const [productsOpen, dispatchProductsState] = useReducer(disclosureReducer, false);
+  const productsOpenRef = useRef(productsOpen);
   const productsRef = useRef<HTMLDivElement>(null);
   const productsTriggerRef = useRef<HTMLButtonElement>(null);
+
+  const dispatchProducts = useCallback((action: DisclosureAction) => {
+    productsOpenRef.current = disclosureReducer(productsOpenRef.current, action);
+    dispatchProductsState(action);
+  }, []);
 
   const handleScroll = useCallback(() => {
     setScrolled(window.scrollY > 16);
@@ -34,20 +46,18 @@ export default function Nav() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [handleScroll]);
 
-  // While open, dismiss on Escape (returning focus to the trigger) and on an
-  // outside pointer press — both required to keep the disclosure dismissible
-  // (WCAG 2.1 SC 1.4.13). Listeners are only attached while open.
+  // Dismiss on Escape (returning focus to the trigger) and on an outside pointer
+  // press — both required to keep the disclosure dismissible (WCAG 2.1 SC
+  // 1.4.13). The listener lifecycle stays stable and handlers bail while closed.
   useEffect(() => {
-    if (!productsOpen) return;
-
     function onKeyDown(event: KeyboardEvent) {
-      if (isDismissKey(event.key)) {
-        dispatchProducts({ type: 'close' });
-        productsTriggerRef.current?.focus();
-      }
+      if (!productsOpenRef.current || !isDismissKey(event.key)) return;
+      dispatchProducts({ type: 'close' });
+      productsTriggerRef.current?.focus();
     }
 
     function onPointerDown(event: PointerEvent) {
+      if (!productsOpenRef.current) return;
       const container = productsRef.current;
       if (container && !container.contains(event.target as Node)) {
         dispatchProducts({ type: 'close' });
@@ -60,7 +70,7 @@ export default function Nav() {
       document.removeEventListener('keydown', onKeyDown);
       document.removeEventListener('pointerdown', onPointerDown);
     };
-  }, [productsOpen]);
+  }, [dispatchProducts]);
 
   const handleProductsBlur = useCallback((event: React.FocusEvent<HTMLDivElement>) => {
     const container = productsRef.current;
@@ -71,7 +81,19 @@ export default function Nav() {
     if (closes) {
       dispatchProducts({ type: 'close' });
     }
-  }, []);
+  }, [dispatchProducts]);
+
+  const handleProductsPointerEnter = useCallback((event: React.PointerEvent<HTMLDivElement>) => {
+    if (isHoverPointer(event.pointerType)) {
+      dispatchProducts({ type: 'open' });
+    }
+  }, [dispatchProducts]);
+
+  const handleProductsPointerLeave = useCallback((event: React.PointerEvent<HTMLDivElement>) => {
+    if (isHoverPointer(event.pointerType)) {
+      dispatchProducts({ type: 'close' });
+    }
+  }, [dispatchProducts]);
 
   return (
     <nav
@@ -94,8 +116,8 @@ export default function Nav() {
           <div
             ref={productsRef}
             className="relative"
-            onMouseEnter={() => dispatchProducts({ type: 'open' })}
-            onMouseLeave={() => dispatchProducts({ type: 'close' })}
+            onPointerEnter={handleProductsPointerEnter}
+            onPointerLeave={handleProductsPointerLeave}
             onBlur={handleProductsBlur}
           >
             <button

@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import {
+  isHoverPointer,
   disclosureReducer,
   isDismissKey,
   shouldCloseOnFocusOut,
@@ -25,6 +26,13 @@ test('Escape (and legacy Esc) are dismiss keys; other keys are not', () => {
   assert.equal(isDismissKey('Enter'), false);
   assert.equal(isDismissKey(' '), false);
   assert.equal(isDismissKey('Tab'), false);
+});
+
+test('hover disclosure behavior is only enabled for mouse pointers', () => {
+  assert.equal(isHoverPointer('mouse'), true);
+  assert.equal(isHoverPointer('touch'), false);
+  assert.equal(isHoverPointer('pen'), false);
+  assert.equal(isHoverPointer(''), false);
 });
 
 test('focus-out closes when the next target is outside the container', () => {

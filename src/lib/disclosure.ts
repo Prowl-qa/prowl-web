@@ -39,6 +39,15 @@ export function isDismissKey(key: string): boolean {
 }
 
 /**
+ * Pointer types that should receive hover disclosure behavior. Touch and pen
+ * activation should rely on click/tap toggling so compatibility mouse events
+ * cannot open and immediately re-close the disclosure.
+ */
+export function isHoverPointer(pointerType: string): boolean {
+  return pointerType === 'mouse';
+}
+
+/**
  * Whether a focus-out to `next` should close the region: true when focus moved
  * to another element outside the disclosure container (e.g. Tab past the last
  * link), false when it stayed within — or when `next` is null. A null
