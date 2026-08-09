@@ -63,6 +63,11 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
   marketing pages.
 
 ### Fixed
+- `/docs` page now has an `<h1>` (PQW-007): `DocsHub` renders its "Docs for every tool"
+  heading as an `<h1>` when `standalone` (the `/docs` page body) and keeps it an `<h2>` when
+  embedded on the homepage, where the hero owns the page's single `<h1>`. Fixes the broken
+  heading hierarchy and weak SEO signal on `/docs` without introducing a duplicate top-level
+  heading on `/`.
 - Render marketing content visible without JS and fix the LCP/FCP regression (PQW-005):
   every section (heroes, section reveals, and all `whileInView` sections) previously shipped
   its SSR HTML behind motion's inline `opacity:0` `hidden` variant, so content — including the

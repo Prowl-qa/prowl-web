@@ -31,6 +31,11 @@ function DocsHubReveal() {
 }
 
 function DocsHubContent({ standalone, reveal }: { standalone: boolean; reveal: RevealMotionProps }) {
+  // On the standalone /docs page this section owns the page's single <h1>; when
+  // embedded on the homepage the hero already owns the <h1>, so it stays an <h2>
+  // to keep the heading hierarchy correct (no duplicate top-level heading).
+  const Heading = standalone ? motion.h1 : motion.h2;
+
   return (
     <section id="docs" className={`px-6 scroll-mt-20 ${standalone ? 'pt-16 pb-20' : 'pb-20'}`}>
       <motion.div
@@ -41,9 +46,9 @@ function DocsHubContent({ standalone, reveal }: { standalone: boolean; reveal: R
         <motion.p variants={fadeUp} className="text-xs uppercase tracking-[0.2em] text-muted">
           Documentation
         </motion.p>
-        <motion.h2 variants={fadeUp} className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+        <Heading variants={fadeUp} className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
           Docs for every tool
-        </motion.h2>
+        </Heading>
         <motion.p variants={fadeUp} className="mt-3 max-w-3xl text-muted">
           Each product has its own documentation site. Jump straight to the one
           you need — they share the same look and cross-link to each other.
