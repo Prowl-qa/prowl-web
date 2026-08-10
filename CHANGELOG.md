@@ -81,6 +81,11 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
   `<a>` (PQW-011), enabling client-side navigation and prefetch for `/cli#how-it-works`
   instead of a full document reload. Same-page hash anchors elsewhere are intentionally left
   as `<a>`.
+- Infra product renamed "Prowl Infra" → "Prowl Infra Hub" (PQW-013) to match the live
+  satellite site's own title; the `name` in `src/lib/products.ts` propagates to the nav
+  Products dropdown, footer, and homepage showcase. Satellite URLs (`infra.prowl.tools`) are
+  left unchanged. The Prowl Code Review site name is deliberately kept as-is per the owner
+  decision recorded in the workspace CLAUDE.md.
 
 ### Fixed
 - Accessible nav Products menu (PQW-006): the desktop "Products" dropdown was
