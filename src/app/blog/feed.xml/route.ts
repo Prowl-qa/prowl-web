@@ -1,46 +1,18 @@
 import { getAllPosts } from "@/lib/blog";
+import { buildBlogFeed } from "@/lib/rss";
 
-function escapeXmlText(value: string | null | undefined) {
-  return String(value ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&apos;");
-}
+// This route is statically generated at build time (PQW-009). `lastBuildDate`
+// is therefore the build timestamp, which is the intended behavior: the site
+// redeploys whenever blog content changes, regenerating the feed with a fresh
+// timestamp. `force-static` makes that contract explicit — do NOT make this
+// route dynamic just to move the timestamp.
+export const dynamic = "force-static";
 
+/** Serve the statically generated RSS feed XML for the blog. */
 export function GET() {
   const posts = getAllPosts();
   const siteUrl = "https://prowl.tools";
-
-  const items = posts
-    .map(
-      (post) => `
-    <item>
-      <title><![CDATA[${post.title}]]></title>
-      <description><![CDATA[${post.description}]]></description>
-      <link>${siteUrl}/blog/${post.slug}</link>
-      <guid isPermaLink="true">${siteUrl}/blog/${post.slug}</guid>
-      <pubDate>${new Date(post.date).toUTCString()}</pubDate>
-      ${post.tags
-        .map((tag) => `<category>${escapeXmlText(tag)}</category>`)
-        .join("\n      ")}
-      <author>info@prowl.tools (${escapeXmlText(post.author)})</author>
-    </item>`
-    )
-    .join("");
-
-  const feed = `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Prowl Blog</title>
-    <description>Articles on AI-powered testing, QA automation, and building with agents.</description>
-    <link>${siteUrl}/blog</link>
-    <atom:link href="${siteUrl}/blog/feed.xml" rel="self" type="application/rss+xml" />
-    <language>en-us</language>
-    <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>${items}
-  </channel>
-</rss>`;
+  const feed = buildBlogFeed(posts, siteUrl, new Date());
 
   return new Response(feed, {
     headers: {

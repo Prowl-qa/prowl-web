@@ -47,3 +47,15 @@ test('falls back to the site-wide social card when a post has no image', () => {
     twitter: [SITE_OG_IMAGE],
   });
 });
+
+test('sets a per-post canonical to the post URL (PQW-010)', () => {
+  const metadata = createBlogPostMetadata(basePost);
+  assert.equal(metadata.alternates?.canonical, `/blog/${basePost.slug}`);
+});
+
+test('keeps RSS autodiscovery alongside the per-post canonical', () => {
+  const metadata = createBlogPostMetadata(basePost);
+  assert.deepEqual(metadata.alternates?.types, {
+    'application/rss+xml': [{ url: '/blog/feed.xml', title: 'Prowl Blog' }],
+  });
+});

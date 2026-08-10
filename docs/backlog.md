@@ -10,14 +10,6 @@
 
 ## Medium Priority
 
-### PQW-009: RSS feed improvements (autodiscovery, escaping, sitemap)
-**Priority**: Medium
-**Description**: For `src/app/blog/feed.xml/route.ts`: (1) no `<link rel="alternate" type="application/rss+xml">` is emitted anywhere, so readers/browsers can't auto-detect the feed — add `alternates.types` to the blog metadata; (2) `<link>`/`<guid>` URLs are interpolated without XML-escaping (harmless today, inconsistent with `escapeXmlText` used elsewhere); (3) `lastBuildDate` uses `new Date()` in a statically generated route, so it's frozen at build time — either explicitly accept a build-time timestamp (optionally with `force-static`) or make the route dynamic/revalidated if freshness matters; (4) optionally list `/blog/feed.xml` in the sitemap.
-
-### PQW-010: Add canonical URLs to /, /blog, and blog posts
-**Priority**: Medium
-**Description**: Product and docs pages set `alternates.canonical`, but `/` (layout), `/blog`, and `/blog/[slug]` do not. `/blog` is filterable via `?tag=`, so tag URLs risk duplicate-content indexing with no canonical back to `/blog`. Add canonicals to all three.
-
 ### PQW-011: Use next/link for the FinalCta internal link
 **Priority**: Medium
 **Description**: `src/components/FinalCta.tsx` links to `/cli#how-it-works` with a plain `<a>`, causing a full document reload with no prefetch. Switch to `<Link>`. (Same-page hash anchors elsewhere are fine as `<a>`.)

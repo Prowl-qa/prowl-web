@@ -1,12 +1,20 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getAllPosts } from "@/lib/blog";
+import { rssAlternateTypes } from "@/lib/rss";
 import PostCard from "@/components/blog/PostCard";
 
 export const metadata: Metadata = {
   title: "Blog - Prowl",
   description:
     "Articles on AI-powered testing, QA automation, and building with agents. From the team behind Prowl.",
+  // Canonical to /blog (PQW-010). This also collapses `?tag=` filter URLs onto
+  // /blog, removing the duplicate-content risk from tag-filtered views.
+  // `types` re-included so autodiscovery survives Next's shallow alternates merge.
+  alternates: {
+    canonical: "/blog",
+    types: rssAlternateTypes,
+  },
   openGraph: {
     title: "Blog - Prowl",
     description:
