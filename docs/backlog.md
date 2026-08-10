@@ -16,7 +16,7 @@
 
 ### PQW-012: Newsletter form cleanup
 **Priority**: Medium
-**Description**: `src/components/blog/PostFooter.tsx` puts `rel="noopener noreferrer"` on the `<form>` element, which is not a valid attribute there — remove it. Also verify the Buttondown action URL (`https://buttondown.com/api/emails/embed-subscribe/prowl`) matches the live account (Buttondown has used both `buttondown.email` and `buttondown.com` hosts).
+**Description**: Re-scoped 2026-08-10 (owner decision): there is **no live newsletter** — the Buttondown action URL (`https://buttondown.com/api/emails/embed-subscribe/prowl`) points at an account we don't own, so the form silently loses (or misdirects) real subscriber emails. **Remove the newsletter CTA block from `src/components/blog/PostFooter.tsx`** (keeping the rest of the post footer) and update the blog hunt that asserts the form's presence. Re-adding is tracked by PQW-023 once a newsletter plan exists. (The original `rel="noopener noreferrer"`-on-`<form>` cleanup dies with the removed block.)
 
 ### PQW-013: Decide canonical product naming on the site
 **Priority**: Medium
@@ -39,3 +39,7 @@
 ### PQW-016: Footer copyright year is baked at build time
 **Priority**: Low
 **Description**: `new Date().getFullYear()` in `src/components/Footer.tsx` runs at build time in a static page, so the year only advances on redeploy. Harmless for an actively deployed site — fix opportunistically or accept.
+
+### PQW-023: Launch a blog newsletter (blocked: needs execution plan)
+**Priority**: Low
+**Description**: Owner intends to start a newsletter but is holding off until there's a plan for producing content (as of 2026-08-10, no provider account exists and no first-post timeline). When ready: pick a provider, create the account, then restore the newsletter CTA in `src/components/blog/PostFooter.tsx` (removed under PQW-012 — recover the block from git history) pointing at the real signup endpoint, and re-add the blog hunt assertion for the form. Do not un-block this item until the provider account actually exists.
