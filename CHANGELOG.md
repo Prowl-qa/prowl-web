@@ -129,5 +129,12 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
   says Next.js 16.
 
 ### Removed
+- Newsletter signup CTA from the blog post footer (`src/components/blog/PostFooter.tsx`)
+  (PQW-012). There is no live newsletter: the Buttondown embed action
+  (`https://buttondown.com/api/emails/embed-subscribe/prowl`) pointed at an account we do not
+  own, so the form silently misdirected/lost real subscriber emails. The rest of the post
+  footer (the "Back to all posts" link) is unchanged, and the `blog` hunt's newsletter-form
+  assertions were updated in lockstep. This removal is deliberate; restoring a newsletter once
+  a real plan exists is tracked separately by PQW-023 (restore the block from git history).
 - Internal `/hub` and `/infra` marketing pages and the `SatelliteProductLanding` component;
   the old URLs permanently redirect to the live satellite sites.
