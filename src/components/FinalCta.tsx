@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function FinalCta() {
   return (
@@ -23,12 +24,12 @@ export default function FinalCta() {
               >
                 Install the CLI
               </a>
-              <a
+              <Link
                 href="/cli#how-it-works"
                 className="inline-flex items-center justify-center rounded-md border border-border bg-background/85 px-6 py-3 text-sm font-semibold transition hover:border-cyan/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan"
               >
                 How it Works
-              </a>
+              </Link>
             </div>
           </div>
 
