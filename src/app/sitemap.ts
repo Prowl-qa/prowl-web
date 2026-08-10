@@ -4,15 +4,7 @@ import { BLOG_FEED_PATH } from "@/lib/rss";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const posts = getAllPosts();
-  const latestBlogPostDate = posts.reduce<Date | null>((latest, post) => {
-    const publishedAt = new Date(post.date);
-
-    if (!latest || publishedAt > latest) {
-      return publishedAt;
-    }
-
-    return latest;
-  }, null);
+  const latestBlogPostDate = posts[0] ? new Date(posts[0].date) : null;
 
   const blogEntries: MetadataRoute.Sitemap = posts.map((post) => ({
     url: `https://prowl.tools/blog/${post.slug}`,

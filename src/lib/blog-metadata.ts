@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import type { BlogPost } from "@/lib/blog";
-// Relative, extension-ful import (not the "@/" alias) so the node --test
-// runner — which strips types but resolves neither tsconfig path aliases nor
-// extensionless ESM specifiers — can load this value import when tests import
-// blog-metadata. `allowImportingTsExtensions` keeps tsc/Next happy.
+// This production module is also imported directly by node --test. Keep the
+// relative, extension-ful value import: Next/tsc allow it via
+// `allowImportingTsExtensions`, while the test runner resolves neither the
+// "@/..." alias nor extensionless ESM specifiers when stripping TypeScript.
 import { rssAlternateTypes } from "./rss.ts";
 
 // Site-wide social card (PQW-004) served by src/app/opengraph-image.tsx.
@@ -12,6 +12,7 @@ import { rssAlternateTypes } from "./rss.ts";
 // Resolved against metadataBase (https://prowl.tools/opengraph-image).
 export const SITE_OG_IMAGE = "/opengraph-image";
 
+/** Build SEO/social metadata for a blog post, including canonical RSS links. */
 export function createBlogPostMetadata(post: BlogPost): Metadata {
   // Per-post social image from `image` frontmatter (resolved against
   // metadataBase when relative), falling back to the site-wide card (PQW-004)

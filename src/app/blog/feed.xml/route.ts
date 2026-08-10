@@ -8,6 +8,7 @@ import { buildBlogFeed } from "@/lib/rss";
 // route dynamic just to move the timestamp.
 export const dynamic = "force-static";
 
+/** Serve the statically generated RSS feed XML for the blog. */
 export function GET() {
   const posts = getAllPosts();
   const siteUrl = "https://prowl.tools";

@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
 import { test } from 'node:test';
 
 import type { BlogPost } from '../src/lib/blog.ts';
@@ -21,6 +22,20 @@ const basePost: BlogPost = {
   readingTime: '1 min read',
   content: '',
 };
+
+function assertXmlParses(xml: string): void {
+  const result = spawnSync(
+    'python3',
+    [
+      '-c',
+      'import sys, xml.etree.ElementTree as ET; ET.fromstring(sys.stdin.read())',
+    ],
+    { encoding: 'utf8', input: xml },
+  );
+
+  assert.ifError(result.error);
+  assert.equal(result.status, 0, result.stderr);
+}
 
 test('escapeXml escapes all five XML metacharacters', () => {
   assert.equal(
@@ -69,6 +84,41 @@ test('buildBlogFeed uses the injected build date for lastBuildDate', () => {
   );
 });
 
+test('buildBlogFeed keeps CDATA and escaped item fields XML-safe', () => {
+  const feed = buildBlogFeed(
+    [
+      {
+        ...basePost,
+        title: 'Title ]]> with & <markup>',
+        description: 'Description ]]> with & <markup>',
+        author: 'A & B <Team>',
+        tags: ['qa & ops', '<agents>'],
+      },
+    ],
+    SITE_URL,
+    new Date(0),
+  );
+
+  assertXmlParses(feed);
+  assert.ok(
+    feed.includes(
+      '<title><![CDATA[Title ]]]]><![CDATA[> with & <markup>]]></title>',
+    ),
+  );
+  assert.ok(
+    feed.includes(
+      '<description><![CDATA[Description ]]]]><![CDATA[> with & <markup>]]></description>',
+    ),
+  );
+  assert.ok(feed.includes('<category>qa &amp; ops</category>'));
+  assert.ok(feed.includes('<category>&lt;agents&gt;</category>'));
+  assert.ok(
+    feed.includes(
+      '<author>info@prowl.tools (A &amp; B &lt;Team&gt;)</author>',
+    ),
+  );
+});
+
 test('buildBlogFeed produces well-formed, parseable XML with one item per post', () => {
   const feed = buildBlogFeed(
     [basePost, { ...basePost, slug: 'second', title: 'Second' }],
@@ -78,6 +128,7 @@ test('buildBlogFeed produces well-formed, parseable XML with one item per post',
   const itemCount = (feed.match(/<item>/g) ?? []).length;
   assert.equal(itemCount, 2);
   assert.ok(feed.startsWith('<?xml version="1.0" encoding="UTF-8"?>'));
+  assertXmlParses(feed);
 });
 
 test('rssAlternateTypes advertises the feed at its relative path', () => {

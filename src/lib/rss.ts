@@ -34,6 +34,11 @@ export function escapeXml(value: string | null | undefined): string {
     .replaceAll("'", "&apos;");
 }
 
+/** Split the one terminator sequence that cannot appear inside CDATA content. */
+function escapeCdata(value: string | null | undefined): string {
+  return String(value ?? "").replaceAll("]]>", "]]]]><![CDATA[>");
+}
+
 /**
  * Build the RSS 2.0 feed document for the blog.
  *
@@ -41,7 +46,8 @@ export function escapeXml(value: string | null | undefined): string {
  * than read from `new Date()` internally) so the statically generated route can
  * document the build-time timestamp choice and so this stays unit-testable.
  * `<link>`/`<guid>`/`<atom:link>` URLs are XML-escaped for correctness even
- * though today's slugs/siteUrl contain no reserved characters.
+ * though today's slugs/siteUrl contain no reserved characters. Text fields that
+ * use CDATA are split on `]]>` so frontmatter cannot terminate the section.
  */
 export function buildBlogFeed(
   posts: BlogPost[],
@@ -53,8 +59,8 @@ export function buildBlogFeed(
       const postUrl = `${siteUrl}/blog/${post.slug}`;
       return `
     <item>
-      <title><![CDATA[${post.title}]]></title>
-      <description><![CDATA[${post.description}]]></description>
+      <title><![CDATA[${escapeCdata(post.title)}]]></title>
+      <description><![CDATA[${escapeCdata(post.description)}]]></description>
       <link>${escapeXml(postUrl)}</link>
       <guid isPermaLink="true">${escapeXml(postUrl)}</guid>
       <pubDate>${new Date(post.date).toUTCString()}</pubDate>
