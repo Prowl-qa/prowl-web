@@ -19,6 +19,10 @@ export type BlogPost = BlogPostFrontmatter & {
 };
 
 const CONTENT_DIR = path.join(process.cwd(), "content", "blog");
+const FENCE_PATTERN = /^ {0,3}(`{3,}|~{3,})/;
+const MARKDOWN_H1_PATTERN = /^ {0,3}#(?:\s|$)/;
+const SETEXT_H1_PATTERN = /^ {0,3}=+\s*$/;
+const RAW_H1_PATTERN = /^ {0,3}<h1(?:\s|>)/i;
 
 function isNonEmptyString(value: unknown): value is string {
   return typeof value === "string" && value.trim().length > 0;
@@ -76,6 +80,15 @@ function getTags(value: unknown): string[] {
   return value.filter(isNonEmptyString).map((tag) => tag.trim());
 }
 
+function isNotFoundError(error: unknown): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    (error as { code?: unknown }).code === "ENOENT"
+  );
+}
+
 export function assertNoBodyH1(content: string, slug: string): void {
   let inFence = false;
   let fenceMarker = "";
@@ -84,7 +97,7 @@ export function assertNoBodyH1(content: string, slug: string): void {
   // PostHeader owns the page h1, so body content must begin its outline at h2.
   content.split(/\r?\n/).forEach((line, index) => {
     const lineNumber = index + 1;
-    const fenceMatch = line.match(/^ {0,3}(`{3,}|~{3,})/);
+    const fenceMatch = line.match(FENCE_PATTERN);
 
     if (fenceMatch) {
       const marker = fenceMatch[1];
@@ -109,19 +122,19 @@ export function assertNoBodyH1(content: string, slug: string): void {
       return;
     }
 
-    if (/^ {0,3}#(?:\s|$)/.test(line)) {
+    if (MARKDOWN_H1_PATTERN.test(line)) {
       throw new Error(
         `Invalid blog content in content/blog/${slug}/index.mdx: body headings must start at "##" because PostHeader owns the page <h1>. Found markdown "#" heading on line ${lineNumber}.`
       );
     }
 
-    if (/^ {0,3}=+\s*$/.test(line) && hasPreviousContentLine) {
+    if (SETEXT_H1_PATTERN.test(line) && hasPreviousContentLine) {
       throw new Error(
         `Invalid blog content in content/blog/${slug}/index.mdx: body headings must start at "##" because PostHeader owns the page <h1>. Found setext h1 underline on line ${lineNumber}.`
       );
     }
 
-    if (/^ {0,3}<h1(?:\s|>)/i.test(line)) {
+    if (RAW_H1_PATTERN.test(line)) {
       throw new Error(
         `Invalid blog content in content/blog/${slug}/index.mdx: body content must not render its own <h1> because PostHeader owns the page <h1>. Found <h1> on line ${lineNumber}.`
       );
@@ -150,11 +163,7 @@ function getPostSlugs(): string[] {
 
   return fs
     .readdirSync(CONTENT_DIR, { withFileTypes: true })
-    .filter((entry) => {
-      if (!entry.isDirectory() || !isBlogSlug(entry.name)) return false;
-      const indexPath = path.join(CONTENT_DIR, entry.name, "index.mdx");
-      return fs.existsSync(indexPath);
-    })
+    .filter((entry) => entry.isDirectory() && isBlogSlug(entry.name))
     .map((entry) => entry.name);
 }
 
@@ -162,7 +171,6 @@ export function getPostBySlug(slug: string): BlogPost | null {
   if (!isBlogSlug(slug)) return null;
 
   const filePath = path.join(CONTENT_DIR, slug, "index.mdx");
-  if (!fs.existsSync(filePath)) return null;
 
   try {
     const raw = fs.readFileSync(filePath, "utf-8");
@@ -179,6 +187,8 @@ export function getPostBySlug(slug: string): BlogPost | null {
       content,
     };
   } catch (error) {
+    if (isNotFoundError(error)) return null;
+
     console.error(`Error processing blog post ${slug}:`, error);
     return null;
   }

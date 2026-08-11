@@ -59,6 +59,10 @@ test('rejects unsafe blog slugs before file access', () => {
   assert.equal(getPostBySlug('../introducing-prowl-qa-blog'), null);
 });
 
+test('returns null for valid slugs without a matching post file', () => {
+  assert.equal(getPostBySlug(`missing-blog-post-${process.pid}`), null);
+});
+
 test('skips malformed blog posts instead of failing the full post list', () => {
   const slug = `invalid-body-h1-${process.pid}`;
   const fixtureDir = path.join(process.cwd(), 'content', 'blog', slug);
