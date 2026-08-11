@@ -24,7 +24,9 @@ function YamlHighlight() {
   return (
     <code className="text-sm leading-relaxed">
       {lines.map((line, i) => (
-        <span key={i} className="block">
+        // The `- fill` line repeats verbatim, so no field is unique on its
+        // own; disambiguate the duplicate with its position in the static list.
+        <span key={`${line.key}-${i}`} className="block">
           <span className="text-cyan-light">{line.key}:</span>
           {line.value && <span className={CODE_GREEN}>{line.value}</span>}
         </span>

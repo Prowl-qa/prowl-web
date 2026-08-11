@@ -115,7 +115,7 @@ export default function Install() {
 
           <div className="space-y-4">
             {steps.map((step, i) => (
-              <div key={i} className="flex items-start gap-4">
+              <div key={step.command} className="flex items-start gap-4">
                 <span className="shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-cyan/10 text-cyan text-xs font-bold mt-0.5">
                   {i + 1}
                 </span>
