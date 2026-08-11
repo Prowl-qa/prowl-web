@@ -126,6 +126,15 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
   renamed from the legacy `@prowlqa`). Does not touch the `@prowl-review` PR bot name.
 - Removed legacy "Prowl QA" branding from the site title metadata and hero badge; README now
   says Next.js 16.
+- Code hygiene sweep (PQW-014): removed dead exports (`getAllTags` in `src/lib/blog.ts`,
+  `fadeIn`/`scaleIn` in `src/lib/animations.ts`) and the unreachable `'exit'` icon case in
+  `AgentEfficiency`; added `type="button"` to the remaining non-submit buttons (the Nav mobile
+  hamburger, `ThemeToggle`, and the `Install` copy buttons — the Nav Products trigger already
+  had it from PQW-006); and replaced index-based React keys with stable keys in `Install`
+  (`step.command`), `TypingEffect` (`line.text`), and `CodeExample` (content field plus position,
+  since the `- fill` YAML row repeats verbatim). Also fixed two pre-existing TypeScript errors in
+  `tests/og-image-content.test.ts` (TS2322/TS18048) so a bare `npx tsc --noEmit` runs clean,
+  narrowing the optional-chained `backgroundImage` via `assert.ok` rather than a cast.
 
 ### Removed
 - Newsletter signup CTA from the blog post footer (`src/components/blog/PostFooter.tsx`)
