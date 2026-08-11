@@ -122,13 +122,3 @@ export function getAllPosts(): BlogPost[] {
     .filter((post): post is BlogPost => post !== null)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
-
-export function getAllTags(): string[] {
-  const tags = new Set<string>();
-  for (const post of getAllPosts()) {
-    for (const tag of post.tags) {
-      tags.add(tag);
-    }
-  }
-  return Array.from(tags).sort();
-}
