@@ -1,7 +1,14 @@
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
 import { test } from 'node:test';
 
-import { assertNoBodyH1, getAllPosts } from '../src/lib/blog.ts';
+import {
+  assertNoBodyH1,
+  getAllPosts,
+  getPostBySlug,
+  isBlogSlug,
+} from '../src/lib/blog.ts';
 
 test('allows blog body headings that start at h2', () => {
   assert.doesNotThrow(() => {
@@ -41,4 +48,51 @@ test('current blog posts satisfy the body h1 guard', () => {
 
   assert.ok(posts.length > 0);
   assert.ok(posts.some((post) => post.slug === 'introducing-prowl-qa-blog'));
+});
+
+test('rejects unsafe blog slugs before file access', () => {
+  assert.equal(isBlogSlug('introducing-prowl-qa-blog'), true);
+  assert.equal(isBlogSlug('../introducing-prowl-qa-blog'), false);
+  assert.equal(isBlogSlug('introducing/prowl'), false);
+  assert.equal(isBlogSlug('introducing\\prowl'), false);
+  assert.equal(isBlogSlug('Introducing-Prowl'), false);
+  assert.equal(getPostBySlug('../introducing-prowl-qa-blog'), null);
+});
+
+test('skips malformed blog posts instead of failing the full post list', () => {
+  const slug = `invalid-body-h1-${process.pid}`;
+  const fixtureDir = path.join(process.cwd(), 'content', 'blog', slug);
+  const fixturePath = path.join(fixtureDir, 'index.mdx');
+  const originalError = console.error;
+  let loggedError = false;
+
+  fs.rmSync(fixtureDir, { recursive: true, force: true });
+  fs.mkdirSync(fixtureDir, { recursive: true });
+  fs.writeFileSync(
+    fixturePath,
+    [
+      '---',
+      'title: Invalid fixture',
+      'description: Invalid body heading fixture',
+      'date: 2026-08-11',
+      'author: Prowl',
+      '---',
+      '',
+      '# Invalid duplicate heading',
+      '',
+    ].join('\n'),
+  );
+
+  console.error = () => {
+    loggedError = true;
+  };
+
+  try {
+    assert.equal(getPostBySlug(slug), null);
+    assert.equal(getAllPosts().some((post) => post.slug === slug), false);
+    assert.equal(loggedError, true);
+  } finally {
+    console.error = originalError;
+    fs.rmSync(fixtureDir, { recursive: true, force: true });
+  }
 });

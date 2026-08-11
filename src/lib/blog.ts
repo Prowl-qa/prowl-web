@@ -24,6 +24,10 @@ function isNonEmptyString(value: unknown): value is string {
   return typeof value === "string" && value.trim().length > 0;
 }
 
+export function isBlogSlug(slug: string): boolean {
+  return /^[a-z0-9][a-z0-9_-]*$/.test(slug);
+}
+
 function getRequiredString(
   value: unknown,
   fieldName: keyof BlogPostFrontmatter,
@@ -147,7 +151,7 @@ function getPostSlugs(): string[] {
   return fs
     .readdirSync(CONTENT_DIR, { withFileTypes: true })
     .filter((entry) => {
-      if (!entry.isDirectory()) return false;
+      if (!entry.isDirectory() || !isBlogSlug(entry.name)) return false;
       const indexPath = path.join(CONTENT_DIR, entry.name, "index.mdx");
       return fs.existsSync(indexPath);
     })
@@ -155,22 +159,29 @@ function getPostSlugs(): string[] {
 }
 
 export function getPostBySlug(slug: string): BlogPost | null {
+  if (!isBlogSlug(slug)) return null;
+
   const filePath = path.join(CONTENT_DIR, slug, "index.mdx");
   if (!fs.existsSync(filePath)) return null;
 
-  const raw = fs.readFileSync(filePath, "utf-8");
-  const { data, content } = matter(raw);
-  assertNoBodyH1(content, slug);
+  try {
+    const raw = fs.readFileSync(filePath, "utf-8");
+    const { data, content } = matter(raw);
+    assertNoBodyH1(content, slug);
 
-  const stats = readingTime(content);
-  const frontmatter = parseFrontmatter(data as Record<string, unknown>, slug);
+    const stats = readingTime(content);
+    const frontmatter = parseFrontmatter(data as Record<string, unknown>, slug);
 
-  return {
-    slug,
-    ...frontmatter,
-    readingTime: stats.text,
-    content,
-  };
+    return {
+      slug,
+      ...frontmatter,
+      readingTime: stats.text,
+      content,
+    };
+  } catch (error) {
+    console.error(`Error processing blog post ${slug}:`, error);
+    return null;
+  }
 }
 
 export function getAllPosts(): BlogPost[] {

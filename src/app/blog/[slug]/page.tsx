@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getAllPosts, getPostBySlug } from "@/lib/blog";
+import { getAllPosts, getPostBySlug, isBlogSlug } from "@/lib/blog";
 import { createBlogPostMetadata } from "@/lib/blog-metadata";
 import PostHeader from "@/components/blog/PostHeader";
 import PostFooter from "@/components/blog/PostFooter";
@@ -17,6 +17,8 @@ export async function generateMetadata({
   params: Promise<Params>;
 }): Promise<Metadata> {
   const { slug } = await params;
+  if (!isBlogSlug(slug)) return {};
+
   const post = getPostBySlug(slug);
   if (!post) return {};
 
@@ -29,12 +31,14 @@ export default async function BlogPostPage({
   params: Promise<Params>;
 }) {
   const { slug } = await params;
+  if (!isBlogSlug(slug)) notFound();
+
   const post = getPostBySlug(slug);
   if (!post) notFound();
 
   // Dynamically import the MDX file
   const { default: MDXContent } = await import(
-    `../../../../content/blog/${slug}/index.mdx`
+    `../../../../content/blog/${post.slug}/index.mdx`
   );
 
   const jsonLd = {
