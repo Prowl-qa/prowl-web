@@ -1,11 +1,22 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getAllPosts, getPostBySlug, isBlogSlug } from "@/lib/blog";
+import type { ComponentType } from "react";
+import { getAllPosts, getPostBySlug } from "@/lib/blog";
 import { createBlogPostMetadata } from "@/lib/blog-metadata";
 import PostHeader from "@/components/blog/PostHeader";
 import PostFooter from "@/components/blog/PostFooter";
 
 type Params = { slug: string };
+type BlogPostModule = { default: ComponentType };
+
+const blogPostModules = {
+  "introducing-prowl-qa-blog": () =>
+    import("../../../../content/blog/introducing-prowl-qa-blog/index.mdx"),
+} satisfies Record<string, () => Promise<BlogPostModule>>;
+
+function getBlogPostModule(slug: string) {
+  return blogPostModules[slug as keyof typeof blogPostModules] ?? null;
+}
 
 export function generateStaticParams(): Params[] {
   return getAllPosts().map((post) => ({ slug: post.slug }));
@@ -17,8 +28,6 @@ export async function generateMetadata({
   params: Promise<Params>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  if (!isBlogSlug(slug)) return {};
-
   const post = getPostBySlug(slug);
   if (!post) return {};
 
@@ -31,15 +40,13 @@ export default async function BlogPostPage({
   params: Promise<Params>;
 }) {
   const { slug } = await params;
-  if (!isBlogSlug(slug)) notFound();
-
   const post = getPostBySlug(slug);
   if (!post) notFound();
 
-  // Dynamically import the MDX file
-  const { default: MDXContent } = await import(
-    `../../../../content/blog/${post.slug}/index.mdx`
-  );
+  const loadBlogPostModule = getBlogPostModule(post.slug);
+  if (!loadBlogPostModule) notFound();
+
+  const { default: MDXContent } = await loadBlogPostModule();
 
   const jsonLd = {
     "@context": "https://schema.org",

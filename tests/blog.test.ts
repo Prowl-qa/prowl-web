@@ -8,7 +8,6 @@ import {
   assertNoBodyH1,
   getAllPosts,
   getPostBySlug,
-  isBlogSlug,
 } from '../src/lib/blog.ts';
 
 test('allows blog body headings that start at h2', () => {
@@ -52,12 +51,10 @@ test('current blog posts satisfy the body h1 guard', () => {
 });
 
 test('rejects unsafe blog slugs before file access', () => {
-  assert.equal(isBlogSlug('introducing-prowl-qa-blog'), true);
-  assert.equal(isBlogSlug('../introducing-prowl-qa-blog'), false);
-  assert.equal(isBlogSlug('introducing/prowl'), false);
-  assert.equal(isBlogSlug('introducing\\prowl'), false);
-  assert.equal(isBlogSlug('Introducing-Prowl'), false);
   assert.equal(getPostBySlug('../introducing-prowl-qa-blog'), null);
+  assert.equal(getPostBySlug('introducing/prowl'), null);
+  assert.equal(getPostBySlug('introducing\\prowl'), null);
+  assert.equal(getPostBySlug('Introducing-Prowl'), null);
 });
 
 test('returns null for valid slugs without a matching post file', () => {

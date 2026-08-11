@@ -28,10 +28,6 @@ function isNonEmptyString(value: unknown): value is string {
   return typeof value === "string" && value.trim().length > 0;
 }
 
-export function isBlogSlug(slug: string): boolean {
-  return /^[a-z0-9][a-z0-9_-]*$/.test(slug);
-}
-
 function getRequiredString(
   value: unknown,
   fieldName: keyof BlogPostFrontmatter,
@@ -162,7 +158,7 @@ function getPostSlugs(): string[] {
   try {
     return fs
       .readdirSync(CONTENT_DIR, { withFileTypes: true })
-      .filter((entry) => entry.isDirectory() && isBlogSlug(entry.name))
+      .filter((entry) => entry.isDirectory())
       .map((entry) => entry.name);
   } catch (error) {
     if (isNotFoundError(error)) return [];
@@ -173,8 +169,12 @@ function getPostSlugs(): string[] {
 }
 
 export function getPostBySlug(slug: string): BlogPost | null {
-  if (!isBlogSlug(slug)) return null;
+  if (!getPostSlugs().includes(slug)) return null;
 
+  return readPostBySlug(slug);
+}
+
+function readPostBySlug(slug: string): BlogPost | null {
   const filePath = path.join(CONTENT_DIR, slug, "index.mdx");
 
   try {
@@ -201,7 +201,7 @@ export function getPostBySlug(slug: string): BlogPost | null {
 
 export function getAllPosts(): BlogPost[] {
   return getPostSlugs()
-    .map((slug) => getPostBySlug(slug))
+    .map((slug) => readPostBySlug(slug))
     .filter((post): post is BlogPost => post !== null)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
