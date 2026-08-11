@@ -6,10 +6,16 @@ function isExternalHref(href?: string) {
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
+    // PostHeader already renders the post title as the page's single <h1>, so a
+    // post body that starts with a markdown `#` would emit a second <h1> and break
+    // document outline / accessibility. Downshift `#` to render as <h2> — styled
+    // identically to the `##` mapping below — so an accidental top-level heading
+    // produces sensible, consistent output instead of a duplicate <h1>. Authoring
+    // convention is still to start bodies at `##`; this is the mechanical guard.
     h1: ({ children }) => (
-      <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mt-10 mb-4">
+      <h2 className="text-2xl font-bold tracking-tight mt-10 mb-3 pb-2 border-b border-border">
         {children}
-      </h1>
+      </h2>
     ),
     h2: ({ children }) => (
       <h2 className="text-2xl font-bold tracking-tight mt-10 mb-3 pb-2 border-b border-border">

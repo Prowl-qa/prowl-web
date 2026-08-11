@@ -87,6 +87,15 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
   decision recorded in the workspace CLAUDE.md.
 
 ### Fixed
+- Duplicate `<h1>` guard in MDX blog posts (PQW-015): `mdx-components.tsx`
+  mapped a markdown `#` to `<h1>`, but `PostHeader` already renders the post
+  title as the page's single `<h1>`, so a post body starting with `#` would emit
+  two `<h1>`s (broken document outline / accessibility). The `h1` mapping now
+  renders `<h2>`, styled identically to the `##` mapping, so an accidental
+  top-level heading produces sensible, consistent output instead of a duplicate
+  `<h1>`. Authoring convention remains to start bodies at `##`; this is the
+  mechanical guard behind it. No existing post used `#` (the current post starts
+  at `##`), so rendered output is unchanged.
 - Accessible nav Products menu (PQW-006): the desktop "Products" dropdown was
   CSS-hover / `group-focus-within` only — the trigger had no `aria-expanded`/`aria-controls`,
   no click or keyboard handling, no Escape-to-close, and defaulted to `type="submit"`, failing

@@ -29,4 +29,9 @@ steps:
 assertions:
   - urlIncludes: "/blog/introducing-prowl-qa-blog"
   - selectorExists: "h1"
+  # PQW-015: the post title (PostHeader) is the page's only <h1>; the MDX `#`
+  # mapping is downshifted to <h2> so a post body can never emit a second <h1>.
+  # `:nth-match(h1, 2)` matches a would-be 2nd h1 — asserting it does not exist
+  # locks in "exactly one <h1>" on the rendered post.
+  - selectorNotExists: ":nth-match(h1, 2)"
   - selectorExists: "footer a[href='/blog']"
