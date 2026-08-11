@@ -25,10 +25,14 @@ function childrenOf(value: ElementLike): unknown[] {
 
 function backgroundImageOf(value: ElementLike): string {
   const style = value.props.style as { backgroundImage?: unknown } | undefined;
+  const backgroundImage = style?.backgroundImage;
 
-  assert.equal(typeof style?.backgroundImage, 'string');
+  assert.ok(
+    typeof backgroundImage === 'string',
+    'expected style.backgroundImage to be a string',
+  );
 
-  return style.backgroundImage;
+  return backgroundImage;
 }
 
 test('builds stable OG image content for ImageResponse', () => {
