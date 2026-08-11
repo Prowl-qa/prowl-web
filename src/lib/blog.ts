@@ -241,7 +241,7 @@ export function getAllPosts(): BlogPost[] {
   const slugs = getPostSlugs();
 
   return slugs
-    .map((slug) => getPostBySlug(slug, slugs))
+    .map((slug) => readPostBySlug(slug))
     .filter((post): post is BlogPost => post !== null)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
