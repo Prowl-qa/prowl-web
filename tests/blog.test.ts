@@ -6,7 +6,7 @@ import { test } from 'node:test';
 
 import {
   assertNoBodyH1,
-  clearBlogPostSlugCache,
+  clearBlogPostCache,
   getAllPosts,
   getPostBySlug,
 } from '../src/lib/blog.ts';
@@ -84,7 +84,7 @@ test('caches blog slug discovery until the cache is cleared', () => {
 
   try {
     fs.rmSync(fixtureDir, { recursive: true, force: true });
-    clearBlogPostSlugCache();
+    clearBlogPostCache();
     assert.equal(getPostBySlug(slug), null);
 
     fs.mkdirSync(fixtureDir, { recursive: true });
@@ -104,13 +104,55 @@ test('caches blog slug discovery until the cache is cleared', () => {
     );
 
     assert.equal(getPostBySlug(slug), null);
-    clearBlogPostSlugCache();
+    clearBlogPostCache();
     assert.equal(getPostBySlug(slug)?.slug, slug);
   } finally {
     assert.doesNotThrow(() => {
       fs.rmSync(fixtureDir, { recursive: true, force: true });
     });
-    clearBlogPostSlugCache();
+    clearBlogPostCache();
+    assert.equal(fs.existsSync(fixtureDir), false);
+  }
+});
+
+test('caches parsed blog posts until the cache is cleared', () => {
+  const slug = `post-cache-fixture-${randomUUID()}`;
+  const fixtureDir = path.join(process.cwd(), 'content', 'blog', slug);
+  const fixturePath = path.join(fixtureDir, 'index.mdx');
+  const writeFixture = (title: string) => {
+    fs.mkdirSync(fixtureDir, { recursive: true });
+    fs.writeFileSync(
+      fixturePath,
+      [
+        '---',
+        `title: ${title}`,
+        'description: Parsed post cache fixture',
+        'date: 2026-08-11',
+        'author: Prowl',
+        '---',
+        '',
+        '## Valid fixture heading',
+        '',
+      ].join('\n'),
+    );
+  };
+
+  try {
+    fs.rmSync(fixtureDir, { recursive: true, force: true });
+    writeFixture('First cache title');
+    clearBlogPostCache();
+    assert.equal(getPostBySlug(slug)?.title, 'First cache title');
+
+    writeFixture('Second cache title');
+    assert.equal(getPostBySlug(slug)?.title, 'First cache title');
+
+    clearBlogPostCache();
+    assert.equal(getPostBySlug(slug)?.title, 'Second cache title');
+  } finally {
+    assert.doesNotThrow(() => {
+      fs.rmSync(fixtureDir, { recursive: true, force: true });
+    });
+    clearBlogPostCache();
     assert.equal(fs.existsSync(fixtureDir), false);
   }
 });
@@ -139,7 +181,7 @@ test('skips malformed blog posts instead of failing the full post list', () => {
         '',
       ].join('\n'),
     );
-    clearBlogPostSlugCache();
+    clearBlogPostCache();
 
     console.error = () => {
       loggedError = true;
@@ -153,7 +195,7 @@ test('skips malformed blog posts instead of failing the full post list', () => {
     assert.doesNotThrow(() => {
       fs.rmSync(fixtureDir, { recursive: true, force: true });
     });
-    clearBlogPostSlugCache();
+    clearBlogPostCache();
     assert.equal(fs.existsSync(fixtureDir), false);
   }
 });

@@ -25,6 +25,7 @@ const SETEXT_H1_PATTERN = /^ {0,3}=+\s*$/;
 const RAW_H1_PATTERN = /^ {0,3}<h1(?:\s|>)/i;
 const BLOG_SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 let cachedPostSlugs: string[] | null = null;
+const cachedPosts = new Map<string, BlogPost | null>();
 
 function isNonEmptyString(value: unknown): value is string {
   return typeof value === "string" && value.trim().length > 0;
@@ -187,8 +188,9 @@ function getPostSlugs(): string[] {
   }
 }
 
-export function clearBlogPostSlugCache(): void {
+export function clearBlogPostCache(): void {
   cachedPostSlugs = null;
+  cachedPosts.clear();
 }
 
 export function getPostBySlug(
@@ -198,13 +200,17 @@ export function getPostBySlug(
   if (!isBlogSlug(slug)) return null;
 
   const slugs = availableSlugs ?? getPostSlugs();
-  if (!slugs.includes(slug)) return null;
+  const matchingSlug = slugs.find(
+    (availableSlug) => availableSlug === slug && isBlogSlug(availableSlug)
+  );
+  if (!matchingSlug) return null;
 
-  return readPostBySlug(slug);
+  return readPostBySlug(matchingSlug);
 }
 
 function readPostBySlug(slug: string): BlogPost | null {
   if (!isBlogSlug(slug)) return null;
+  if (cachedPosts.has(slug)) return cachedPosts.get(slug) ?? null;
 
   const filePath = path.join(CONTENT_DIR, slug, "index.mdx");
 
@@ -216,13 +222,17 @@ function readPostBySlug(slug: string): BlogPost | null {
     const stats = readingTime(content);
     const frontmatter = parseFrontmatter(data as Record<string, unknown>, slug);
 
-    return {
+    const post = {
       slug,
       ...frontmatter,
       readingTime: stats.text,
       content,
     };
+
+    cachedPosts.set(slug, post);
+    return post;
   } catch (error) {
+    cachedPosts.set(slug, null);
     if (isNotFoundError(error)) return null;
 
     console.error(`Error processing blog post ${slug}:`, error);
