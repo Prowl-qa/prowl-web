@@ -98,6 +98,9 @@ test('skips malformed blog posts instead of failing the full post list', () => {
     assert.equal(loggedError, true);
   } finally {
     console.error = originalError;
-    fs.rmSync(fixtureDir, { recursive: true, force: true });
+    assert.doesNotThrow(() => {
+      fs.rmSync(fixtureDir, { recursive: true, force: true });
+    });
+    assert.equal(fs.existsSync(fixtureDir), false);
   }
 });

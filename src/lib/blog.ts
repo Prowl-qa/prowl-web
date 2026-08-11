@@ -159,12 +159,17 @@ function parseFrontmatter(
 }
 
 function getPostSlugs(): string[] {
-  if (!fs.existsSync(CONTENT_DIR)) return [];
+  try {
+    return fs
+      .readdirSync(CONTENT_DIR, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory() && isBlogSlug(entry.name))
+      .map((entry) => entry.name);
+  } catch (error) {
+    if (isNotFoundError(error)) return [];
 
-  return fs
-    .readdirSync(CONTENT_DIR, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory() && isBlogSlug(entry.name))
-    .map((entry) => entry.name);
+    console.error("Error reading blog content directory:", error);
+    return [];
+  }
 }
 
 export function getPostBySlug(slug: string): BlogPost | null {
