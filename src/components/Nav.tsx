@@ -188,6 +188,7 @@ export default function Nav() {
         <div className="flex sm:hidden items-center gap-3">
           <ThemeToggle />
           <button
+            type="button"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={menuOpen}

@@ -54,6 +54,7 @@ function CopyButton({ text }: { text: string }) {
 
   return (
     <button
+      type="button"
       onClick={handleCopy}
       aria-label={copied ? 'Copied!' : 'Copy to clipboard'}
       className="shrink-0 rounded-md p-1.5 text-muted hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan"
@@ -88,6 +89,7 @@ function CopyAllButton({ text }: { text: string }) {
 
   return (
     <button
+      type="button"
       onClick={handleCopy}
       aria-label={copied ? 'All commands copied!' : 'Copy all commands to clipboard'}
       className="text-sm text-muted hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-md px-3 py-1.5"
