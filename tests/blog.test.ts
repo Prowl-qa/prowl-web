@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { randomUUID } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { test } from 'node:test';
@@ -64,7 +65,7 @@ test('returns null for valid slugs without a matching post file', () => {
 });
 
 test('skips malformed blog posts instead of failing the full post list', () => {
-  const slug = `invalid-body-h1-${process.pid}`;
+  const slug = `invalid-body-h1-${randomUUID()}`;
   const fixtureDir = path.join(process.cwd(), 'content', 'blog', slug);
   const fixturePath = path.join(fixtureDir, 'index.mdx');
   const originalError = console.error;
