@@ -66,28 +66,28 @@ test('skips malformed blog posts instead of failing the full post list', () => {
   const originalError = console.error;
   let loggedError = false;
 
-  fs.rmSync(fixtureDir, { recursive: true, force: true });
-  fs.mkdirSync(fixtureDir, { recursive: true });
-  fs.writeFileSync(
-    fixturePath,
-    [
-      '---',
-      'title: Invalid fixture',
-      'description: Invalid body heading fixture',
-      'date: 2026-08-11',
-      'author: Prowl',
-      '---',
-      '',
-      '# Invalid duplicate heading',
-      '',
-    ].join('\n'),
-  );
-
-  console.error = () => {
-    loggedError = true;
-  };
-
   try {
+    fs.rmSync(fixtureDir, { recursive: true, force: true });
+    fs.mkdirSync(fixtureDir, { recursive: true });
+    fs.writeFileSync(
+      fixturePath,
+      [
+        '---',
+        'title: Invalid fixture',
+        'description: Invalid body heading fixture',
+        'date: 2026-08-11',
+        'author: Prowl',
+        '---',
+        '',
+        '# Invalid duplicate heading',
+        '',
+      ].join('\n'),
+    );
+
+    console.error = () => {
+      loggedError = true;
+    };
+
     assert.equal(getPostBySlug(slug), null);
     assert.equal(getAllPosts().some((post) => post.slug === slug), false);
     assert.equal(loggedError, true);
