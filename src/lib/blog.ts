@@ -19,7 +19,7 @@ export type BlogPost = BlogPostFrontmatter & {
 };
 
 const CONTENT_DIR = path.join(process.cwd(), "content", "blog");
-const FENCE_PATTERN = /^ {0,3}(`{3,}|~{3,})/;
+const FENCE_PATTERN = /^ {0,3}(`{3,}|~{3,})(.*)$/;
 const MARKDOWN_H1_PATTERN = /^ {0,3}#(?:\s|$)/;
 const SETEXT_H1_PATTERN = /^ {0,3}=+\s*$/;
 const RAW_H1_PATTERN = /^ {0,3}<h1(?:\s|>)/i;
@@ -97,11 +97,16 @@ export function assertNoBodyH1(content: string, slug: string): void {
 
     if (fenceMatch) {
       const marker = fenceMatch[1];
+      const trailingText = fenceMatch[2] ?? "";
 
       if (!inFence) {
         inFence = true;
-        fenceMarker = marker[0];
-      } else if (marker[0] === fenceMarker) {
+        fenceMarker = marker;
+      } else if (
+        marker[0] === fenceMarker[0] &&
+        marker.length >= fenceMarker.length &&
+        trailingText.trim().length === 0
+      ) {
         inFence = false;
         fenceMarker = "";
       }
@@ -169,7 +174,14 @@ function getPostSlugs(): string[] {
 }
 
 export function getPostBySlug(slug: string): BlogPost | null {
-  if (!getPostSlugs().includes(slug)) return null;
+  return getPostBySlugFromSlugs(slug, getPostSlugs());
+}
+
+function getPostBySlugFromSlugs(
+  slug: string,
+  availableSlugs: string[]
+): BlogPost | null {
+  if (!availableSlugs.includes(slug)) return null;
 
   return readPostBySlug(slug);
 }
@@ -200,8 +212,10 @@ function readPostBySlug(slug: string): BlogPost | null {
 }
 
 export function getAllPosts(): BlogPost[] {
-  return getPostSlugs()
-    .map((slug) => readPostBySlug(slug))
+  const slugs = getPostSlugs();
+
+  return slugs
+    .map((slug) => getPostBySlugFromSlugs(slug, slugs))
     .filter((post): post is BlogPost => post !== null)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }

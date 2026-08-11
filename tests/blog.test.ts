@@ -43,6 +43,15 @@ test('ignores h1 examples inside fenced code blocks', () => {
   });
 });
 
+test('requires a valid closing fence before resuming h1 checks', () => {
+  assert.doesNotThrow(() => {
+    assertNoBodyH1(
+      '````md\n``` still code\n# Example\n``` not closed\n````\n\n## Real section',
+      'fixture',
+    );
+  });
+});
+
 test('current blog posts satisfy the body h1 guard', () => {
   const posts = getAllPosts();
 
