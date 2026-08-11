@@ -68,6 +68,12 @@ test('rejects unsafe blog slugs before file access', () => {
     ]),
     null,
   );
+  assert.equal(
+    getPostBySlug('introducing-prowl-qa-blog', [
+      '../introducing-prowl-qa-blog',
+    ]),
+    null,
+  );
   assert.equal(getPostBySlug('introducing/prowl'), null);
   assert.equal(getPostBySlug('introducing\\prowl'), null);
   assert.equal(getPostBySlug('Introducing-Prowl'), null);

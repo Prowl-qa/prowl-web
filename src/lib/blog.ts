@@ -199,13 +199,10 @@ export function getPostBySlug(
 ): BlogPost | null {
   if (!isBlogSlug(slug)) return null;
 
-  const slugs = availableSlugs ?? getPostSlugs();
-  const matchingSlug = slugs.find(
-    (availableSlug) => availableSlug === slug && isBlogSlug(availableSlug)
-  );
-  if (!matchingSlug) return null;
+  const slugs = availableSlugs?.filter(isBlogSlug) ?? getPostSlugs();
+  if (!slugs.includes(slug)) return null;
 
-  return readPostBySlug(matchingSlug);
+  return readPostBySlug(slug);
 }
 
 function readPostBySlug(slug: string): BlogPost | null {
