@@ -54,6 +54,7 @@ function CopyButton({ text }: { text: string }) {
 
   return (
     <button
+      type="button"
       onClick={handleCopy}
       aria-label={copied ? 'Copied!' : 'Copy to clipboard'}
       className="shrink-0 rounded-md p-1.5 text-muted hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan"
@@ -88,6 +89,7 @@ function CopyAllButton({ text }: { text: string }) {
 
   return (
     <button
+      type="button"
       onClick={handleCopy}
       aria-label={copied ? 'All commands copied!' : 'Copy all commands to clipboard'}
       className="text-sm text-muted hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-md px-3 py-1.5"
@@ -113,7 +115,7 @@ export default function Install() {
 
           <div className="space-y-4">
             {steps.map((step, i) => (
-              <div key={i} className="flex items-start gap-4">
+              <div key={step.command} className="flex items-start gap-4">
                 <span className="shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-cyan/10 text-cyan text-xs font-bold mt-0.5">
                   {i + 1}
                 </span>

@@ -74,12 +74,6 @@ function HighlightIcon({ icon }: { icon: string }) {
           <path d="M9 12h6" /><path d="M12 9v6" />
         </svg>
       );
-    case 'exit':
-      return (
-        <svg className={cls} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          <path d="M9 12l2 2 4-4" /><rect x="3" y="3" width="18" height="18" rx="2" />
-        </svg>
-      );
     case 'api':
       return (
         <svg className={cls} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

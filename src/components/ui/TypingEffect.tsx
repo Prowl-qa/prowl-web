@@ -36,9 +36,9 @@ export default function TypingEffect({ lines }: TypingEffectProps) {
       {...reveal}
       variants={containerVariants}
     >
-      {lines.map((line, i) => (
+      {lines.map((line) => (
         <motion.span
-          key={i}
+          key={line.text}
           className={`block ${line.className || ''}`}
           variants={lineVariants}
         >
