@@ -77,10 +77,9 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
 - Prowl Hub and Prowl Infra links (homepage tiles, nav, footer, docs hub) now point at the
   live satellite sites `hub.prowl.tools` and `infra.prowl.tools` instead of internal
   marketing pages.
-- FinalCta "How it Works" internal link now uses `next/link` (`<Link>`) instead of a plain
-  `<a>` (PQW-011), enabling client-side navigation and prefetch for `/cli#how-it-works`
-  instead of a full document reload. Same-page hash anchors elsewhere are intentionally left
-  as `<a>`.
+- FinalCta "How it Works" CTA now uses an approved external docs destination
+  (`https://docs.prowl.tools`) with a native `<a>` (PQW-011), keeping the button text and
+  styling while aligning the CTA target with review guidelines.
 - Infra product renamed "Prowl Infra" → "Prowl Infra Hub" (PQW-013) to match the live
   satellite site's own title; the `name` in `src/lib/products.ts` propagates to the nav
   Products dropdown, footer, and homepage showcase. Satellite URLs (`infra.prowl.tools`) are
