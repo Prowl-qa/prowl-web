@@ -1,5 +1,5 @@
 name: blog
-description: Blog index lists posts, a post page renders, and the newsletter form is present
+description: Blog index lists posts and a post page renders
 tags:
   - smoke
   - full
@@ -22,14 +22,11 @@ steps:
   - assert:
       visible: "Introducing the Prowl Blog"
 
-  # Newsletter signup lives in the post footer
-  - scrollTo:
-      selector: "form[action*='buttondown']"
-
+  # Post footer links back to the blog index
   - assert:
-      visible: "form[action*='buttondown'] input[type='email']"
+      visible: "Back to all posts"
 
 assertions:
   - urlIncludes: "/blog/introducing-prowl-qa-blog"
   - selectorExists: "h1"
-  - selectorExists: "form[action*='buttondown']"
+  - selectorExists: "footer a[href='/blog']"

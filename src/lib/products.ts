@@ -64,7 +64,7 @@ export const suiteProducts: SuiteProduct[] = [
   },
   {
     slug: "infra",
-    name: "Prowl Infra",
+    name: "Prowl Infra Hub",
     tagline: "Infrastructure test playbooks — validate cloud and Terraform environments before you ship.",
     points: [
       "Catalog of reusable infra validation playbooks",

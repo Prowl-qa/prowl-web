@@ -10,18 +10,6 @@
 
 ## Medium Priority
 
-### PQW-011: Use next/link for the FinalCta internal link
-**Priority**: Medium
-**Description**: `src/components/FinalCta.tsx` links to `/cli#how-it-works` with a plain `<a>`, causing a full document reload with no prefetch. Switch to `<Link>`. (Same-page hash anchors elsewhere are fine as `<a>`.)
-
-### PQW-012: Newsletter form cleanup
-**Priority**: Medium
-**Description**: Re-scoped 2026-08-10 (owner decision): there is **no live newsletter** — the Buttondown action URL (`https://buttondown.com/api/emails/embed-subscribe/prowl`) points at an account we don't own, so the form silently loses (or misdirects) real subscriber emails. **Remove the newsletter CTA block from `src/components/blog/PostFooter.tsx`** (keeping the rest of the post footer) and update the blog hunt that asserts the form's presence. Re-adding is tracked by PQW-023 once a newsletter plan exists. (The original `rel="noopener noreferrer"`-on-`<form>` cleanup dies with the removed block.)
-
-### PQW-013: Decide canonical product naming on the site
-**Priority**: Medium
-**Description**: The site says "Prowl Code Review," but the workspace's canonical product name is **"Prowl Review"** (npm `prowl-review`). The site says "Prowl Infra," while the live satellite site titles itself **"Prowl Infra Hub."** Decide the customer-facing names, then update `name` in `src/lib/products.ts` (propagates to nav, footer, showcase) plus page titles in `src/app/code-review/page.tsx` and the `Prowl Suite · Code Review` badge in `src/components/CodeReview.tsx`.
-
 ## Low Priority
 
 ### PQW-003: Re-link the Genkei Labs footer to genkeilabs.com

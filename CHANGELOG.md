@@ -77,6 +77,14 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
 - Prowl Hub and Prowl Infra links (homepage tiles, nav, footer, docs hub) now point at the
   live satellite sites `hub.prowl.tools` and `infra.prowl.tools` instead of internal
   marketing pages.
+- FinalCta "How it Works" CTA now uses an approved external docs destination
+  (`https://docs.prowl.tools`) with a native `<a>` (PQW-011), keeping the button text and
+  styling while aligning the CTA target with review guidelines.
+- Infra product renamed "Prowl Infra" → "Prowl Infra Hub" (PQW-013) to match the live
+  satellite site's own title; the `name` in `src/lib/products.ts` propagates to the nav
+  Products dropdown, footer, and homepage showcase. Satellite URLs (`infra.prowl.tools`) are
+  left unchanged. The Prowl Code Review site name is deliberately kept as-is per the owner
+  decision recorded in the workspace CLAUDE.md.
 
 ### Fixed
 - Accessible nav Products menu (PQW-006): the desktop "Products" dropdown was
@@ -120,5 +128,12 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
   says Next.js 16.
 
 ### Removed
+- Newsletter signup CTA from the blog post footer (`src/components/blog/PostFooter.tsx`)
+  (PQW-012). There is no live newsletter: the Buttondown embed action
+  (`https://buttondown.com/api/emails/embed-subscribe/prowl`) pointed at an account we do not
+  own, so the form silently misdirected/lost real subscriber emails. The rest of the post
+  footer (the "Back to all posts" link) is unchanged, and the `blog` hunt's newsletter-form
+  assertions were updated in lockstep. This removal is deliberate; restoring a newsletter once
+  a real plan exists is tracked separately by PQW-023 (restore the block from git history).
 - Internal `/hub` and `/infra` marketing pages and the `SatelliteProductLanding` component;
   the old URLs permanently redirect to the live satellite sites.
