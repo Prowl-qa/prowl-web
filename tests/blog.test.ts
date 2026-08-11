@@ -6,6 +6,7 @@ import { test } from 'node:test';
 
 import {
   assertNoBodyH1,
+  clearBlogPostSlugCache,
   getAllPosts,
   getPostBySlug,
 } from '../src/lib/blog.ts';
@@ -94,6 +95,7 @@ test('skips malformed blog posts instead of failing the full post list', () => {
         '',
       ].join('\n'),
     );
+    clearBlogPostSlugCache();
 
     console.error = () => {
       loggedError = true;
@@ -107,6 +109,7 @@ test('skips malformed blog posts instead of failing the full post list', () => {
     assert.doesNotThrow(() => {
       fs.rmSync(fixtureDir, { recursive: true, force: true });
     });
+    clearBlogPostSlugCache();
     assert.equal(fs.existsSync(fixtureDir), false);
   }
 });

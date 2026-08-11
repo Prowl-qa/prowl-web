@@ -23,6 +23,7 @@ const FENCE_PATTERN = /^ {0,3}(`{3,}|~{3,})(.*)$/;
 const MARKDOWN_H1_PATTERN = /^ {0,3}#(?:\s|$)/;
 const SETEXT_H1_PATTERN = /^ {0,3}=+\s*$/;
 const RAW_H1_PATTERN = /^ {0,3}<h1(?:\s|>)/i;
+let cachedPostSlugs: string[] | null = null;
 
 function isNonEmptyString(value: unknown): value is string {
   return typeof value === "string" && value.trim().length > 0;
@@ -160,26 +161,34 @@ function parseFrontmatter(
 }
 
 function getPostSlugs(): string[] {
+  if (cachedPostSlugs !== null) return cachedPostSlugs;
+
   try {
-    return fs
+    cachedPostSlugs = fs
       .readdirSync(CONTENT_DIR, { withFileTypes: true })
       .filter((entry) => entry.isDirectory())
       .map((entry) => entry.name);
+
+    return cachedPostSlugs;
   } catch (error) {
-    if (isNotFoundError(error)) return [];
+    if (isNotFoundError(error)) {
+      cachedPostSlugs = [];
+      return cachedPostSlugs;
+    }
 
     console.error("Error reading blog content directory:", error);
-    return [];
+    cachedPostSlugs = [];
+    return cachedPostSlugs;
   }
 }
 
-export function getPostBySlug(slug: string): BlogPost | null {
-  return getPostBySlugFromSlugs(slug, getPostSlugs());
+export function clearBlogPostSlugCache(): void {
+  cachedPostSlugs = null;
 }
 
-function getPostBySlugFromSlugs(
+export function getPostBySlug(
   slug: string,
-  availableSlugs: string[]
+  availableSlugs: string[] = getPostSlugs()
 ): BlogPost | null {
   if (!availableSlugs.includes(slug)) return null;
 
@@ -215,7 +224,7 @@ export function getAllPosts(): BlogPost[] {
   const slugs = getPostSlugs();
 
   return slugs
-    .map((slug) => getPostBySlugFromSlugs(slug, slugs))
+    .map((slug) => getPostBySlug(slug, slugs))
     .filter((post): post is BlogPost => post !== null)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
