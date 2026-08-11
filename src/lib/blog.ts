@@ -72,6 +72,61 @@ function getTags(value: unknown): string[] {
   return value.filter(isNonEmptyString).map((tag) => tag.trim());
 }
 
+export function assertNoBodyH1(content: string, slug: string): void {
+  let inFence = false;
+  let fenceMarker = "";
+  let hasPreviousContentLine = false;
+
+  // PostHeader owns the page h1, so body content must begin its outline at h2.
+  content.split(/\r?\n/).forEach((line, index) => {
+    const lineNumber = index + 1;
+    const fenceMatch = line.match(/^ {0,3}(`{3,}|~{3,})/);
+
+    if (fenceMatch) {
+      const marker = fenceMatch[1];
+
+      if (!inFence) {
+        inFence = true;
+        fenceMarker = marker[0];
+      } else if (marker[0] === fenceMarker) {
+        inFence = false;
+        fenceMarker = "";
+      }
+
+      hasPreviousContentLine = false;
+      return;
+    }
+
+    if (inFence) return;
+
+    const trimmed = line.trim();
+    if (!trimmed) {
+      hasPreviousContentLine = false;
+      return;
+    }
+
+    if (/^ {0,3}#(?:\s|$)/.test(line)) {
+      throw new Error(
+        `Invalid blog content in content/blog/${slug}/index.mdx: body headings must start at "##" because PostHeader owns the page <h1>. Found markdown "#" heading on line ${lineNumber}.`
+      );
+    }
+
+    if (/^ {0,3}=+\s*$/.test(line) && hasPreviousContentLine) {
+      throw new Error(
+        `Invalid blog content in content/blog/${slug}/index.mdx: body headings must start at "##" because PostHeader owns the page <h1>. Found setext h1 underline on line ${lineNumber}.`
+      );
+    }
+
+    if (/^ {0,3}<h1(?:\s|>)/i.test(line)) {
+      throw new Error(
+        `Invalid blog content in content/blog/${slug}/index.mdx: body content must not render its own <h1> because PostHeader owns the page <h1>. Found <h1> on line ${lineNumber}.`
+      );
+    }
+
+    hasPreviousContentLine = true;
+  });
+}
+
 function parseFrontmatter(
   data: Record<string, unknown>,
   slug: string
@@ -105,6 +160,8 @@ export function getPostBySlug(slug: string): BlogPost | null {
 
   const raw = fs.readFileSync(filePath, "utf-8");
   const { data, content } = matter(raw);
+  assertNoBodyH1(content, slug);
+
   const stats = readingTime(content);
   const frontmatter = parseFrontmatter(data as Record<string, unknown>, slug);
 
