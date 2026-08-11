@@ -62,6 +62,12 @@ test('current blog posts satisfy the body h1 guard', () => {
 
 test('rejects unsafe blog slugs before file access', () => {
   assert.equal(getPostBySlug('../introducing-prowl-qa-blog'), null);
+  assert.equal(
+    getPostBySlug('../introducing-prowl-qa-blog', [
+      '../introducing-prowl-qa-blog',
+    ]),
+    null,
+  );
   assert.equal(getPostBySlug('introducing/prowl'), null);
   assert.equal(getPostBySlug('introducing\\prowl'), null);
   assert.equal(getPostBySlug('Introducing-Prowl'), null);
@@ -69,6 +75,44 @@ test('rejects unsafe blog slugs before file access', () => {
 
 test('returns null for valid slugs without a matching post file', () => {
   assert.equal(getPostBySlug(`missing-blog-post-${process.pid}`), null);
+});
+
+test('caches blog slug discovery until the cache is cleared', () => {
+  const slug = `cache-fixture-${randomUUID()}`;
+  const fixtureDir = path.join(process.cwd(), 'content', 'blog', slug);
+  const fixturePath = path.join(fixtureDir, 'index.mdx');
+
+  try {
+    fs.rmSync(fixtureDir, { recursive: true, force: true });
+    clearBlogPostSlugCache();
+    assert.equal(getPostBySlug(slug), null);
+
+    fs.mkdirSync(fixtureDir, { recursive: true });
+    fs.writeFileSync(
+      fixturePath,
+      [
+        '---',
+        'title: Cache fixture',
+        'description: Cache behavior fixture',
+        'date: 2026-08-11',
+        'author: Prowl',
+        '---',
+        '',
+        '## Valid fixture heading',
+        '',
+      ].join('\n'),
+    );
+
+    assert.equal(getPostBySlug(slug), null);
+    clearBlogPostSlugCache();
+    assert.equal(getPostBySlug(slug)?.slug, slug);
+  } finally {
+    assert.doesNotThrow(() => {
+      fs.rmSync(fixtureDir, { recursive: true, force: true });
+    });
+    clearBlogPostSlugCache();
+    assert.equal(fs.existsSync(fixtureDir), false);
+  }
 });
 
 test('skips malformed blog posts instead of failing the full post list', () => {

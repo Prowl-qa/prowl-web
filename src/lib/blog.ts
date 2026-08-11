@@ -23,10 +23,15 @@ const FENCE_PATTERN = /^ {0,3}(`{3,}|~{3,})(.*)$/;
 const MARKDOWN_H1_PATTERN = /^ {0,3}#(?:\s|$)/;
 const SETEXT_H1_PATTERN = /^ {0,3}=+\s*$/;
 const RAW_H1_PATTERN = /^ {0,3}<h1(?:\s|>)/i;
+const BLOG_SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 let cachedPostSlugs: string[] | null = null;
 
 function isNonEmptyString(value: unknown): value is string {
   return typeof value === "string" && value.trim().length > 0;
+}
+
+function isBlogSlug(slug: string): boolean {
+  return BLOG_SLUG_PATTERN.test(slug);
 }
 
 function getRequiredString(
@@ -166,7 +171,7 @@ function getPostSlugs(): string[] {
   try {
     cachedPostSlugs = fs
       .readdirSync(CONTENT_DIR, { withFileTypes: true })
-      .filter((entry) => entry.isDirectory())
+      .filter((entry) => entry.isDirectory() && isBlogSlug(entry.name))
       .map((entry) => entry.name);
 
     return cachedPostSlugs;
@@ -188,14 +193,19 @@ export function clearBlogPostSlugCache(): void {
 
 export function getPostBySlug(
   slug: string,
-  availableSlugs: string[] = getPostSlugs()
+  availableSlugs?: string[]
 ): BlogPost | null {
-  if (!availableSlugs.includes(slug)) return null;
+  if (!isBlogSlug(slug)) return null;
+
+  const slugs = availableSlugs ?? getPostSlugs();
+  if (!slugs.includes(slug)) return null;
 
   return readPostBySlug(slug);
 }
 
 function readPostBySlug(slug: string): BlogPost | null {
+  if (!isBlogSlug(slug)) return null;
+
   const filePath = path.join(CONTENT_DIR, slug, "index.mdx");
 
   try {
