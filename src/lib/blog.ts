@@ -19,9 +19,20 @@ export type BlogPost = BlogPostFrontmatter & {
 };
 
 const CONTENT_DIR = path.join(process.cwd(), "content", "blog");
+const FENCE_PATTERN = /^ {0,3}(`{3,}|~{3,})(.*)$/;
+const MARKDOWN_H1_PATTERN = /^ {0,3}#(?:\s|$)/;
+const SETEXT_H1_PATTERN = /^ {0,3}=+\s*$/;
+const RAW_H1_PATTERN = /^ {0,3}<h1(?:\s|>)/i;
+const BLOG_SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+let cachedPostSlugs: string[] | null = null;
+const cachedPosts = new Map<string, BlogPost | null>();
 
 function isNonEmptyString(value: unknown): value is string {
   return typeof value === "string" && value.trim().length > 0;
+}
+
+function isBlogSlug(slug: string): boolean {
+  return BLOG_SLUG_PATTERN.test(slug);
 }
 
 function getRequiredString(
@@ -72,6 +83,75 @@ function getTags(value: unknown): string[] {
   return value.filter(isNonEmptyString).map((tag) => tag.trim());
 }
 
+function isNotFoundError(error: unknown): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    (error as { code?: unknown }).code === "ENOENT"
+  );
+}
+
+export function assertNoBodyH1(content: string, slug: string): void {
+  let inFence = false;
+  let fenceMarker = "";
+  let hasPreviousContentLine = false;
+
+  // PostHeader owns the page h1, so body content must begin its outline at h2.
+  content.split(/\r?\n/).forEach((line, index) => {
+    const lineNumber = index + 1;
+    const fenceMatch = line.match(FENCE_PATTERN);
+
+    if (fenceMatch) {
+      const marker = fenceMatch[1];
+      const trailingText = fenceMatch[2] ?? "";
+
+      if (!inFence) {
+        inFence = true;
+        fenceMarker = marker;
+      } else if (
+        marker[0] === fenceMarker[0] &&
+        marker.length >= fenceMarker.length &&
+        trailingText.trim().length === 0
+      ) {
+        inFence = false;
+        fenceMarker = "";
+      }
+
+      hasPreviousContentLine = false;
+      return;
+    }
+
+    if (inFence) return;
+
+    const trimmed = line.trim();
+    if (!trimmed) {
+      hasPreviousContentLine = false;
+      return;
+    }
+
+    if (MARKDOWN_H1_PATTERN.test(line)) {
+      throw new Error(
+        `Invalid blog content in content/blog/${slug}/index.mdx: body headings must start at "##" because PostHeader owns the page <h1>. Found markdown "#" heading on line ${lineNumber}.`
+      );
+    }
+
+    if (SETEXT_H1_PATTERN.test(line) && hasPreviousContentLine) {
+      throw new Error(
+        `Invalid blog content in content/blog/${slug}/index.mdx: body headings must start at "##" because PostHeader owns the page <h1>. Found setext h1 underline on line ${lineNumber}.`
+      );
+    }
+
+    if (RAW_H1_PATTERN.test(line)) {
+      throw new Error(
+        `Invalid blog content in content/blog/${slug}/index.mdx: body content must not render its own <h1> because PostHeader owns the page <h1>. Found <h1> on line ${lineNumber}.`
+      );
+    }
+
+    hasPreviousContentLine = true;
+  });
+}
+
 function parseFrontmatter(
   data: Record<string, unknown>,
   slug: string
@@ -87,38 +167,81 @@ function parseFrontmatter(
 }
 
 function getPostSlugs(): string[] {
-  if (!fs.existsSync(CONTENT_DIR)) return [];
+  if (cachedPostSlugs !== null) return cachedPostSlugs;
 
-  return fs
-    .readdirSync(CONTENT_DIR, { withFileTypes: true })
-    .filter((entry) => {
-      if (!entry.isDirectory()) return false;
-      const indexPath = path.join(CONTENT_DIR, entry.name, "index.mdx");
-      return fs.existsSync(indexPath);
-    })
-    .map((entry) => entry.name);
+  try {
+    cachedPostSlugs = fs
+      .readdirSync(CONTENT_DIR, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory() && isBlogSlug(entry.name))
+      .map((entry) => entry.name);
+
+    return cachedPostSlugs;
+  } catch (error) {
+    if (isNotFoundError(error)) {
+      cachedPostSlugs = [];
+      return cachedPostSlugs;
+    }
+
+    console.error("Error reading blog content directory:", error);
+    cachedPostSlugs = [];
+    return cachedPostSlugs;
+  }
 }
 
-export function getPostBySlug(slug: string): BlogPost | null {
+export function clearBlogPostCache(): void {
+  cachedPostSlugs = null;
+  cachedPosts.clear();
+}
+
+export function getPostBySlug(
+  slug: string,
+  availableSlugs?: string[]
+): BlogPost | null {
+  if (!isBlogSlug(slug)) return null;
+
+  const slugs = availableSlugs?.filter(isBlogSlug) ?? getPostSlugs();
+  if (!slugs.includes(slug)) return null;
+
+  return readPostBySlug(slug);
+}
+
+function readPostBySlug(slug: string): BlogPost | null {
+  if (!isBlogSlug(slug)) return null;
+  if (cachedPosts.has(slug)) return cachedPosts.get(slug) ?? null;
+
   const filePath = path.join(CONTENT_DIR, slug, "index.mdx");
-  if (!fs.existsSync(filePath)) return null;
 
-  const raw = fs.readFileSync(filePath, "utf-8");
-  const { data, content } = matter(raw);
-  const stats = readingTime(content);
-  const frontmatter = parseFrontmatter(data as Record<string, unknown>, slug);
+  try {
+    const raw = fs.readFileSync(filePath, "utf-8");
+    const { data, content } = matter(raw);
+    assertNoBodyH1(content, slug);
 
-  return {
-    slug,
-    ...frontmatter,
-    readingTime: stats.text,
-    content,
-  };
+    const stats = readingTime(content);
+    const frontmatter = parseFrontmatter(data as Record<string, unknown>, slug);
+
+    const post = {
+      slug,
+      ...frontmatter,
+      readingTime: stats.text,
+      content,
+    };
+
+    cachedPosts.set(slug, post);
+    return post;
+  } catch (error) {
+    cachedPosts.set(slug, null);
+    if (isNotFoundError(error)) return null;
+
+    console.error(`Error processing blog post ${slug}:`, error);
+    return null;
+  }
 }
 
 export function getAllPosts(): BlogPost[] {
-  return getPostSlugs()
-    .map((slug) => getPostBySlug(slug))
+  const slugs = getPostSlugs();
+
+  return slugs
+    .map((slug) => readPostBySlug(slug))
     .filter((post): post is BlogPost => post !== null)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }

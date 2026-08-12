@@ -7,6 +7,8 @@ import PostFooter from "@/components/blog/PostFooter";
 
 type Params = { slug: string };
 
+export const dynamicParams = false;
+
 export function generateStaticParams(): Params[] {
   return getAllPosts().map((post) => ({ slug: post.slug }));
 }
@@ -32,9 +34,8 @@ export default async function BlogPostPage({
   const post = getPostBySlug(slug);
   if (!post) notFound();
 
-  // Dynamically import the MDX file
   const { default: MDXContent } = await import(
-    `../../../../content/blog/${slug}/index.mdx`
+    `../../../../content/blog/${post.slug}/index.mdx`
   );
 
   const jsonLd = {
