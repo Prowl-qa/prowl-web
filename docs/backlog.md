@@ -8,6 +8,20 @@
 
 ## High Priority
 
+### PQW-024: Announce the mobile targets (Android + iOS) on the landing page
+**Priority**: High
+**Description**: Prowl v0.1.5 (released 2026-08-21) shipped experimental Android (emulator +
+USB device) and iOS Simulator targets — the "major shipped feature" tier the workspace rules
+say must reach the landing site. Update prowl.tools to tell the four-target story: **web,
+macOS, Android, iOS** — one YAML hunt format, one selector philosophy, local-first, no cloud
+required. Concrete surfaces: the hero/feature section (platform coverage), any "how it works"
+copy that currently implies web-only, and the competitor comparison table (Maestro requires a
+JVM and has no desktop-app story; BrowserStack has no native desktop testing at all — mind the
+FTC comparative-advertising guidelines in the CLI repo's LEGAL-004: factual, verifiable claims
+only). Label mobile as **experimental** honestly — same wording tier the CLI README uses.
+Coordinate messaging with the CLI repo's PROWL-037 (GTM-002 positioning matrix) so claims stay
+consistent; don't block on it.
+
 ## Medium Priority
 
 ## Low Priority
