@@ -74,6 +74,15 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
   completed CI run (with an API fallback), gates out forks, and hands the PR number and draft
   state to the action explicitly; CI now subscribes to `ready_for_review` so draft→ready still
   triggers a review. Provider keys are read from org-level secrets.
+- prowl-review now runs on the keyless Codex subscription provider (#64) on the self-hosted
+  Mac mini runner instead of the API-key Claude + Gemini ensemble, so per-review marginal cost
+  is $0.00 and no `PROWL_AI_KEY_*` secret is stored in GitHub. The `workflow_run`→CI chain and
+  the branded prowl-review[bot] identity (App-token minting) are preserved; the `review` and
+  `command` jobs move to `runs-on: [self-hosted, macOS, prowl-review]` behind a mandatory
+  same-repo fork gate (public repo), share a non-cancelling per-PR Codex concurrency group, and
+  cap at `timeout-minutes: 30`. `.prowl-review.yml` pins `provider: codex` / `model: gpt-5.5` /
+  `codex.effort: low` (the ensemble block is retained, commented out, as a key-gated fallback).
+  The action is temporarily referenced at `@main` until a release with the codex provider ships.
 - Prowl Hub and Prowl Infra links (homepage tiles, nav, footer, docs hub) now point at the
   live satellite sites `hub.prowl.tools` and `infra.prowl.tools` instead of internal
   marketing pages.
