@@ -1,5 +1,13 @@
-# Drive prowl-review from PR comments (@prowl-review review, pause, questions…).
-# Adapted from prowl-tools/prowl-code-review/examples/workflows/.
+# Drive prowl-review from PR comments (@prowl-review review, pause, questions…) —
+# keyless Codex subscription provider (#64) on the self-hosted Mac mini runner.
+# No PROWL_AI_KEY_* secret reaches the runner; auth is the runner's own
+# `codex login`. Mirrors the prowl-tools/prowl-code-review dogfood command
+# workflow.
+#
+# PUBLIC-REPO CAVEAT: this is a public repo. The ubuntu `resolve` job (no
+# provider secrets) computes the fork/trust verdict; the self-hosted `command`
+# job's job-level same-repo gate is MANDATORY so a fork PR is never scheduled onto
+# the runner. Codex itself runs `--sandbox read-only`.
 name: prowl-review command
 
 on:
@@ -8,13 +16,6 @@ on:
   pull_request_review_comment:
     types: [created]
 
-# Serialize commands with auto reviews for the same PR so review publishing and
-# inline finding dedupe cannot race. The PR number comes from `issue`
-# (issue_comment) or `pull_request` (pull_request_review_comment).
-concurrency:
-  group: prowl-review-${{ github.event.issue.number || github.event.pull_request.number }}
-  cancel-in-progress: false
-
 permissions:
   pull-requests: write
   issues: write
@@ -22,9 +23,12 @@ permissions:
   contents: read
 
 jobs:
-  command:
+  resolve:
     # Only PR comments (top-level or inline) from a trusted commenter
-    # (owner/member/collaborator) that mention the bot; never bot comments.
+    # (owner/member/collaborator) that mention the bot; never bot comments, never
+    # the bot's own summary/finding comments. This ubuntu job (no provider
+    # secrets) does the fork/trust resolution so the self-hosted Codex runner
+    # below is only ever scheduled for an authorized, same-repo request.
     if: |
       (github.event.issue.pull_request || github.event.pull_request) &&
       github.event.comment.user.type != 'Bot' &&
@@ -37,9 +41,70 @@ jobs:
       !contains(github.event.comment.body, '<!-- prowl-review:summary -->') &&
       !contains(github.event.comment.body, '<!-- prowl-review:finding ')
     runs-on: ubuntu-latest
+    # Serialize command resolution by PR too, so a burst of top-level/inline
+    # comments cannot race ahead of the self-hosted command job for the same PR.
+    # The PR number comes from `issue` (issue_comment) or `pull_request`
+    # (pull_request_review_comment).
+    concurrency:
+      group: prowl-review-codex-${{ github.repository }}-${{ github.event.issue.number || github.event.pull_request.number }}
+      cancel-in-progress: false
+    outputs:
+      pr_number: ${{ steps.pr.outputs.pr_number }}
+      base_sha: ${{ steps.pr.outputs.base_sha }}
+      head_sha: ${{ steps.pr.outputs.head_sha }}
+      head_repo: ${{ steps.pr.outputs.head_repo }}
+      trusted_head: ${{ steps.pr.outputs.trusted_head }}
+    steps:
+      - name: Resolve PR metadata
+        id: pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          pr_number="${{ github.event.issue.number || github.event.pull_request.number }}"
+          IFS=$'\t' read -r base_sha head_sha head_repo < <(
+            gh api "repos/${GITHUB_REPOSITORY}/pulls/${pr_number}" --jq '[.base.sha, .head.sha, .head.repo.full_name] | @tsv'
+          )
+          if [ -z "${base_sha}" ] || [ -z "${head_sha}" ] || [ -z "${head_repo}" ]; then
+            echo "Failed to resolve complete PR metadata for #${pr_number}." >&2
+            exit 1
+          fi
+          {
+            echo "pr_number=${pr_number}"
+            echo "base_sha=${base_sha}"
+            echo "head_sha=${head_sha}"
+            echo "head_repo=${head_repo}"
+          } >> "$GITHUB_OUTPUT"
+          if [ "${head_repo}" = "${GITHUB_REPOSITORY}" ]; then
+            echo "trusted_head=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "trusted_head=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Fork PR command skipped::Skipping command from fork PR head ${head_repo}; the self-hosted Codex runner is never scheduled for fork code."
+          fi
+
+  command:
+    needs: resolve
+    # Job-level same-repo gate (#64): the self-hosted Codex runner must NEVER be
+    # scheduled for a fork PR. trusted_head is the same-repo verdict re-derived
+    # from server-side PR metadata; the explicit head_repo == github.repository
+    # check is belt-and-suspenders alongside it. MANDATORY on this public repo.
+    if: >
+      needs.resolve.outputs.trusted_head == 'true' &&
+      needs.resolve.outputs.head_repo == github.repository
+    # Keyless `provider: codex` runs on the always-on Mac mini (#64).
+    runs-on: [self-hosted, macOS, prowl-review]
+    timeout-minutes: 30
+    # Shares the per-PR Codex group with auto reviews (#64) so review publishing
+    # and inline finding dedupe cannot race. Machine-wide serialization across
+    # repos/runner instances is the provider's Codex lock, not GitHub
+    # concurrency. Keep this non-cancelling so an in-flight maintainer request is
+    # never cancelled by a newer auto-review push.
+    concurrency:
+      group: prowl-review-codex-${{ github.repository }}-${{ needs.resolve.outputs.pr_number }}
+      cancel-in-progress: false
     env:
       PROWL_APP_CONFIGURED: ${{ secrets.PROWL_APP_ID != '' && secrets.PROWL_APP_PRIVATE_KEY != '' }}
-      PROWL_REVIEW_KEYS_CONFIGURED: ${{ secrets.PROWL_AI_KEY_ANTHROPIC != '' && secrets.PROWL_AI_KEY_GEMINI != '' }}
     steps:
       # Branded identity: post the command reply as prowl-review[bot] when the
       # App secrets are set; falls back to github-actions[bot].
@@ -56,59 +121,24 @@ jobs:
           permission-pull-requests: write
           permission-checks: write
 
-      - name: Resolve PR metadata
-        id: pr
-        env:
-          GH_TOKEN: ${{ github.token }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          pr_number="${{ github.event.issue.number || github.event.pull_request.number }}"
-          IFS=$'\t' read -r base_sha head_sha head_repo < <(
-            gh api "repos/${GITHUB_REPOSITORY}/pulls/${pr_number}" --jq '[.base.sha, .head.sha, .head.repo.full_name] | @tsv'
-          )
-          if [ -z "${base_sha}" ] || [ -z "${head_sha}" ] || [ -z "${head_repo}" ]; then
-            echo "Failed to resolve complete PR metadata for #${pr_number}." >&2
-            exit 1
-          fi
-          echo "base_sha=${base_sha}" >> "$GITHUB_OUTPUT"
-          echo "head_sha=${head_sha}" >> "$GITHUB_OUTPUT"
-          echo "head_repo=${head_repo}" >> "$GITHUB_OUTPUT"
-          if [ "${head_repo}" = "${GITHUB_REPOSITORY}" ]; then
-            echo "trusted_head=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "trusted_head=false" >> "$GITHUB_OUTPUT"
-            echo "::notice title=Fork PR command skipped::Skipping command from fork PR head ${head_repo}."
-          fi
-
-      - name: Skip fork PR command
-        if: steps.pr.outputs.trusted_head != 'true'
-        env:
-          HEAD_REPO: ${{ steps.pr.outputs.head_repo }}
-          BASE_REPOSITORY: ${{ github.repository }}
-        shell: bash
-        run: |
-          echo "::notice title=Fork PR command unsupported::Skipping @prowl-review because the PR head repository '${HEAD_REPO}' does not match '${BASE_REPOSITORY}'."
-
       # Prefer trusted base config/guidelines; fall back to the PR config only
       # while bootstrapping onto a base branch that does not have the config yet.
-      - uses: actions/checkout@v4
+      - name: Checkout trusted base (config + guidelines)
+        uses: actions/checkout@v4
         with:
-          ref: ${{ steps.pr.outputs.base_sha }}
+          ref: ${{ needs.resolve.outputs.base_sha }}
           path: prowl-base
           persist-credentials: false
 
-      # Only check out the PR head when it's from this repo (not a fork).
-      - uses: actions/checkout@v4
-        if: steps.pr.outputs.trusted_head == 'true'
+      - name: Checkout PR head for context
+        uses: actions/checkout@v4
         with:
-          ref: ${{ steps.pr.outputs.head_sha }}
+          ref: ${{ needs.resolve.outputs.head_sha }}
           path: pr-head
           persist-credentials: false
 
       - name: Resolve prowl-review config
         id: review-config
-        if: steps.pr.outputs.trusted_head == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -125,26 +155,23 @@ jobs:
           fi
           echo "path=${config_path}" >> "$GITHUB_OUTPUT"
 
-      - name: Reject command when AI keys are missing
-        if: steps.pr.outputs.trusted_head == 'true' && env.PROWL_REVIEW_KEYS_CONFIGURED != 'true'
-        shell: bash
-        run: |
-          echo "::error title=Prowl Review AI keys missing::Configure PROWL_AI_KEY_ANTHROPIC and PROWL_AI_KEY_GEMINI repository secrets before running @prowl-review commands."
-          exit 1
-
-      - uses: prowl-tools/prowl-code-review@v1
-        if: steps.pr.outputs.trusted_head == 'true' && env.PROWL_REVIEW_KEYS_CONFIGURED == 'true'
+      - name: prowl-review command
+        # TODO: pin to @v1 once a release containing the codex provider (>0.3.0) ships
+        uses: prowl-tools/prowl-code-review@main
         env:
-          PROWL_REVIEWED_HEAD_SHA: ${{ steps.pr.outputs.head_sha }}
-          PROWL_REVIEWED_HEAD_REPOSITORY: ${{ steps.pr.outputs.head_repo }}
+          PROWL_REVIEWED_HEAD_SHA: ${{ needs.resolve.outputs.head_sha }}
+          PROWL_REVIEWED_HEAD_REPOSITORY: ${{ needs.resolve.outputs.head_repo }}
         with:
           mode: command
-          # Same ensemble keys/config as auto reviews, so an @prowl-review
-          # review command produces the cross-provider result too.
-          ai-key-anthropic: ${{ secrets.PROWL_AI_KEY_ANTHROPIC }}
-          ai-key-gemini: ${{ secrets.PROWL_AI_KEY_GEMINI }}
+          # Keyless Codex subscription provider (#64): no PROWL_AI_KEY_* secret
+          # reaches this self-hosted job. Model + effort are pinned in the trusted
+          # base-branch config; ai-provider is passed explicitly so an
+          # @prowl-review command runs on the same keyless provider as the auto
+          # review.
+          ai-provider: codex
           config-path: ${{ steps.review-config.outputs.path }}
           workspace-path: ${{ github.workspace }}/pr-head
           guidelines-path: ${{ github.workspace }}/prowl-base
+          # Branded App token when configured; otherwise the default Actions token.
           github-token: ${{ steps.app-token.outputs.token || github.token }}
           bot-login: ${{ steps.app-token.outputs.app-slug != '' && format('{0}[bot]', steps.app-token.outputs.app-slug) || '' }}

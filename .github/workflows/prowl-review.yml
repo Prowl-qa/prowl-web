@@ -1,6 +1,14 @@
-# Automatic prowl-review on pull requests — Claude + Gemini ensemble, posting
-# under the branded prowl-review[bot] identity when the App secrets are present.
-# Adapted from the prowl-tools/prowl-code-review dogfood workflow.
+# Automatic prowl-review on pull requests — keyless Codex subscription provider
+# (#64) on the self-hosted Mac mini runner, posting under the branded
+# prowl-review[bot] identity when the App secrets are present. Per-review marginal
+# cost is $0.00 and no provider key is stored in GitHub; auth is the runner's own
+# `codex login`. Mirrors the prowl-tools/prowl-code-review dogfood workflow.
+#
+# PUBLIC-REPO CAVEAT: this is a public repo, so the self-hosted Codex `review` job
+# below carries a MANDATORY job-level same-repo gate — fork PRs are never
+# scheduled onto the runner. The hosted ubuntu resolve/report jobs still give fork
+# PRs a status row without touching the runner. Codex itself runs
+# `--sandbox read-only`.
 name: prowl-review
 
 # Single branded checks row: trigger off the CI workflow COMPLETING rather than
@@ -108,14 +116,14 @@ jobs:
             fi
           done
 
-          set -- ${matches}
-          count=$#
+          IFS=" " read -r -a match_array <<< "${matches}"
+          count=${#match_array[@]}
           if [ "${count}" -ne 1 ]; then
             echo "resolved=false" >> "$GITHUB_OUTPUT"
             echo "Skipping: expected exactly one open PR at CI head ${HEAD_SHA}, found ${count} (${matches:-none})."
             exit 0
           fi
-          pr_number="$1"
+          pr_number="${match_array[0]}"
 
           # Re-derive trusted base/head from the resolved PR (never from the CI
           # payload) so the config/guidelines checkout stays anchored to base code.
@@ -213,35 +221,46 @@ jobs:
 
   review:
     needs: resolve
-    if: needs.resolve.outputs.resolved == 'true'
-    runs-on: ubuntu-latest
+    # Job-level same-repo gate (#64): the self-hosted Codex runner must NEVER be
+    # scheduled for a fork PR. `resolved` is already same-repo-only (the resolve
+    # job posts the neutral fork-skip check on ubuntu and never sets resolved=true
+    # for a fork), but the explicit head_repo == github.repository check is
+    # belt-and-suspenders so no future resolve change can silently route fork code
+    # onto the runner. head_repo is re-derived server-side from PR metadata in
+    # `resolve`, never from the PR-controlled event payload. MANDATORY on this
+    # public repo.
+    if: >
+      needs.resolve.outputs.resolved == 'true' &&
+      needs.resolve.outputs.head_repo == github.repository
+    # Subscription-backed reviews run on the always-on Mac mini (#64): keyless
+    # `provider: codex` via the ChatGPT login that lives only on that host. The
+    # ubuntu resolve/report jobs above stay hosted so fork PRs still get a status
+    # row without touching the self-hosted runner.
+    runs-on: [self-hosted, macOS, prowl-review]
+    timeout-minutes: 30
     permissions:
       contents: read
       pull-requests: write
       issues: write
       checks: write
-    # Serialize auto reviews with @prowl-review commands for the same PR so pushes
-    # do not cancel command side effects; the action's stale-head checks prevent
-    # outdated publishes.
+    # Per-PR serialization shared with the command workflow. Keep this
+    # non-cancelling so a new auto-review cannot interrupt an in-flight maintainer
+    # command; stale auto reviews skip publishing when the reviewed head has
+    # advanced. Machine-wide serialization ACROSS repos/runner instances is the
+    # provider's Codex lock ($CODEX_HOME/.prowl-review.lock, on by default for
+    # `provider: codex`), NOT GitHub concurrency.
     concurrency:
-      group: prowl-review-${{ needs.resolve.outputs.pr_number }}
+      group: prowl-review-codex-${{ github.repository }}-${{ needs.resolve.outputs.pr_number }}
       cancel-in-progress: false
     env:
       PROWL_APP_CONFIGURED: ${{ secrets.PROWL_APP_ID != '' && secrets.PROWL_APP_PRIVATE_KEY != '' }}
-      PROWL_REVIEW_KEYS_CONFIGURED: ${{ secrets.PROWL_AI_KEY_ANTHROPIC != '' && secrets.PROWL_AI_KEY_GEMINI != '' }}
     steps:
-      - name: Skip prowl-review when AI keys are missing
-        if: env.PROWL_REVIEW_KEYS_CONFIGURED != 'true'
-        shell: bash
-        run: |
-          echo "::notice title=Prowl Review skipped::Configure PROWL_AI_KEY_ANTHROPIC and PROWL_AI_KEY_GEMINI organization or repository secrets to enable Claude + Gemini reviews."
-
       # Branded identity: mint an App installation token when PROWL_APP_ID is set
       # so the review posts as prowl-review[bot] with the App avatar. Falls back
       # to github-actions[bot] when unset or when token minting fails.
       - name: Mint prowl-review app token
         id: app-token
-        if: env.PROWL_REVIEW_KEYS_CONFIGURED == 'true' && env.PROWL_APP_CONFIGURED == 'true'
+        if: env.PROWL_APP_CONFIGURED == 'true'
         continue-on-error: true
         uses: actions/create-github-app-token@v1
         with:
@@ -256,7 +275,6 @@ jobs:
       # "Review in progress" row while the review runs.
       - name: Open Prowl Review check
         id: open-check
-        if: env.PROWL_REVIEW_KEYS_CONFIGURED == 'true'
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token || github.token }}
           HEAD_SHA: ${{ needs.resolve.outputs.head_sha }}
@@ -281,7 +299,6 @@ jobs:
 
       # Trusted base checkout: guidelines and preferred config come from base.
       - name: Checkout trusted base (config + guidelines)
-        if: env.PROWL_REVIEW_KEYS_CONFIGURED == 'true'
         uses: actions/checkout@v4
         with:
           ref: ${{ needs.resolve.outputs.base_sha }}
@@ -289,7 +306,6 @@ jobs:
           persist-credentials: false
 
       - name: Checkout PR head for context
-        if: env.PROWL_REVIEW_KEYS_CONFIGURED == 'true'
         uses: actions/checkout@v4
         with:
           ref: ${{ needs.resolve.outputs.head_sha }}
@@ -298,7 +314,6 @@ jobs:
 
       - name: Resolve prowl-review config
         id: review-config
-        if: env.PROWL_REVIEW_KEYS_CONFIGURED == 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -316,8 +331,8 @@ jobs:
           echo "path=${config_path}" >> "$GITHUB_OUTPUT"
 
       - name: prowl-review
-        if: env.PROWL_REVIEW_KEYS_CONFIGURED == 'true'
-        uses: prowl-tools/prowl-code-review@v1
+        # TODO: pin to @v1 once a release containing the codex provider (>0.3.0) ships
+        uses: prowl-tools/prowl-code-review@main
         env:
           # Trusted head identity re-derived from the resolved PR; the action reads
           # these for stale-head detection and same-repo (non-fork) confirmation.
@@ -329,10 +344,11 @@ jobs:
           # number and draft state to the action explicitly.
           pr-number: ${{ needs.resolve.outputs.pr_number }}
           pr-draft: ${{ needs.resolve.outputs.is_draft }}
-          # Claude + Gemini ensemble; provider/model pinned in the resolved
-          # base-first config, not in workflow inputs.
-          ai-key-anthropic: ${{ secrets.PROWL_AI_KEY_ANTHROPIC }}
-          ai-key-gemini: ${{ secrets.PROWL_AI_KEY_GEMINI }}
+          # Keyless Codex subscription provider (#64): no PROWL_AI_KEY_* secret
+          # reaches this self-hosted job. Model + effort are pinned in the trusted
+          # base-branch config; ai-provider is passed explicitly so the run can
+          # never silently fall back to an API-key provider.
+          ai-provider: codex
           config-path: ${{ steps.review-config.outputs.path }}
           workspace-path: ${{ github.workspace }}/pr-head
           guidelines-path: ${{ github.workspace }}/prowl-base
