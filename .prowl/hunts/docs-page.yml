@@ -16,12 +16,8 @@ steps:
   - assert:
       visible: "Prowl CLI"
 
-  - assert:
-      visible: "Prowl Code Review"
-
 assertions:
-  # CLI and Code Review docs cards use approved docs.prowl.tools CTA destinations.
+  # The CLI docs card uses the approved docs.prowl.tools CTA destination.
   - selectorExists: 'a[href="https://docs.prowl.tools"]:has-text("Prowl CLI")'
-  - selectorExists: 'a[href="https://docs.prowl.tools"]:has-text("Prowl Code Review")'
   - selectorExists: "a[href^='https://hub.prowl.tools']"
   - selectorExists: "a[href^='https://infra.prowl.tools']"
