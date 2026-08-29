@@ -330,14 +330,11 @@ test('PR head checkouts have inline same-repo guards and disable persisted crede
   }
 });
 
-test('command workflow preserves all pending command request concurrency groups', () => {
+test('command workflow queues command requests on server-derived PR metadata', () => {
   const resolveJob = extractJobBlock('prowl-review-command.yml', 'resolve');
   const commandJob = extractJobBlock('prowl-review-command.yml', 'command');
 
-  assert.match(
-    resolveJob,
-    /concurrency:\n\s+group: prowl-review-codex-\$\{\{ github\.repository \}\}-\$\{\{ github\.event\.issue\.number \|\| github\.event\.pull_request\.number \}\}\n\s+queue: max\n\s+cancel-in-progress: false/,
-  );
+  assert.doesNotMatch(resolveJob, /\n    concurrency:\n/);
   assert.match(
     commandJob,
     /concurrency:\n\s+group: prowl-review-codex-\$\{\{ github\.repository \}\}-\$\{\{ needs\.resolve\.outputs\.pr_number \}\}\n\s+queue: max\n\s+cancel-in-progress: false/,
@@ -454,6 +451,19 @@ test('command resolve marks same-repo pull request heads trusted', () => {
     pr_number: '33',
     trusted_head: 'true',
   });
+});
+
+test('command resolve rejects malformed event PR numbers before API lookup', () => {
+  const result = runWorkflowScript(getCommandResolveScript(), {
+    env: {
+      EVENT_PR_NUMBER: '../../33',
+    },
+    responses: {},
+  });
+
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /Invalid command PR number: \.\.\/\.\.\/33/);
+  assert.deepEqual(result.outputs, {});
 });
 
 test('command resolve marks fork pull request heads untrusted without failing', () => {
