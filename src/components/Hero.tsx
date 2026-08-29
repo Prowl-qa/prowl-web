@@ -60,7 +60,7 @@ export default function Hero() {
             className="mt-8 flex flex-col gap-3 sm:flex-row"
           >
             <a
-              href="https://docs.prowl.tools/getting-started"
+              href="https://docs.prowl.tools"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-md bg-gradient-to-r from-gradient-from to-gradient-to px-6 py-3 text-sm font-semibold text-white transition-shadow hover:shadow-lg hover:shadow-cyan/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan"

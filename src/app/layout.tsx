@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 
 const SITE_TITLE = "Prowl — E2E tests for native macOS and web apps from one YAML file";
 const SITE_DESCRIPTION =
-  "Prowl is an open-source CLI that runs the same YAML end-to-end test against a native macOS app or a web app. Deterministic runs, artifacts in your repo, bring your own key, no metered pricing.";
+  "Prowl is an open-source CLI that runs the same YAML end-to-end test against a native macOS app or a web app. Deterministic, local-first, bring your own key.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://prowl.tools"),

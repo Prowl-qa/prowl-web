@@ -5,7 +5,7 @@ const footerLinkClass =
   'hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm';
 
 const productLinks = [
-  { label: 'Getting started', href: 'https://docs.prowl.tools/getting-started' },
+  { label: 'Getting started', href: 'https://docs.prowl.tools' },
   { label: 'macOS target', href: 'https://docs.prowl.tools/macos-target' },
   { label: 'Agents & MCP', href: 'https://docs.prowl.tools/agents' },
   { label: 'Releases', href: 'https://github.com/prowl-tools/prowl/releases' },

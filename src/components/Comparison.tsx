@@ -37,6 +37,9 @@ export default function Comparison() {
             className="mt-8 overflow-x-auto rounded-xl border border-border bg-surface-elevated"
           >
             <table className="w-full min-w-[720px] text-left text-sm">
+              <caption className="sr-only">
+                Capability comparison of Prowl with Maestro, Playwright, and XCUITest
+              </caption>
               <thead>
                 <tr className="border-b border-border">
                   <th scope="col" className="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-muted">

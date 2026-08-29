@@ -35,7 +35,7 @@ export default function Nav() {
 
         {/* Desktop links */}
         <div className="hidden sm:flex items-center gap-6 text-sm">
-          <a href="#how-it-works" className={linkClass}>How it works</a>
+          <Link href="/#how-it-works" className={linkClass}>How it works</Link>
           <a href="https://docs.prowl.tools" target="_blank" rel="noopener noreferrer" className={linkClass}>
             Docs
           </a>
@@ -66,7 +66,7 @@ export default function Nav() {
       {/* Mobile menu */}
       {menuOpen && (
         <div className="sm:hidden border-t border-border bg-background/95 backdrop-blur-lg px-6 py-4 space-y-3 text-sm">
-          <a href="#how-it-works" className={`block ${linkClass}`} onClick={() => setMenuOpen(false)}>How it works</a>
+          <Link href="/#how-it-works" className={`block ${linkClass}`} onClick={() => setMenuOpen(false)}>How it works</Link>
           <a href="https://docs.prowl.tools" target="_blank" rel="noopener noreferrer" className={`block ${linkClass}`}>
             Docs
           </a>
