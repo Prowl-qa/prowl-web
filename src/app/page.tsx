@@ -1,9 +1,15 @@
 import type { Metadata } from 'next';
 import Nav from '@/components/Nav';
-import SuiteHero from '@/components/SuiteHero';
-import ProductShowcase from '@/components/ProductShowcase';
+import Hero from '@/components/Hero';
+import Targets from '@/components/Targets';
 import WhyProwl from '@/components/WhyProwl';
-import DocsHub from '@/components/DocsHub';
+import HowItWorks from '@/components/HowItWorks';
+import CodeExample from '@/components/CodeExample';
+import AgentEfficiency from '@/components/AgentEfficiency';
+import Features from '@/components/Features';
+import Comparison from '@/components/Comparison';
+import Install from '@/components/Install';
+import Faq from '@/components/Faq';
 import FinalCta from '@/components/FinalCta';
 import Footer from '@/components/Footer';
 import { rssAlternateTypes } from '@/lib/rss';
@@ -25,10 +31,16 @@ export default function Home() {
     <div className="min-h-screen bg-background text-foreground">
       <Nav />
       <main>
-        <SuiteHero />
-        <ProductShowcase />
+        <Hero />
+        <Targets />
         <WhyProwl />
-        <DocsHub />
+        <HowItWorks />
+        <CodeExample />
+        <AgentEfficiency />
+        <Features />
+        <Comparison />
+        <Install />
+        <Faq />
         <FinalCta />
       </main>
       <Footer />

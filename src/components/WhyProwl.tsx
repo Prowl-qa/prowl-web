@@ -4,7 +4,7 @@ import { motion } from 'motion/react';
 import SectionReveal from '@/components/ui/SectionReveal';
 import { fadeUp, staggerContainer } from '@/lib/animations';
 import { useScrollReveal } from '@/lib/reveal';
-import { suitePillars } from '@/lib/products';
+import { pillars } from '@/lib/pillars';
 
 export default function WhyProwl() {
   const reveal = useScrollReveal();
@@ -21,11 +21,14 @@ export default function WhyProwl() {
             Why Prowl
           </motion.p>
           <motion.h2 variants={fadeUp} className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-            What makes it a suite, not a toolbox
+            Your tests, your data, your keys
           </motion.h2>
+          <motion.p variants={fadeUp} className="mt-3 max-w-3xl text-muted">
+            Prowl exists so you can own your own testing — no vendor ecosystem, no metered pricing, no data leaving your repo.
+          </motion.p>
 
           <motion.div variants={staggerContainer} className="mt-8 grid gap-4 md:grid-cols-2">
-            {suitePillars.map((pillar) => (
+            {pillars.map((pillar) => (
               <motion.div
                 key={pillar.title}
                 variants={fadeUp}

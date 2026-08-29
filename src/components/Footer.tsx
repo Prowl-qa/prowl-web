@@ -1,9 +1,22 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { isExternalHref, suiteProducts } from '@/lib/products';
 
 const footerLinkClass =
   'hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm';
+
+const productLinks = [
+  { label: 'Getting started', href: 'https://docs.prowl.tools/getting-started' },
+  { label: 'macOS target', href: 'https://docs.prowl.tools/macos-target' },
+  { label: 'Agents & MCP', href: 'https://docs.prowl.tools/agents' },
+  { label: 'Releases', href: 'https://github.com/prowl-tools/prowl/releases' },
+];
+
+const docsLinks = [
+  { label: 'All docs', href: 'https://docs.prowl.tools' },
+  { label: 'Step types', href: 'https://docs.prowl.tools/step-types' },
+  { label: 'Configuration', href: 'https://docs.prowl.tools/configuration' },
+  { label: 'Selectors', href: 'https://docs.prowl.tools/selectors' },
+];
 
 export default function Footer() {
   return (
@@ -26,7 +39,7 @@ export default function Footer() {
             />
             <div>
               <span className="text-lg font-bold tracking-tight">Prowl</span>
-              <p className="mt-1 text-muted text-sm">A QA suite for the web.</p>
+              <p className="mt-1 text-muted text-sm">End-to-end tests for native macOS and web apps.</p>
               <p className="mt-1 text-muted text-sm">Made for agents, controlled by humans.</p>
               {/* TODO(PQW-003): re-link to https://genkeilabs.com once the Genkei Labs site is live */}
               <p className="mt-2 text-muted text-sm">Brought to you by Genkei Labs.</p>
@@ -76,17 +89,13 @@ export default function Footer() {
         {/* Right: Link groups */}
         <nav aria-label="Footer" className="flex gap-12 sm:gap-16">
           <div>
-            <h4 className="font-semibold mb-3 text-xs uppercase tracking-wider text-muted">Products</h4>
+            <h4 className="font-semibold mb-3 text-xs uppercase tracking-wider text-muted">Product</h4>
             <ul className="space-y-2 text-muted">
-              {suiteProducts.map((p) => (
-                <li key={p.slug}>
-                  {isExternalHref(p.href) ? (
-                    <a href={p.href} target="_blank" rel="noopener noreferrer" className={footerLinkClass}>
-                      {p.name}
-                    </a>
-                  ) : (
-                    <Link href={p.href} className={footerLinkClass}>{p.name}</Link>
-                  )}
+              {productLinks.map((link) => (
+                <li key={link.href}>
+                  <a href={link.href} target="_blank" rel="noopener noreferrer" className={footerLinkClass}>
+                    {link.label}
+                  </a>
                 </li>
               ))}
             </ul>
@@ -94,13 +103,10 @@ export default function Footer() {
           <div>
             <h4 className="font-semibold mb-3 text-xs uppercase tracking-wider text-muted">Docs</h4>
             <ul className="space-y-2 text-muted">
-              <li>
-                <Link href="/docs" className={footerLinkClass}>All docs</Link>
-              </li>
-              {suiteProducts.map((p) => (
-                <li key={p.slug}>
-                  <a href={p.docsHref} target="_blank" rel="noopener noreferrer" className={footerLinkClass}>
-                    {p.name}
+              {docsLinks.map((link) => (
+                <li key={link.href}>
+                  <a href={link.href} target="_blank" rel="noopener noreferrer" className={footerLinkClass}>
+                    {link.label}
                   </a>
                 </li>
               ))}
@@ -115,6 +121,11 @@ export default function Footer() {
               <li>
                 <a href="https://github.com/prowl-tools" target="_blank" rel="noopener noreferrer" className={footerLinkClass}>
                   GitHub
+                </a>
+              </li>
+              <li>
+                <a href="https://www.npmjs.com/package/prowl-tools" target="_blank" rel="noopener noreferrer" className={footerLinkClass}>
+                  npm
                 </a>
               </li>
             </ul>

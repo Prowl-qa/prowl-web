@@ -15,27 +15,27 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const SUITE_TITLE = "Prowl — the testing suite made for agents, controlled by humans";
-const SUITE_DESCRIPTION =
-  "Prowl is a QA suite from Genkei Labs: deterministic E2E testing in YAML and infrastructure validation — CLI-first, agent-ready, no runaway cost.";
+const SITE_TITLE = "Prowl — E2E tests for native macOS and web apps from one YAML file";
+const SITE_DESCRIPTION =
+  "Prowl is an open-source CLI that runs the same YAML end-to-end test against a native macOS app or a web app. Deterministic runs, artifacts in your repo, bring your own key, no metered pricing.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://prowl.tools"),
-  title: SUITE_TITLE,
-  description: SUITE_DESCRIPTION,
+  title: SITE_TITLE,
+  description: SITE_DESCRIPTION,
   // Site-wide RSS autodiscovery for the single blog feed (PQW-009). Placed in
   // the root layout as the conventional default so any route inherits it.
   // NOTE: Next shallow-merges `alternates`, so pages that set their own
-  // `alternates.canonical` (PQW-010: /, /blog, blog posts, and the product
-  // pages) replace this object; those we control re-include `rssAlternateTypes`
+  // `alternates.canonical` (PQW-010: /, /blog, and blog posts) replace this
+  // object; those we control re-include `rssAlternateTypes`
   // to keep the feed link. Deliberately no layout-level `canonical` here — that
   // would be inherited by every child and stamp `/` onto unrelated pages.
   alternates: {
     types: rssAlternateTypes,
   },
   openGraph: {
-    title: SUITE_TITLE,
-    description: SUITE_DESCRIPTION,
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
     url: "https://prowl.tools",
     siteName: "Prowl",
     type: "website",
@@ -43,8 +43,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: SUITE_TITLE,
-    description: SUITE_DESCRIPTION,
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
     creator: "@prowltools",
   },
 };
