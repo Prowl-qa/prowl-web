@@ -10,10 +10,11 @@ type Redirect = {
 };
 
 const loadRedirects = async () => {
-  const config = nextConfig as { redirects?: () => Redirect[] | Promise<Redirect[]> };
+  const { redirects } = nextConfig as { redirects?: () => Redirect[] | Promise<Redirect[]> };
 
-  assert.equal(typeof config.redirects, "function");
-  return await config.redirects();
+  // `assert.ok` narrows the type; `assert.equal(typeof …)` does not, which tsc flags.
+  assert.ok(typeof redirects === "function", "next.config.ts exports a redirects() function");
+  return await redirects();
 };
 
 describe("redirects", () => {
