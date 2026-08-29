@@ -1,0 +1,411 @@
+import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { test } from 'node:test';
+
+const REVIEW_ACTION_SHA = '4e60b282f3837b3f09b2a9d0c74f19eef2804c10';
+const REPOSITORY = 'prowl-tools/prowl-web';
+const BASE_SHA = 'd478fb5dc46c96361dc1f9c8fde76aa745dbc884';
+const HEAD_SHA = '6d51eaa779368e4f4dd40b5ea9cd2b7882f12397';
+const MOVED_HEAD_SHA = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
+
+type FakeGhResponses = Record<string, Record<string, string>>;
+
+type WorkflowResult = {
+  outputs: Record<string, string>;
+  status: number | null;
+  stderr: string;
+  stdout: string;
+};
+
+const workflowPath = (file: string) =>
+  path.join(process.cwd(), '.github', 'workflows', file);
+
+const readWorkflow = (file: string) =>
+  fs.readFileSync(workflowPath(file), 'utf8');
+
+const extractRunBlock = (file: string, stepName: string) => {
+  const lines = readWorkflow(file).split('\n');
+  const stepIndex = lines.findIndex((line) =>
+    line.trimStart().startsWith(`- name: ${stepName}`),
+  );
+
+  assert.notEqual(stepIndex, -1, `Missing workflow step: ${stepName}`);
+
+  const runIndex = lines.findIndex(
+    (line, index) => index > stepIndex && line === '        run: |',
+  );
+
+  assert.notEqual(runIndex, -1, `Missing run block for step: ${stepName}`);
+
+  const scriptLines: string[] = [];
+  for (const line of lines.slice(runIndex + 1)) {
+    if (line === '') {
+      scriptLines.push('');
+      continue;
+    }
+    if (!line.startsWith('          ')) {
+      break;
+    }
+    scriptLines.push(line.slice(10));
+  }
+
+  assert.ok(scriptLines.length > 0, `Empty run block for step: ${stepName}`);
+
+  return `${scriptLines.join('\n')}\n`;
+};
+
+const getCommandResolveScript = () =>
+  extractRunBlock('prowl-review-command.yml', 'Resolve PR metadata').replace(
+    'pr_number="${{ github.event.issue.number || github.event.pull_request.number }}"',
+    'pr_number="${EVENT_PR_NUMBER}"',
+  );
+
+const getWorkflowRunResolveScript = () =>
+  extractRunBlock('prowl-review.yml', 'Resolve PR from the CI run');
+
+const createFakeGh = (directory: string) => {
+  const ghPath = path.join(directory, 'gh');
+  fs.writeFileSync(
+    ghPath,
+    `#!/usr/bin/env node
+const scenario = JSON.parse(process.env.GH_FAKE_SCENARIO ?? '{}');
+const [command, endpoint, ...rest] = process.argv.slice(2);
+
+if (command !== 'api' || !endpoint) {
+  console.error('Only gh api is supported by this test fixture.');
+  process.exit(1);
+}
+
+if ((scenario.failEndpoints ?? []).includes(endpoint)) {
+  console.error('Synthetic gh api failure for ' + endpoint);
+  process.exit(1);
+}
+
+const jqIndex = rest.indexOf('--jq');
+const jq = jqIndex === -1 ? 'default' : rest[jqIndex + 1];
+const endpointResponses = scenario.responses?.[endpoint] ?? {};
+const response = endpointResponses[jq] ?? endpointResponses.default;
+
+if (response === undefined) {
+  console.error('No fake gh response for ' + endpoint + ' with jq ' + jq);
+  process.exit(1);
+}
+
+process.stdout.write(response);
+if (response !== '' && !response.endsWith('\\n')) {
+  process.stdout.write('\\n');
+}
+`,
+  );
+  fs.chmodSync(ghPath, 0o755);
+};
+
+const parseOutputs = (outputPath: string) => {
+  if (!fs.existsSync(outputPath)) {
+    return {};
+  }
+
+  const entries = fs
+    .readFileSync(outputPath, 'utf8')
+    .split('\n')
+    .filter(Boolean)
+    .map((line) => {
+      const separatorIndex = line.indexOf('=');
+      assert.ok(separatorIndex > 0, `Invalid GITHUB_OUTPUT line: ${line}`);
+      return [line.slice(0, separatorIndex), line.slice(separatorIndex + 1)];
+    });
+
+  return Object.fromEntries(entries);
+};
+
+const runWorkflowScript = (
+  script: string,
+  options: {
+    env: Record<string, string>;
+    failEndpoints?: string[];
+    responses: FakeGhResponses;
+  },
+): WorkflowResult => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'prowl-workflow-'));
+  const scriptPath = path.join(directory, 'script.sh');
+  const outputPath = path.join(directory, 'github-output');
+
+  try {
+    createFakeGh(directory);
+    fs.writeFileSync(scriptPath, script);
+    fs.chmodSync(scriptPath, 0o755);
+
+    const result = spawnSync('bash', [scriptPath], {
+      encoding: 'utf8',
+      env: {
+        ...process.env,
+        ...options.env,
+        GH_FAKE_SCENARIO: JSON.stringify({
+          failEndpoints: options.failEndpoints ?? [],
+          responses: options.responses,
+        }),
+        GITHUB_OUTPUT: outputPath,
+        GITHUB_REPOSITORY: REPOSITORY,
+        PATH: [directory, process.env.PATH ?? ''].filter(Boolean).join(path.delimiter),
+      },
+    });
+
+    return {
+      outputs: parseOutputs(outputPath),
+      status: result.status,
+      stderr: result.stderr,
+      stdout: result.stdout,
+    };
+  } finally {
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+};
+
+const pullEndpoint = (prNumber: number) =>
+  `repos/${REPOSITORY}/pulls/${prNumber}`;
+
+const runEndpoint = (runId: string) =>
+  `repos/${REPOSITORY}/actions/runs/${runId}`;
+
+test('pins both prowl-review action references to the reviewed Codex-capable commit', () => {
+  for (const file of ['prowl-review.yml', 'prowl-review-command.yml']) {
+    const workflow = readWorkflow(file);
+
+    assert.match(
+      workflow,
+      new RegExp(
+        `uses: prowl-tools/prowl-code-review@${REVIEW_ACTION_SHA}`,
+      ),
+    );
+    assert.doesNotMatch(workflow, /prowl-tools\/prowl-code-review@main/);
+  }
+});
+
+test('command workflow ignores untrusted command comments before resolving metadata', () => {
+  const workflow = readWorkflow('prowl-review-command.yml');
+
+  assert.match(workflow, /github\.event\.comment\.user\.type != 'Bot'/);
+  assert.match(workflow, /github\.event\.comment\.author_association == 'OWNER'/);
+  assert.match(workflow, /github\.event\.comment\.author_association == 'MEMBER'/);
+  assert.match(
+    workflow,
+    /github\.event\.comment\.author_association == 'COLLABORATOR'/,
+  );
+  assert.match(workflow, /contains\(github\.event\.comment\.body, '@prowl-review'\)/);
+  assert.match(
+    workflow,
+    /!contains\(github\.event\.comment\.body, '<!-- prowl-review:summary -->'\)/,
+  );
+  assert.match(
+    workflow,
+    /!contains\(github\.event\.comment\.body, '<!-- prowl-review:finding '\)/,
+  );
+});
+
+test('command resolve marks same-repo pull request heads trusted', () => {
+  const result = runWorkflowScript(getCommandResolveScript(), {
+    env: {
+      EVENT_PR_NUMBER: '33',
+    },
+    responses: {
+      [pullEndpoint(33)]: {
+        '[.base.sha, .head.sha, .head.repo.full_name] | @tsv':
+          `${BASE_SHA}\t${HEAD_SHA}\t${REPOSITORY}`,
+      },
+    },
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.deepEqual(result.outputs, {
+    base_sha: BASE_SHA,
+    head_repo: REPOSITORY,
+    head_sha: HEAD_SHA,
+    pr_number: '33',
+    trusted_head: 'true',
+  });
+});
+
+test('command resolve marks fork pull request heads untrusted without failing', () => {
+  const result = runWorkflowScript(getCommandResolveScript(), {
+    env: {
+      EVENT_PR_NUMBER: '33',
+    },
+    responses: {
+      [pullEndpoint(33)]: {
+        '[.base.sha, .head.sha, .head.repo.full_name] | @tsv':
+          `${BASE_SHA}\t${HEAD_SHA}\tcontributor/prowl-web`,
+      },
+    },
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(result.outputs.trusted_head, 'false');
+  assert.equal(result.outputs.head_repo, 'contributor/prowl-web');
+  assert.match(result.stdout, /Fork PR command skipped/);
+});
+
+test('command resolve fails closed when required pull request metadata is incomplete', () => {
+  const result = runWorkflowScript(getCommandResolveScript(), {
+    env: {
+      EVENT_PR_NUMBER: '33',
+    },
+    responses: {
+      [pullEndpoint(33)]: {
+        '[.base.sha, .head.sha, .head.repo.full_name] | @tsv':
+          `${BASE_SHA}\t${HEAD_SHA}\t`,
+      },
+    },
+  });
+
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /Failed to resolve complete PR metadata/);
+});
+
+test('workflow_run resolve only starts after successful pull_request CI runs', () => {
+  const workflow = readWorkflow('prowl-review.yml');
+
+  assert.match(
+    workflow,
+    /github\.event\.workflow_run\.event == 'pull_request'/,
+  );
+  assert.match(
+    workflow,
+    /github\.event\.workflow_run\.conclusion == 'success'/,
+  );
+});
+
+test('workflow_run resolve deduplicates candidates and resolves exactly one open PR at the CI head', () => {
+  const result = runWorkflowScript(getWorkflowRunResolveScript(), {
+    env: {
+      CHECK_RUN: 'true',
+      HEAD_SHA,
+      PR_PAYLOAD: '[{"number":33}]',
+      RUN_ID: '100',
+    },
+    responses: {
+      [runEndpoint('100')]: {
+        '.pull_requests[]?.number': '33',
+      },
+      [pullEndpoint(33)]: {
+        '[.base.sha, .head.sha, .head.repo.full_name, .draft] | @tsv':
+          `${BASE_SHA}\t${HEAD_SHA}\t${REPOSITORY}\tfalse`,
+        '[.state, .head.sha] | @tsv': `open\t${HEAD_SHA}`,
+      },
+    },
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.deepEqual(result.outputs, {
+    base_sha: BASE_SHA,
+    head_repo: REPOSITORY,
+    head_sha: HEAD_SHA,
+    is_draft: 'false',
+    pr_number: '33',
+    resolved: 'true',
+  });
+});
+
+test('workflow_run resolve fails the setup check when the completed run cannot be inspected', () => {
+  const result = runWorkflowScript(getWorkflowRunResolveScript(), {
+    env: {
+      CHECK_RUN: 'true',
+      HEAD_SHA,
+      PR_PAYLOAD: '[]',
+      RUN_ID: 'rate-limited',
+    },
+    failEndpoints: [runEndpoint('rate-limited')],
+    responses: {},
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(result.outputs.resolved, 'false');
+  assert.equal(result.outputs.check_head_sha, HEAD_SHA);
+  assert.equal(result.outputs.check_conclusion, 'failure');
+  assert.match(result.outputs.check_summary, /API, rate-limit, or permissions errors/);
+});
+
+test('workflow_run resolve skips ambiguous matching pull requests', () => {
+  const result = runWorkflowScript(getWorkflowRunResolveScript(), {
+    env: {
+      CHECK_RUN: 'true',
+      HEAD_SHA,
+      PR_PAYLOAD: '[{"number":33}]',
+      RUN_ID: '101',
+    },
+    responses: {
+      [runEndpoint('101')]: {
+        '.pull_requests[]?.number': '34',
+      },
+      [pullEndpoint(33)]: {
+        '[.state, .head.sha] | @tsv': `open\t${HEAD_SHA}`,
+      },
+      [pullEndpoint(34)]: {
+        '[.state, .head.sha] | @tsv': `open\t${HEAD_SHA}`,
+      },
+    },
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.deepEqual(result.outputs, {
+    resolved: 'false',
+  });
+  assert.match(result.stdout, /expected exactly one open PR/);
+});
+
+test('workflow_run resolve skips fork pull requests before the self-hosted review job', () => {
+  const result = runWorkflowScript(getWorkflowRunResolveScript(), {
+    env: {
+      CHECK_RUN: 'true',
+      HEAD_SHA,
+      PR_PAYLOAD: '[{"number":33}]',
+      RUN_ID: '102',
+    },
+    responses: {
+      [runEndpoint('102')]: {
+        '.pull_requests[]?.number': '',
+      },
+      [pullEndpoint(33)]: {
+        '[.base.sha, .head.sha, .head.repo.full_name, .draft] | @tsv':
+          `${BASE_SHA}\t${HEAD_SHA}\tcontributor/prowl-web\tfalse`,
+        '[.state, .head.sha] | @tsv': `open\t${HEAD_SHA}`,
+      },
+    },
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(result.outputs.resolved, 'false');
+  assert.equal(result.outputs.pr_number, '33');
+  assert.equal(result.outputs.check_head_sha, HEAD_SHA);
+  assert.equal(result.outputs.check_conclusion, 'neutral');
+  assert.match(result.outputs.check_summary, /fork pull request/);
+});
+
+test('workflow_run resolve skips stale CI runs when the pull request head has moved', () => {
+  const result = runWorkflowScript(getWorkflowRunResolveScript(), {
+    env: {
+      CHECK_RUN: 'true',
+      HEAD_SHA,
+      PR_PAYLOAD: '[{"number":33}]',
+      RUN_ID: '103',
+    },
+    responses: {
+      [runEndpoint('103')]: {
+        '.pull_requests[]?.number': '',
+      },
+      [pullEndpoint(33)]: {
+        '[.base.sha, .head.sha, .head.repo.full_name, .draft] | @tsv':
+          `${BASE_SHA}\t${MOVED_HEAD_SHA}\t${REPOSITORY}\tfalse`,
+        '[.state, .head.sha] | @tsv': `open\t${HEAD_SHA}`,
+      },
+    },
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.deepEqual(result.outputs, {
+    resolved: 'false',
+  });
+  assert.match(result.stdout, /head moved from CI head/);
+});

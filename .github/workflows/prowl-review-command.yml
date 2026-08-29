@@ -156,8 +156,9 @@ jobs:
           echo "path=${config_path}" >> "$GITHUB_OUTPUT"
 
       - name: prowl-review command
-        # TODO: pin to @v1 once a release containing the codex provider (>0.3.0) ships
-        uses: prowl-tools/prowl-code-review@main
+        # Pinned to the reviewed Codex-capable action commit; move to a release
+        # tag once one includes the codex provider.
+        uses: prowl-tools/prowl-code-review@4e60b282f3837b3f09b2a9d0c74f19eef2804c10
         env:
           PROWL_REVIEWED_HEAD_SHA: ${{ needs.resolve.outputs.head_sha }}
           PROWL_REVIEWED_HEAD_REPOSITORY: ${{ needs.resolve.outputs.head_repo }}
