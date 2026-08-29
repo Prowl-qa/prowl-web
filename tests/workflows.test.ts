@@ -26,30 +26,49 @@ const workflowPath = (file: string) =>
 const readWorkflow = (file: string) =>
   fs.readFileSync(workflowPath(file), 'utf8');
 
-const extractRunBlock = (file: string, stepName: string) => {
-  const lines = readWorkflow(file).split('\n');
+const leadingSpaceCount = (line: string) => line.match(/^ */)?.[0].length ?? 0;
+
+const extractRunBlockFromWorkflow = (workflow: string, stepName: string) => {
+  const lines = workflow.split('\n');
   const stepIndex = lines.findIndex((line) =>
     line.trimStart().startsWith(`- name: ${stepName}`),
   );
 
   assert.notEqual(stepIndex, -1, `Missing workflow step: ${stepName}`);
 
-  const runIndex = lines.findIndex(
-    (line, index) => index > stepIndex && line === '        run: |',
-  );
+  const stepIndent = leadingSpaceCount(lines[stepIndex]);
+  let runIndex = -1;
+  for (let index = stepIndex + 1; index < lines.length; index += 1) {
+    const line = lines[index];
+
+    if (
+      index > stepIndex + 1 &&
+      line.trimStart().startsWith('- name:') &&
+      leadingSpaceCount(line) <= stepIndent
+    ) {
+      break;
+    }
+
+    if (line.trim() === 'run: |') {
+      runIndex = index;
+      break;
+    }
+  }
 
   assert.notEqual(runIndex, -1, `Missing run block for step: ${stepName}`);
 
+  const scriptIndent = leadingSpaceCount(lines[runIndex]) + 2;
+  const scriptPrefix = ' '.repeat(scriptIndent);
   const scriptLines: string[] = [];
   for (const line of lines.slice(runIndex + 1)) {
     if (line === '') {
       scriptLines.push('');
       continue;
     }
-    if (!line.startsWith('          ')) {
+    if (!line.startsWith(scriptPrefix)) {
       break;
     }
-    scriptLines.push(line.slice(10));
+    scriptLines.push(line.slice(scriptIndent));
   }
 
   assert.ok(scriptLines.length > 0, `Empty run block for step: ${stepName}`);
@@ -57,10 +76,28 @@ const extractRunBlock = (file: string, stepName: string) => {
   return `${scriptLines.join('\n')}\n`;
 };
 
-const getCommandResolveScript = () =>
-  extractRunBlock('prowl-review-command.yml', 'Resolve PR metadata').replace(
-    'pr_number="${{ github.event.issue.number || github.event.pull_request.number }}"',
+const extractRunBlock = (file: string, stepName: string) =>
+  extractRunBlockFromWorkflow(readWorkflow(file), stepName);
+
+const commandPrNumberExpression =
+  /pr_number="\$\{\{\s*github\.event\.issue\.number\s*\|\|\s*github\.event\.pull_request\.number\s*\}\}"/;
+
+const replaceCommandPrNumberExpression = (script: string) => {
+  assert.match(
+    script,
+    commandPrNumberExpression,
+    'Missing command workflow PR number expression',
+  );
+
+  return script.replace(
+    commandPrNumberExpression,
     'pr_number="${EVENT_PR_NUMBER}"',
+  );
+};
+
+const getCommandResolveScript = () =>
+  replaceCommandPrNumberExpression(
+    extractRunBlock('prowl-review-command.yml', 'Resolve PR metadata'),
   );
 
 const getWorkflowRunResolveScript = () =>
@@ -183,6 +220,46 @@ test('pins both prowl-review action references to the reviewed Codex-capable com
     );
     assert.doesNotMatch(workflow, /prowl-tools\/prowl-code-review@main/);
   }
+});
+
+test('run block extractor strips indentation relative to the run key', () => {
+  const workflow = [
+    'steps:',
+    '- name: Fixture step',
+    '  run: |',
+    '    echo first',
+    '      echo nested',
+    '- name: Next step',
+    '  run: |',
+    '    echo skipped',
+  ].join('\n');
+
+  assert.equal(
+    extractRunBlockFromWorkflow(workflow, 'Fixture step'),
+    'echo first\n  echo nested\n',
+  );
+});
+
+test('command resolve script substitutes the workflow PR-number expression', () => {
+  const script = getCommandResolveScript();
+
+  assert.match(script, /pr_number="\$\{EVENT_PR_NUMBER\}"/);
+  assert.doesNotMatch(script, commandPrNumberExpression);
+});
+
+test('command resolve script substitution handles expression formatting changes', () => {
+  const script = replaceCommandPrNumberExpression(
+    'pr_number="${{github.event.issue.number||github.event.pull_request.number}}"\n',
+  );
+
+  assert.equal(script, 'pr_number="${EVENT_PR_NUMBER}"\n');
+});
+
+test('command resolve script substitution rejects missing workflow expression', () => {
+  assert.throws(
+    () => replaceCommandPrNumberExpression('pr_number="${{ github.event.issue.number }}"\n'),
+    /Missing command workflow PR number expression/,
+  );
 });
 
 test('workflow output parser rejects malformed lines without separators', () => {
