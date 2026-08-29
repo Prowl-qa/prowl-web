@@ -5,6 +5,15 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
 ## [Unreleased]
 
 ### Removed
+- Removed Prowl Hub and Prowl Infra Hub from the site (PQW-025; both repos were
+  retired and archived 2026-08-26). Deleted the `hub` and `infra` product entries
+  and everything that rendered from them — the suite hero, the three-product
+  showcase, the "Docs for every tool" hub, the nav Products menu, the footer
+  Products/Docs columns, the `ProductIcon` set, the "Community Hub" section, and
+  `src/lib/products.ts` itself — plus the `/cli` and `/docs` routes now that the
+  homepage *is* the product page. `/cli`, `/hub`, and `/infra` permanently
+  redirect to `/`; `/docs` redirects to `docs.prowl.tools`. The launch blog post
+  no longer links to the Hub, and the `cli-page` / `docs-page` hunts were dropped.
 - Removed Prowl Code Review from the marketing site (PQW-026; counterpart of
   `prowl-code-review` #69). prowl-review moved to maintenance mode as an internal
   tool (owner decision, 2026-08-26), leaving the site's current catalog at three
@@ -20,6 +29,15 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
   `docs-page.yml`, `homepage.yml`) and deleted `code-review-page.yml`.
 
 ### Added
+- Desktop-first homepage (PQW-027, re-scoping PQW-024): a new hero that leads with
+  native macOS apps and web apps from one YAML hunt (using the menu bar example
+  from the macOS target guide), a "Change the target, not the test" section that
+  shows one portable hunt against a `macos` and a `web` target with Android/iOS
+  Simulator marked experimental, a "Why Prowl" section stating the mission as four
+  commitments (agents/humans, data stays in your repo, bring your own key, Apache-2.0),
+  a factual four-column comparison table (Prowl, Maestro, Playwright, XCUITest)
+  backed by `src/lib/comparison-data.ts` with a trademark disclaimer, and a
+  `legacy-routes` hunt covering the retired-route redirects.
 - Canonical URLs for the remaining routes (PQW-010): `alternates.canonical` is
   now set for `/` (in `src/app/page.tsx`, deliberately not the root layout so it
   is not inherited by unrelated pages), `/blog` (which also collapses `?tag=`
@@ -82,6 +100,12 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
   artifacts on failure.
 
 ### Changed
+- Repositioned every remaining section for the single product: root metadata and
+  OG image, features ("Built for desktop and web apps", native + browser
+  selectors), how-it-works, the agents section (`prowl analyze --app`, BYOK
+  generation), the FAQ (macOS, iOS/Android, CI-runner answers), the install
+  section — which now states plainly that the macOS helper is built from source
+  today — and the final CTA. Nav is a flat How it works / Docs / Blog / GitHub.
 - Single branded checks row for reviews: the prowl-review auto-review now triggers off the CI
   workflow completing (`workflow_run`) instead of `pull_request`, so the PR checks list shows
   only the branded "Prowl Review" check run (no extra `prowl-review / review` Actions row) and
