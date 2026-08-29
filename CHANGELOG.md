@@ -73,10 +73,11 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
   reviews only run once CI is green. The workflow resolves exactly one open PR from the
   completed CI run (with an API fallback), gates out forks, and hands the PR number and draft
   state to the action explicitly; CI now subscribes to `ready_for_review` so draft→ready still
-  triggers a review. Provider keys are read from org-level secrets.
+  triggers a review.
 - prowl-review now runs on the keyless Codex subscription provider (#64) on the self-hosted
   Mac mini runner instead of the API-key Claude + Gemini ensemble, so per-review marginal cost
-  is $0.00 and no `PROWL_AI_KEY_*` secret is stored in GitHub. The `workflow_run`→CI chain and
+  is $0.00 and no `PROWL_AI_KEY_*` secret is required or passed to the runner. The
+  `workflow_run`→CI chain and
   the branded prowl-review[bot] identity (App-token minting) are preserved; the `review` and
   `command` jobs move to `runs-on: [self-hosted, macOS, prowl-review]` behind a mandatory
   same-repo fork gate (public repo), share a non-cancelling per-PR Codex concurrency group, and

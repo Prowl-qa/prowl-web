@@ -1,8 +1,8 @@
 # Automatic prowl-review on pull requests — keyless Codex subscription provider
 # (#64) on the self-hosted Mac mini runner, posting under the branded
 # prowl-review[bot] identity when the App secrets are present. Per-review marginal
-# cost is $0.00 and no provider key is stored in GitHub; auth is the runner's own
-# `codex login`. Mirrors the prowl-tools/prowl-code-review dogfood workflow.
+# cost is $0.00 and no provider key is required or passed to the runner; auth is
+# the runner's own `codex login`. Mirrors the prowl-tools/prowl-code-review dogfood workflow.
 #
 # PUBLIC-REPO CAVEAT: this is a public repo, so the self-hosted Codex `review` job
 # below carries a MANDATORY job-level same-repo gate — fork PRs are never
@@ -149,12 +149,12 @@ jobs:
             exit 0
           fi
 
-          # Fork gate: forks never receive provider secrets. Draft handling is
-          # deferred to the action so trusted `review.reviewDrafts` config and the
-          # neutral skip check run still apply.
+          # Fork gate: fork code is never scheduled onto the self-hosted runner.
+          # Draft handling is deferred to the action so trusted
+          # `review.reviewDrafts` config and the neutral skip check run still apply.
           if [ "${head_repo}" != "${GITHUB_REPOSITORY}" ]; then
-            report_check "neutral" "Fork pull request - review skipped" "prowl-review skipped this fork pull request because provider secrets are unavailable to fork pull_request runs. No review was run for this commit."
-            echo "Skipping fork PR head ${head_repo}; forks do not receive provider secrets."
+            report_check "neutral" "Fork pull request - review skipped" "prowl-review skipped this fork pull request because fork code is not scheduled onto the self-hosted runner. No review was run for this commit."
+            echo "Skipping fork PR head ${head_repo}; fork code is not scheduled onto the self-hosted runner."
             exit 0
           fi
 
