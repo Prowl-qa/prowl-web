@@ -161,8 +161,9 @@ jobs:
           echo "path=${config_path}" >> "$GITHUB_OUTPUT"
 
       - name: prowl-review command
-        # Pinned to the reviewed Codex-capable action commit; move to a release
-        # tag once one includes the codex provider.
+        # Temporary SHA pin: current v1 lacks the Codex provider, so keep the
+        # reviewed Codex-capable commit until prowl-code-review publishes a
+        # stable Codex-capable tag. Re-check monthly and migrate to that tag.
         uses: prowl-tools/prowl-code-review@4e60b282f3837b3f09b2a9d0c74f19eef2804c10
         env:
           PROWL_REVIEWED_HEAD_SHA: ${{ needs.resolve.outputs.head_sha }}
