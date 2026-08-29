@@ -91,18 +91,19 @@ jobs:
     # check is belt-and-suspenders alongside it. MANDATORY on this public repo.
     if: >
       needs.resolve.outputs.trusted_head == 'true' &&
+      needs.resolve.outputs.head_repo != '' &&
       needs.resolve.outputs.head_repo == github.repository
     # Keyless `provider: codex` runs on the always-on Mac mini (#64).
     runs-on: [self-hosted, macOS, prowl-review]
     timeout-minutes: 30
     # Shares the per-PR Codex group with auto reviews (#64) using the PR number
-    # re-derived from GitHub's pull-request API, so review publishing and inline
-    # finding dedupe cannot race. Machine-wide serialization across repos/runner
-    # instances is the provider's Codex lock, not GitHub concurrency. Keep this
-    # non-cancelling so an in-flight maintainer request is never cancelled by a
-    # newer auto-review push.
+    # and head repository re-derived from GitHub's pull-request API, so review
+    # publishing and inline finding dedupe cannot race. Machine-wide serialization
+    # across repos/runner instances is the provider's Codex lock, not GitHub
+    # concurrency. Keep this non-cancelling so an in-flight maintainer request is
+    # never cancelled by a newer auto-review push.
     concurrency:
-      group: prowl-review-codex-${{ github.repository }}-${{ needs.resolve.outputs.pr_number }}
+      group: prowl-review-codex-${{ github.repository }}-${{ needs.resolve.outputs.pr_number }}-${{ needs.resolve.outputs.head_repo }}
       queue: max
       cancel-in-progress: false
     env:
@@ -135,6 +136,7 @@ jobs:
       - name: Checkout PR head for context
         if: >
           needs.resolve.outputs.trusted_head == 'true' &&
+          needs.resolve.outputs.head_repo != '' &&
           needs.resolve.outputs.head_repo == github.repository
         uses: actions/checkout@v4
         with:

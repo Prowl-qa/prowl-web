@@ -100,8 +100,12 @@ jobs:
 
           matches=""
           for pr in ${candidates}; do
+            if [[ ! "${pr}" =~ ^[1-9][0-9]*$ ]]; then
+              report_check "failure" "Review setup failed" "prowl-review received an invalid pull request number while resolving the completed CI run. Inspect this workflow run for payload or API errors."
+              echo "Skipping: invalid PR candidate while resolving completed CI run."
+              exit 0
+            fi
             if ! info="$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${pr}" --jq '[.state, .head.sha] | @tsv' 2>/dev/null)"; then
-              pr_number="${pr}"
               report_check "failure" "Review setup failed" "prowl-review could not load pull request #${pr} while resolving the completed CI run. Inspect this workflow run for API, rate-limit, or permissions errors."
               echo "Skipping: failed to load PR #${pr} metadata during resolution."
               exit 0
@@ -231,6 +235,7 @@ jobs:
     # public repo.
     if: >
       needs.resolve.outputs.resolved == 'true' &&
+      needs.resolve.outputs.head_repo != '' &&
       needs.resolve.outputs.head_repo == github.repository
     # Subscription-backed reviews run on the always-on Mac mini (#64): keyless
     # `provider: codex` via the ChatGPT login that lives only on that host. The
@@ -243,14 +248,15 @@ jobs:
       pull-requests: write
       issues: write
       checks: write
-    # Per-PR serialization shared with the command workflow. Keep this
-    # non-cancelling so a new auto-review cannot interrupt an in-flight maintainer
-    # command; stale auto reviews skip publishing when the reviewed head has
-    # advanced. Machine-wide serialization ACROSS repos/runner instances is the
-    # provider's Codex lock ($CODEX_HOME/.prowl-review.lock, on by default for
-    # `provider: codex`), NOT GitHub concurrency.
+    # Per-PR serialization shared with the command workflow, keyed by the
+    # server-derived PR number and head repository. Keep this non-cancelling so a
+    # new auto-review cannot interrupt an in-flight maintainer command; stale auto
+    # reviews skip publishing when the reviewed head has advanced. Machine-wide
+    # serialization ACROSS repos/runner instances is the provider's Codex lock
+    # ($CODEX_HOME/.prowl-review.lock, on by default for `provider: codex`), NOT
+    # GitHub concurrency.
     concurrency:
-      group: prowl-review-codex-${{ github.repository }}-${{ needs.resolve.outputs.pr_number }}
+      group: prowl-review-codex-${{ github.repository }}-${{ needs.resolve.outputs.pr_number }}-${{ needs.resolve.outputs.head_repo }}
       cancel-in-progress: false
     env:
       PROWL_APP_CONFIGURED: ${{ secrets.PROWL_APP_ID != '' && secrets.PROWL_APP_PRIVATE_KEY != '' }}
@@ -308,6 +314,7 @@ jobs:
       - name: Checkout PR head for context
         if: >
           needs.resolve.outputs.resolved == 'true' &&
+          needs.resolve.outputs.head_repo != '' &&
           needs.resolve.outputs.head_repo == github.repository
         uses: actions/checkout@v4
         with:

@@ -327,12 +327,12 @@ test('PR head checkouts have inline same-repo guards and disable persisted crede
     {
       file: 'prowl-review.yml',
       guard:
-        /if: >\n\s+needs\.resolve\.outputs\.resolved == 'true' &&\n\s+needs\.resolve\.outputs\.head_repo == github\.repository/,
+        /if: >\n\s+needs\.resolve\.outputs\.resolved == 'true' &&\n\s+needs\.resolve\.outputs\.head_repo != '' &&\n\s+needs\.resolve\.outputs\.head_repo == github\.repository/,
     },
     {
       file: 'prowl-review-command.yml',
       guard:
-        /if: >\n\s+needs\.resolve\.outputs\.trusted_head == 'true' &&\n\s+needs\.resolve\.outputs\.head_repo == github\.repository/,
+        /if: >\n\s+needs\.resolve\.outputs\.trusted_head == 'true' &&\n\s+needs\.resolve\.outputs\.head_repo != '' &&\n\s+needs\.resolve\.outputs\.head_repo == github\.repository/,
     },
   ];
 
@@ -351,17 +351,25 @@ test('self-hosted review jobs keep mandatory same-repo gates', () => {
 
   assert.match(
     commandJob,
-    /if: >\n\s+needs\.resolve\.outputs\.trusted_head == 'true' &&\n\s+needs\.resolve\.outputs\.head_repo == github\.repository/,
+    /if: >\n\s+needs\.resolve\.outputs\.trusted_head == 'true' &&\n\s+needs\.resolve\.outputs\.head_repo != '' &&\n\s+needs\.resolve\.outputs\.head_repo == github\.repository/,
   );
   assert.match(commandJob, /runs-on: \[self-hosted, macOS, prowl-review\]/);
   assert.match(commandJob, /timeout-minutes: 30/);
+  assert.match(
+    commandJob,
+    /group: prowl-review-codex-\$\{\{ github\.repository \}\}-\$\{\{ needs\.resolve\.outputs\.pr_number \}\}-\$\{\{ needs\.resolve\.outputs\.head_repo \}\}/,
+  );
 
   assert.match(
     reviewJob,
-    /if: >\n\s+needs\.resolve\.outputs\.resolved == 'true' &&\n\s+needs\.resolve\.outputs\.head_repo == github\.repository/,
+    /if: >\n\s+needs\.resolve\.outputs\.resolved == 'true' &&\n\s+needs\.resolve\.outputs\.head_repo != '' &&\n\s+needs\.resolve\.outputs\.head_repo == github\.repository/,
   );
   assert.match(reviewJob, /runs-on: \[self-hosted, macOS, prowl-review\]/);
   assert.match(reviewJob, /timeout-minutes: 30/);
+  assert.match(
+    reviewJob,
+    /group: prowl-review-codex-\$\{\{ github\.repository \}\}-\$\{\{ needs\.resolve\.outputs\.pr_number \}\}-\$\{\{ needs\.resolve\.outputs\.head_repo \}\}/,
+  );
 });
 
 test('command workflow queues command requests on server-derived PR metadata', () => {
@@ -371,7 +379,7 @@ test('command workflow queues command requests on server-derived PR metadata', (
   assert.doesNotMatch(resolveJob, /\n    concurrency:\n/);
   assert.match(
     commandJob,
-    /concurrency:\n\s+group: prowl-review-codex-\$\{\{ github\.repository \}\}-\$\{\{ needs\.resolve\.outputs\.pr_number \}\}\n\s+queue: max\n\s+cancel-in-progress: false/,
+    /concurrency:\n\s+group: prowl-review-codex-\$\{\{ github\.repository \}\}-\$\{\{ needs\.resolve\.outputs\.pr_number \}\}-\$\{\{ needs\.resolve\.outputs\.head_repo \}\}\n\s+queue: max\n\s+cancel-in-progress: false/,
   );
 });
 
@@ -426,6 +434,19 @@ test('workflow output parser rejects malformed lines without separators', () => 
       () => parseOutputs(outputPath),
       /Invalid GITHUB_OUTPUT line: not-a-key-value-line/,
     );
+  } finally {
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+test('workflow output parser rejects malformed lines without keys', () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'prowl-output-'));
+  const outputPath = path.join(directory, 'github-output');
+
+  try {
+    fs.writeFileSync(outputPath, '=value\n');
+
+    assert.throws(() => parseOutputs(outputPath), /Invalid GITHUB_OUTPUT line: =value/);
   } finally {
     fs.rmSync(directory, { recursive: true, force: true });
   }
@@ -612,6 +633,31 @@ test('workflow_run resolve fails the setup check when the completed run cannot b
   assert.match(result.outputs.check_summary, /API, rate-limit, or permissions errors/);
 });
 
+test('workflow_run resolve rejects malformed PR candidates before PR API lookup', () => {
+  const result = runWorkflowScript(getWorkflowRunResolveScript(), {
+    env: {
+      CHECK_RUN: 'true',
+      HEAD_SHA,
+      PR_PAYLOAD: '[{"number":"../../33"}]',
+      RUN_ID: 'malformed-candidate',
+    },
+    responses: {
+      [runEndpoint('malformed-candidate')]: {
+        '.pull_requests[]?.number': '',
+      },
+    },
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(result.outputs.resolved, 'false');
+  assert.equal(result.outputs.head_sha, HEAD_SHA);
+  assert.equal(result.outputs.check_head_sha, HEAD_SHA);
+  assert.equal(result.outputs.check_conclusion, 'failure');
+  assert.equal(result.outputs.pr_number, undefined);
+  assert.match(result.outputs.check_summary, /invalid pull request number/);
+  assert.match(result.stdout, /invalid PR candidate/);
+});
+
 test('workflow_run resolve fails the setup check when candidate PR metadata cannot be loaded', () => {
   const result = runWorkflowScript(getWorkflowRunResolveScript(), {
     env: {
@@ -630,7 +676,7 @@ test('workflow_run resolve fails the setup check when candidate PR metadata cann
 
   assert.equal(result.status, 0, result.stderr);
   assert.equal(result.outputs.resolved, 'false');
-  assert.equal(result.outputs.pr_number, '33');
+  assert.equal(result.outputs.pr_number, undefined);
   assert.equal(result.outputs.head_sha, HEAD_SHA);
   assert.equal(result.outputs.check_head_sha, HEAD_SHA);
   assert.equal(result.outputs.check_conclusion, 'failure');

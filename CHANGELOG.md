@@ -80,14 +80,16 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
   `workflow_run`→CI chain and
   the branded prowl-review[bot] identity (App-token minting) are preserved; the `review` and
   `command` jobs move to `runs-on: [self-hosted, macOS, prowl-review]` behind a mandatory
-  same-repo fork gate (public repo), share a non-cancelling per-PR Codex concurrency group, and
-  cap at `timeout-minutes: 30`. `.prowl-review.yml` pins `provider: codex` / `model: gpt-5.5` /
+  same-repo fork gate (public repo), share a non-cancelling Codex concurrency group keyed by
+  repository, PR number, and server-derived head repository, and cap at `timeout-minutes: 30`.
+  `.prowl-review.yml` pins `provider: codex` / `model: gpt-5.5` /
   `codex.effort: low` (the ensemble block is retained, commented out, as a key-gated fallback).
   The action is pinned to reviewed commit `4e60b282f3837b3f09b2a9d0c74f19eef2804c10`
   until a release tag includes the codex provider. Workflow tests cover the
   mandatory same-repo job gates, guarded PR-head checkouts, queued command
-  concurrency, base-config preference, PR metadata API failures, closed PR
-  candidates, fork skips, stale heads, and malformed output parsing.
+  concurrency, base-config preference, invalid PR candidates, PR metadata API
+  failures, closed PR candidates, fork skips, stale heads, and malformed output
+  parsing.
 - Prowl Hub and Prowl Infra links (homepage tiles, nav, footer, docs hub) now point at the
   live satellite sites `hub.prowl.tools` and `infra.prowl.tools` instead of internal
   marketing pages.
