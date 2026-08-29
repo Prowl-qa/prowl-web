@@ -87,9 +87,9 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
   The action is pinned to reviewed commit `4e60b282f3837b3f09b2a9d0c74f19eef2804c10`
   until a release tag includes the codex provider. Workflow tests cover the
   mandatory same-repo job gates, guarded PR-head checkouts, queued command
-  concurrency, base-config preference, invalid PR candidates, PR metadata API
-  failures, closed PR candidates, fork skips, stale heads, and malformed output
-  parsing.
+  concurrency, base-config preference, PR-config bootstrap fallback, invalid PR
+  candidates, PR metadata API failures, closed PR candidates, fork skips, stale
+  heads, and malformed output parsing.
 - Prowl Hub and Prowl Infra links (homepage tiles, nav, footer, docs hub) now point at the
   live satellite sites `hub.prowl.tools` and `infra.prowl.tools` instead of internal
   marketing pages.

@@ -477,6 +477,19 @@ test('config resolve scripts prefer trusted base config when PR config is absent
   }
 });
 
+test('config resolve scripts fall back to PR config when base config is absent', () => {
+  for (const file of ['prowl-review.yml', 'prowl-review-command.yml']) {
+    const result = runConfigResolveScript(
+      extractRunBlock(file, 'Resolve prowl-review config'),
+      { prConfig: 'provider: codex\n' },
+    );
+
+    assert.equal(result.status, 0, `${file}\n${result.stdout}\n${result.stderr}`);
+    assert.match(result.outputs.path, /\/pr-head\/\.prowl-review\.yml$/);
+    assert.match(result.stdout, /Using bootstrap config/);
+  }
+});
+
 test('command workflow ignores untrusted command comments before resolving metadata', () => {
   const workflow = readWorkflow('prowl-review-command.yml');
 
@@ -644,6 +657,31 @@ test('workflow_run resolve rejects malformed PR candidates before PR API lookup'
     responses: {
       [runEndpoint('malformed-candidate')]: {
         '.pull_requests[]?.number': '',
+      },
+    },
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(result.outputs.resolved, 'false');
+  assert.equal(result.outputs.head_sha, HEAD_SHA);
+  assert.equal(result.outputs.check_head_sha, HEAD_SHA);
+  assert.equal(result.outputs.check_conclusion, 'failure');
+  assert.equal(result.outputs.pr_number, undefined);
+  assert.match(result.outputs.check_summary, /invalid pull request number/);
+  assert.match(result.stdout, /invalid PR candidate/);
+});
+
+test('workflow_run resolve rejects zero PR candidates before PR API lookup', () => {
+  const result = runWorkflowScript(getWorkflowRunResolveScript(), {
+    env: {
+      CHECK_RUN: 'true',
+      HEAD_SHA,
+      PR_PAYLOAD: '[]',
+      RUN_ID: 'zero-candidate',
+    },
+    responses: {
+      [runEndpoint('zero-candidate')]: {
+        '.pull_requests[]?.number': '0',
       },
     },
   });
