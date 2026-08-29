@@ -59,16 +59,6 @@ and customer-facing display-name decision (it is workspace-level, not in any rep
 **Acceptance**: no mention of Hub/Infra Hub anywhere on prowl.tools; all landing hunts pass;
 workspace `CLAUDE.md` updated.
 
-### PQW-026: Demote Prowl Code Review to a footnote
-**Priority**: High
-**Description**: Counterpart of `prowl-code-review` item 69. Remove the `code-review` product
-entry and the `/code-review` route (redirect to the GitHub repo), or replace with a single
-honest line ("we also open-sourced the BYOK reviewer we run on our own PRs — maintained, no
-roadmap") near the footer/community area. Delete `.prowl/hunts/code-review-page.yml` or
-re-point it at whatever remains. Remove the `review.prowl.tools` link once
-`prowl-code-review` item 68 takes the docs site down.
-**Acceptance**: prowl.tools presents one product; any prowl-review mention links to the repo.
-
 ### PQW-027: Reposition the landing page desktop-first (re-scopes PQW-024)
 **Priority**: High
 **Description**: PQW-024 asked for a "four-target story". The sharper story is: **the only

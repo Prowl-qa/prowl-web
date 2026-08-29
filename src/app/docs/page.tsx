@@ -5,7 +5,7 @@ import DocsHub from "@/components/DocsHub";
 
 const TITLE = "Prowl docs — documentation for the whole suite";
 const DESCRIPTION =
-  "Documentation for every Prowl tool: the CLI, Code Review, Hub, and Infra. Jump to the docs site for the product you're using.";
+  "Documentation for every Prowl tool: the CLI, Hub, and Infra. Jump to the docs site for the product you're using.";
 
 export const metadata: Metadata = {
   title: TITLE,

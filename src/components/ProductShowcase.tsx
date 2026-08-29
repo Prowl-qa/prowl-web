@@ -23,7 +23,7 @@ export default function ProductShowcase() {
             The tools
           </motion.p>
           <motion.h2 variants={fadeUp} className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-            Four tools, one testing philosophy
+            Three tools, one testing philosophy
           </motion.h2>
           <motion.p variants={fadeUp} className="mt-3 max-w-3xl text-muted">
             Each product stands on its own and shares the same DNA — CLI-first,

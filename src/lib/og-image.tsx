@@ -11,7 +11,7 @@ import { OG_LOGO_DATA_URI } from "@/lib/og-logo-data";
  * Every social card is a 1200x630 dark, brand-coloured image with the Prowl
  * mascot logo, the "Prowl" wordmark, a section eyebrow, a one-line headline,
  * and the prowl.tools domain — legible at thumbnail size. Section routes
- * (`/cli`, `/code-review`, `/docs`) reuse this via the `opengraph-image` /
+ * (`/cli`, `/docs`) reuse this via the `opengraph-image` /
  * `twitter-image` file conventions with their own eyebrow + headline.
  */
 

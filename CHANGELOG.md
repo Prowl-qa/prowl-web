@@ -4,6 +4,21 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
 
 ## [Unreleased]
 
+### Removed
+- Removed Prowl Code Review from the marketing site (PQW-026; counterpart of
+  `prowl-code-review` #69). prowl-review moved to maintenance mode as an internal
+  tool (owner decision, 2026-08-26), leaving the site's current catalog at three
+  entries: Prowl CLI, Prowl Hub, and Prowl Infra Hub (Hub/Infra retirement is
+  tracked in PQW-025). Deleted the `/code-review` route (`src/app/code-review/`,
+  page + `opengraph-image`) with no redirect — the URL now 404s — the `CodeReview`
+  component, the `code-review` entry in `src/lib/products.ts`, its `ProductIcon`
+  variant, and the `/code-review`
+  sitemap entry. Dropped every `review.prowl.tools` link and trimmed the Code
+  Review mentions from the root layout description, the `/docs` hub description,
+  the "own your keys" suite pillar, the `SuiteHero` copy, and the "Three tools"
+  showcase/hunt count. Updated the landing hunts (`nav-desktop.yml`,
+  `docs-page.yml`, `homepage.yml`) and deleted `code-review-page.yml`.
+
 ### Added
 - Canonical URLs for the remaining routes (PQW-010): `alternates.canonical` is
   now set for `/` (in `src/app/page.tsx`, deliberately not the root layout so it

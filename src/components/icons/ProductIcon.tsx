@@ -2,7 +2,7 @@ import { useId } from 'react';
 import type { JSX } from 'react';
 
 /**
- * Line icons for the four Prowl products — 24×24, stroke-width 2, round caps,
+ * Line icons for the Prowl products — 24×24, stroke-width 2, round caps,
  * flat cyan→green gradient stroke (#2dd4ee → #34d399), no fill/background.
  */
 
@@ -12,14 +12,6 @@ const PATHS: Record<string, JSX.Element> = {
       <rect x="3" y="4" width="18" height="16" rx="2" />
       <polyline points="7 9 10.5 12 7 15" />
       <line x1="12.5" y1="15" x2="16.5" y2="15" />
-    </>
-  ),
-  'code-review': (
-    <>
-      <rect x="2.5" y="4" width="19" height="13" rx="2.5" />
-      <path d="M7.5 17 L7.5 20.5 L11 17" />
-      <polyline points="9.5 8.5 7.5 10.5 9.5 12.5" />
-      <polyline points="14.5 8.5 16.5 10.5 14.5 12.5" />
     </>
   ),
   hub: (

@@ -1,5 +1,5 @@
 name: homepage
-description: Homepage loads with the suite hero and all four product tiles
+description: Homepage loads with the suite hero and all three product tiles
 tags:
   - smoke
   - full
@@ -14,7 +14,7 @@ steps:
       visible: "A testing suite made for agents, controlled by humans."
 
   - assert:
-      visible: "Four tools, one testing philosophy"
+      visible: "Three tools, one testing philosophy"
 
   - assert:
       visible: "Docs for every tool"

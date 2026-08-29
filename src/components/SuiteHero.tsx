@@ -43,7 +43,7 @@ export default function SuiteHero() {
             className="mt-6 max-w-2xl text-base leading-relaxed text-muted sm:text-lg"
           >
             Prowl is a suite of development tools from Genkei Labs — end-to-end testing,
-            AI code review, community templates, and infrastructure validation.
+            community templates, and infrastructure validation.
             Each is CLI-first, agent-ready, and free to adopt. Pick one, or run
             them all.
           </motion.p>

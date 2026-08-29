@@ -36,19 +36,6 @@ export const suiteProducts: SuiteProduct[] = [
     docsLabel: "Docs",
   },
   {
-    slug: "code-review",
-    name: "Prowl Code Review",
-    tagline: "BYOK AI code review for pull requests — quality-first, with no rate limits.",
-    points: [
-      "Multi-pass specialists + judge, cross-file context",
-      "Linter/SAST grounding + false-positive verification",
-      "Your key, your provider — cents per review",
-    ],
-    href: "/code-review",
-    docsHref: "https://docs.prowl.tools",
-    docsLabel: "Docs",
-  },
-  {
     slug: "hub",
     name: "Prowl Hub",
     tagline: "A growing library of community hunt templates — copy real-world flows and adapt them.",
@@ -95,7 +82,7 @@ export const suitePillars: { title: string; text: string }[] = [
   },
   {
     title: "Own your keys, no lock-in",
-    text: "BYOK where inference is involved (Code Review), open formats everywhere else. Your data goes to your providers, not ours.",
+    text: "BYOK where inference is involved, open formats everywhere else. Your data goes to your providers, not ours.",
   },
   {
     title: "CLI-first, zero infrastructure",

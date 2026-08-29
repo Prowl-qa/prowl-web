@@ -25,9 +25,6 @@ steps:
       visible: "css=#nav-products-menu a[href='/cli']:visible"
 
   - assert:
-      visible: "css=#nav-products-menu a[href='/code-review']:visible"
-
-  - assert:
       visible: "css=#nav-products-menu a[href='https://hub.prowl.tools']:visible"
 
   - assert:
