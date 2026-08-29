@@ -239,6 +239,38 @@ const pullEndpoint = (prNumber: number) =>
 const runEndpoint = (runId: string) =>
   `repos/${REPOSITORY}/actions/runs/${runId}`;
 
+const runConfigResolveScript = (script: string): WorkflowResult => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'prowl-config-'));
+  const workspace = path.join(directory, 'workspace');
+  const scriptPath = path.join(directory, 'script.sh');
+  const outputPath = path.join(directory, 'github-output');
+
+  try {
+    fs.mkdirSync(path.join(workspace, 'prowl-base'), { recursive: true });
+    fs.mkdirSync(path.join(workspace, 'pr-head'), { recursive: true });
+    fs.writeFileSync(scriptPath, script);
+    fs.chmodSync(scriptPath, 0o755);
+
+    const result = spawnSync('bash', [scriptPath], {
+      encoding: 'utf8',
+      env: {
+        ...process.env,
+        GITHUB_OUTPUT: outputPath,
+        GITHUB_WORKSPACE: workspace,
+      },
+    });
+
+    return {
+      outputs: parseOutputs(outputPath),
+      status: result.status,
+      stderr: result.stderr,
+      stdout: result.stdout,
+    };
+  } finally {
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+};
+
 test('pins both prowl-review action references to the reviewed Codex-capable commit', () => {
   for (const file of ['prowl-review.yml', 'prowl-review-command.yml']) {
     const workflow = readWorkflow(file);
@@ -329,6 +361,18 @@ test('workflow output parser rejects malformed lines without separators', () => 
     );
   } finally {
     fs.rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+test('config resolve scripts fail closed when base and PR configs are missing', () => {
+  for (const file of ['prowl-review.yml', 'prowl-review-command.yml']) {
+    const result = runConfigResolveScript(
+      extractRunBlock(file, 'Resolve prowl-review config'),
+    );
+
+    assert.equal(result.status, 1, `${file}\n${result.stdout}\n${result.stderr}`);
+    assert.deepEqual(result.outputs, {});
+    assert.match(result.stdout, /Missing prowl-review config/);
   }
 });
 
@@ -473,6 +517,43 @@ test('workflow_run resolve fails the setup check when the completed run cannot b
   assert.equal(result.outputs.check_head_sha, HEAD_SHA);
   assert.equal(result.outputs.check_conclusion, 'failure');
   assert.match(result.outputs.check_summary, /API, rate-limit, or permissions errors/);
+});
+
+test('workflow_run resolve fails the setup check when resolved PR metadata is incomplete', () => {
+  const invalidMetadata = [
+    ['base_sha', `null\t${HEAD_SHA}\t${REPOSITORY}\tfalse`],
+    ['head_sha', `${BASE_SHA}\tnull\t${REPOSITORY}\tfalse`],
+    ['head_repo', `${BASE_SHA}\t${HEAD_SHA}\tnull\tfalse`],
+  ];
+
+  for (const [field, metadata] of invalidMetadata) {
+    const result = runWorkflowScript(getWorkflowRunResolveScript(), {
+      env: {
+        CHECK_RUN: 'true',
+        HEAD_SHA,
+        PR_PAYLOAD: '[{"number":33}]',
+        RUN_ID: `incomplete-${field}`,
+      },
+      responses: {
+        [runEndpoint(`incomplete-${field}`)]: {
+          '.pull_requests[]?.number': '',
+        },
+        [pullEndpoint(33)]: {
+          '[.base.sha, .head.sha, .head.repo.full_name, .draft] | @tsv': metadata,
+          '[.state, .head.sha] | @tsv': `open\t${HEAD_SHA}`,
+        },
+      },
+    });
+
+    assert.equal(result.status, 0, result.stderr);
+    assert.equal(result.outputs.resolved, 'false');
+    assert.equal(result.outputs.pr_number, '33');
+    assert.equal(result.outputs.head_sha, HEAD_SHA);
+    assert.equal(result.outputs.check_head_sha, HEAD_SHA);
+    assert.equal(result.outputs.check_conclusion, 'failure');
+    assert.match(result.outputs.check_summary, /complete metadata/);
+    assert.match(result.stdout, /incomplete PR metadata/);
+  }
 });
 
 test('workflow_run resolve skips ambiguous matching pull requests', () => {
