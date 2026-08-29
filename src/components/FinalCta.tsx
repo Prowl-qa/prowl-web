@@ -8,28 +8,26 @@ export default function FinalCta() {
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-muted">Start catching regressions today</p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-              Deterministic E2E coverage from install to first test in minutes.
+              One YAML file. Your Mac app and your web app, tested.
             </h2>
             <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">
-              YAML hunts, Playwright reliability, and rich artifacts — add flow coverage to your workflow without the complexity.
+              Deterministic hunts, artifacts in your repo, your own keys — end-to-end coverage without a vendor in the loop.
             </p>
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <a
-                href="https://docs.prowl.tools"
+                href="https://docs.prowl.tools/getting-started"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center rounded-md bg-gradient-to-r from-gradient-from to-gradient-to px-6 py-3 text-sm font-semibold text-white transition-shadow hover:shadow-lg hover:shadow-cyan/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan"
               >
-                Install the CLI
+                Get started
               </a>
               <a
-                href="https://docs.prowl.tools"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="#how-it-works"
                 className="inline-flex items-center justify-center rounded-md border border-border bg-background/85 px-6 py-3 text-sm font-semibold transition hover:border-cyan/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan"
               >
-                How it Works
+                How it works
               </a>
             </div>
           </div>

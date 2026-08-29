@@ -30,7 +30,7 @@ export default function Hero() {
             variants={fadeUp}
             className="inline-flex rounded-full border border-border bg-surface px-4 py-1.5 text-xs uppercase tracking-[0.2em] text-muted"
           >
-            Prowl Suite · CLI
+            Prowl CLI · Open source
           </motion.p>
 
           {/* Headline */}
@@ -38,9 +38,8 @@ export default function Hero() {
             variants={fadeUp}
             className="mt-7 max-w-3xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl lg:text-6xl"
           >
-            Catch regressions before users do with{' '}
-            <GradientText shimmer>readable YAML hunts</GradientText>{' '}
-            and Playwright precision.
+            End-to-end tests for your Mac app and your web app, from{' '}
+            <GradientText shimmer>one YAML file</GradientText>.
           </motion.h1>
 
           {/* Description */}
@@ -48,10 +47,11 @@ export default function Hero() {
             variants={fadeUp}
             className="mt-6 max-w-2xl text-base leading-relaxed text-muted sm:text-lg"
           >
-            Prowl is a CLI-first E2E testing tool that pairs YAML test
-            definitions with Playwright execution. QA engineers and developers
-            get deterministic flow coverage, visual regression detection, and
-            rich debugging artifacts — all from the terminal.
+            Prowl is a CLI-first E2E testing tool. Describe a user flow as a short
+            YAML hunt, then run it against a native macOS app — menu bar extras
+            included — through the Accessibility API, or against a browser through
+            Playwright. Deterministic runs, artifacts in your repo, no cloud, no
+            metered pricing.
           </motion.p>
 
           {/* CTA buttons */}
@@ -60,12 +60,12 @@ export default function Hero() {
             className="mt-8 flex flex-col gap-3 sm:flex-row"
           >
             <a
-              href="https://docs.prowl.tools"
+              href="https://docs.prowl.tools/getting-started"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center rounded-md bg-gradient-to-r from-gradient-from to-gradient-to px-6 py-3 text-sm font-semibold text-white transition-shadow hover:shadow-lg hover:shadow-cyan/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan"
             >
-              Install the CLI
+              Get started
             </a>
             <a
               href="https://github.com/prowl-tools/prowl"
@@ -91,26 +91,27 @@ export default function Hero() {
           <div className="relative rounded-2xl border border-border bg-surface-elevated p-6 shadow-[0_25px_80px_-35px_rgba(0,0,0,0.55)]">
             {/* Card header */}
             <div className="mb-4 flex items-center justify-between text-xs text-muted">
-              <span>release-check.hunt.yaml</span>
-              <span>critical-flow suite</span>
+              <span>.prowl/hunts/settings-window.yml</span>
+              <span className="font-mono">target: macos</span>
             </div>
 
-            {/* YAML code block */}
+            {/* YAML code block — the menu bar example from the macOS target guide */}
             <pre className="rounded-lg border border-border-subtle bg-code-bg p-4 text-xs leading-relaxed font-mono text-zinc-300">
               <code>
-                <span className="text-purple-400">name</span><span className="text-zinc-500">:</span> <span className="text-green-400">checkout-flow</span>{'\n'}
+                <span className="text-purple-400">name</span><span className="text-zinc-500">:</span> <span className="text-green-400">settings-window</span>{'\n'}
                 <span className="text-purple-400">steps</span><span className="text-zinc-500">:</span>{'\n'}
-                {'  '}<span className="text-zinc-500">-</span> <span className="text-cyan-light">navigate</span><span className="text-zinc-500">:</span> <span className="text-green-400">&quot;/cart&quot;</span>{'\n'}
-                {'  '}<span className="text-zinc-500">-</span> <span className="text-cyan-light">click</span><span className="text-zinc-500">:</span> <span className="text-green-400">&quot;Checkout&quot;</span>{'\n'}
-                {'  '}<span className="text-zinc-500">-</span> <span className="text-cyan-light">fill</span><span className="text-zinc-500">:</span> <span className="text-green-400">&quot;Email&quot;</span> <span className="text-green-400">&quot;{'{{TEST_EMAIL}}'}&quot;</span>{'\n'}
-                {'  '}<span className="text-zinc-500">-</span> <span className="text-cyan-light">click</span><span className="text-zinc-500">:</span> <span className="text-green-400">&quot;Pay now&quot;</span>{'\n'}
-                {'  '}<span className="text-zinc-500">-</span> <span className="text-cyan-light">assert</span><span className="text-zinc-500">:</span> <span className="text-yellow-300">visible</span> <span className="text-green-400">&quot;Order confirmed&quot;</span>
+                {'  '}<span className="text-zinc-500">-</span> <span className="text-cyan-light">click</span><span className="text-zinc-500">:</span>{'\n'}
+                {'      '}<span className="text-purple-400">selector</span><span className="text-zinc-500">:</span> <span className="text-green-400">menu=Settings</span>{'\n'}
+                {'  '}<span className="text-zinc-500">-</span> <span className="text-cyan-light">waitForSelector</span><span className="text-zinc-500">:</span>{'\n'}
+                {'      '}<span className="text-purple-400">selector</span><span className="text-zinc-500">:</span> <span className="text-green-400">text=&quot;Settings&quot;</span>{'\n'}
+                {'  '}<span className="text-zinc-500">-</span> <span className="text-cyan-light">assert</span><span className="text-zinc-500">:</span>{'\n'}
+                {'      '}<span className="text-yellow-300">visible</span><span className="text-zinc-500">:</span> <span className="text-green-400">text=&quot;Settings&quot;</span>
               </code>
             </pre>
 
             {/* Result bar */}
             <div className="mt-4 rounded-lg border border-emerald-500/30 bg-emerald-500/12 px-3 py-2 text-xs text-emerald-300">
-              PASS 1 hunt, 5 steps, 0 failures
+              PASS settings-window (410ms) 3/3 steps · com.example.MyMenuBarApp
             </div>
           </div>
 

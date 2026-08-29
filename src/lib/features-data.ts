@@ -7,22 +7,22 @@ export interface Feature {
 export const features: Feature[] = [
   {
     title: 'YAML-first',
-    desc: 'Write tests in readable YAML. No JavaScript required. 26 step types cover navigation, forms, assertions, conditionals, mocking, and more.',
+    desc: 'Write tests in readable YAML — no JavaScript, no Swift. Step types cover navigation, forms, assertions, conditionals, mocking, and more.',
     icon: 'yaml',
   },
   {
-    title: 'Playwright precision',
-    desc: 'Full Playwright selector engine under the hood. data-testid, ARIA roles, text matching, CSS — use whatever works.',
+    title: 'Native and browser selectors',
+    desc: 'Accessibility ids, roles, and labels on macOS; the full Playwright selector engine on the web. prowl analyze dumps ranked candidates for either.',
     icon: 'target',
   },
   {
     title: 'Safety guardrails',
-    desc: 'Forbidden selectors, allowed domains, and max step limits prevent tests from going off the rails.',
+    desc: 'Forbidden selectors, allowed domains and apps, and max step limits prevent tests from going off the rails.',
     icon: 'shield',
   },
   {
     title: 'Rich artifacts',
-    desc: 'Every run generates screenshots, console logs, network data, and Playwright traces. Debug failures instantly.',
+    desc: 'Every run saves screenshots, logs, and — on the web — network data and Playwright traces, under .prowl/runs in your repo.',
     icon: 'artifacts',
   },
   {
@@ -32,7 +32,7 @@ export const features: Feature[] = [
   },
   {
     title: 'Network mocking',
-    desc: 'Intercept API requests and return custom responses. Test error states, loading states, and empty states without touching your backend.',
+    desc: 'On the web target, intercept API requests and return custom responses. Test error, loading, and empty states without touching your backend.',
     icon: 'mock',
   },
   {
@@ -42,7 +42,7 @@ export const features: Feature[] = [
   },
   {
     title: 'CI & agent ready',
-    desc: 'JSON output, JUnit XML reports, structured exit codes, parallel execution, and a native MCP server. Plugs into any CI pipeline or AI agent workflow.',
+    desc: 'JSON output, JUnit XML reports, structured exit codes, and a native MCP server. Plugs into any CI pipeline or AI agent workflow.',
     icon: 'ci',
   },
 ];
