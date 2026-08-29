@@ -28,6 +28,7 @@ steps:
 assertions:
   - selectorExists: "h1"
   - selectorNotExists: ":nth-match(h1, 2)"
+  - selectorExists: "#how-it-works"
   - selectorExists: "a[href^='https://docs.prowl.tools']"
   - selectorExists: "a[href='https://github.com/prowl-tools/prowl']"
   # PQW-025: no retired product links anywhere on the page.

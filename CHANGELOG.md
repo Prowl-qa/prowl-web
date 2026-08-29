@@ -143,6 +143,12 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
   decision recorded in the workspace CLAUDE.md.
 
 ### Fixed
+- Tightened review coverage for the single-product redirects: the `legacy-routes`
+  hunt now asserts the exact final local homepage URL after `/cli`, `/hub`, and
+  `/infra`, and unit coverage locks `/docs` as a permanent redirect to
+  `https://docs.prowl.tools`.
+- Added hunt coverage for the `#how-it-works` anchor used by the nav and final
+  CTA links.
 - Prowl Review workflow hardening: both `prowl-code-review` action references are pinned to
   reviewed commit `4e60b282f3837b3f09b2a9d0c74f19eef2804c10`, and
   `tests/workflows.test.ts` executes the inline resolve scripts with fake GitHub API responses

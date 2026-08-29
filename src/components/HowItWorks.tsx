@@ -41,7 +41,7 @@ const steps: { step: string; title: string; detail: string; code: ReactNode }[] 
     detail: 'Run hunts from the terminal, then wire the same command into your pull request pipeline.',
     code: (
       <>
-        <span className={MUTED}>$</span> <span className={CYAN}>prowl</span> run <span className={GREEN}>checkout-flow</span> <span className={YELLOW}>--json</span>
+        <span className={MUTED}>$</span> <span className={CYAN}>prowl</span> run <span className={GREEN}>checkout-flow</span> <span className={YELLOW}>--json</span> <span className={YELLOW}>--trace</span>
       </>
     ),
   },

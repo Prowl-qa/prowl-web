@@ -10,6 +10,9 @@ steps:
       timeout: 5000
 
   - assert:
+      urlEquals: "http://localhost:3002/"
+
+  - assert:
       visible: "End-to-end tests for your Mac app and your web app"
 
   - navigate: "/hub"
@@ -18,12 +21,18 @@ steps:
       timeout: 5000
 
   - assert:
+      urlEquals: "http://localhost:3002/"
+
+  - assert:
       visible: "End-to-end tests for your Mac app and your web app"
 
   - navigate: "/infra"
 
   - waitForNetworkIdle:
       timeout: 5000
+
+  - assert:
+      urlEquals: "http://localhost:3002/"
 
   - assert:
       visible: "End-to-end tests for your Mac app and your web app"
