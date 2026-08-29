@@ -1,5 +1,5 @@
 name: nav-desktop
-description: Desktop nav Products menu is an accessible disclosure - hover opens it, click toggles aria-expanded, and the Docs link navigates
+description: Desktop nav carries the single-product links (How it works, Docs, Blog, GitHub) and the Blog link navigates
 tags:
   - smoke
   - full
@@ -7,49 +7,29 @@ tags:
 steps:
   - navigate: "/"
 
-  # The trigger is a disclosure button: collapsed on load.
+  # No Products menu any more (PQW-025): the nav is a flat set of links.
   - assert:
-      visible: "css=button[aria-controls='nav-products-menu'][aria-expanded='false']:visible"
-
-  # Mouse users: hovering the trigger opens the menu (pointer UX preserved) and
-  # flips aria-expanded to true.
-  - hover:
-      selector: "button[aria-controls='nav-products-menu']"
+      notVisible: "css=button[aria-controls='nav-products-menu']"
 
   - assert:
-      visible: "css=button[aria-controls='nav-products-menu'][aria-expanded='true']:visible"
-
-  # Menu items are revealed and reachable. Scope to the menu region so footer
-  # duplicates don't satisfy the check.
-  - assert:
-      visible: "css=#nav-products-menu a[href='/cli']:visible"
+      visible: "css=nav.sticky a[href='https://docs.prowl.tools']:visible"
 
   - assert:
-      visible: "css=#nav-products-menu a[href='https://hub.prowl.tools']:visible"
-
-  - assert:
-      visible: "css=#nav-products-menu a[href='https://infra.prowl.tools']:visible"
-
-  # Clicking the trigger toggles the disclosure closed again (aria-expanded flips
-  # back to false) - proving the JS click handler, not just CSS hover, drives it.
-  - click:
-      selector: "button[aria-controls='nav-products-menu']"
-
-  - assert:
-      visible: "css=button[aria-controls='nav-products-menu'][aria-expanded='false']:visible"
+      visible: "css=nav.sticky a[href='https://github.com/prowl-tools/prowl']:visible"
 
   # Internal nav link actually navigates (client-side routing).
-  # Scoped to the sticky top nav so the docs-section "All docs" link doesn't collide.
+  # Scoped to the sticky top nav so the footer Blog link doesn't collide.
   - click:
-      selector: "nav.sticky a[href='/docs']"
+      selector: "nav.sticky a[href='/blog']"
 
   - waitForUrl:
-      value: "/docs"
+      value: "/blog"
       timeout: 10000
 
   - assert:
-      visible: "Docs for every tool"
+      visible: "Blog"
 
 assertions:
-  - urlIncludes: "/docs"
-  - selectorExists: "a[href='https://github.com/prowl-tools/prowl']"
+  - urlIncludes: "/blog"
+  - selectorNotExists: "a[href*='hub.prowl.tools']"
+  - selectorNotExists: "a[href*='infra.prowl.tools']"
