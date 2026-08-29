@@ -306,6 +306,9 @@ jobs:
           persist-credentials: false
 
       - name: Checkout PR head for context
+        if: >
+          needs.resolve.outputs.resolved == 'true' &&
+          needs.resolve.outputs.head_repo == github.repository
         uses: actions/checkout@v4
         with:
           ref: ${{ needs.resolve.outputs.head_sha }}

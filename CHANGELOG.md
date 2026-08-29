@@ -100,8 +100,9 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
 - Prowl Review workflow hardening: both `prowl-code-review` action references are pinned to
   reviewed commit `4e60b282f3837b3f09b2a9d0c74f19eef2804c10`, and
   `tests/workflows.test.ts` executes the inline resolve scripts with fake GitHub API responses
-  to cover same-repo, fork, incomplete metadata, malformed output, run-block extraction,
-  PR-number expression replacement, API-failure, ambiguous-match, and stale-head branches.
+  to cover same-repo, fork, incomplete metadata, credentialless guarded PR-head checkout,
+  malformed output, run-block extraction, PR-number expression replacement, API-failure,
+  ambiguous-match, and stale-head branches.
 - Duplicate `<h1>` guard in MDX blog posts (PQW-015): `mdx-components.tsx`
   mapped a markdown `#` to `<h1>`, but `PostHeader` already renders the post
   title as the page's single `<h1>`, so a post body starting with `#` would emit

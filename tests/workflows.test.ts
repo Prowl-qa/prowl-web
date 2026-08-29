@@ -79,6 +79,37 @@ const extractRunBlockFromWorkflow = (workflow: string, stepName: string) => {
 const extractRunBlock = (file: string, stepName: string) =>
   extractRunBlockFromWorkflow(readWorkflow(file), stepName);
 
+const extractStepBlockFromWorkflow = (workflow: string, stepName: string) => {
+  const lines = workflow.split('\n');
+  const stepIndex = lines.findIndex((line) =>
+    line.trimStart().startsWith(`- name: ${stepName}`),
+  );
+
+  assert.notEqual(stepIndex, -1, `Missing workflow step: ${stepName}`);
+
+  const stepIndent = leadingSpaceCount(lines[stepIndex]);
+  const stepLines = [lines[stepIndex]];
+  for (const line of lines.slice(stepIndex + 1)) {
+    if (
+      line.trimStart().startsWith('- name:') &&
+      leadingSpaceCount(line) <= stepIndent
+    ) {
+      break;
+    }
+
+    if (line.trim() !== '' && leadingSpaceCount(line) <= stepIndent) {
+      break;
+    }
+
+    stepLines.push(line);
+  }
+
+  return stepLines.join('\n');
+};
+
+const extractStepBlock = (file: string, stepName: string) =>
+  extractStepBlockFromWorkflow(readWorkflow(file), stepName);
+
 const commandPrNumberExpression =
   /pr_number="\$\{\{\s*github\.event\.issue\.number\s*\|\|\s*github\.event\.pull_request\.number\s*\}\}"/;
 
@@ -219,6 +250,29 @@ test('pins both prowl-review action references to the reviewed Codex-capable com
       ),
     );
     assert.doesNotMatch(workflow, /prowl-tools\/prowl-code-review@main/);
+  }
+});
+
+test('PR head checkouts have inline same-repo guards and disable persisted credentials', () => {
+  const workflows = [
+    {
+      file: 'prowl-review.yml',
+      guard:
+        /if: >\n\s+needs\.resolve\.outputs\.resolved == 'true' &&\n\s+needs\.resolve\.outputs\.head_repo == github\.repository/,
+    },
+    {
+      file: 'prowl-review-command.yml',
+      guard:
+        /if: >\n\s+needs\.resolve\.outputs\.trusted_head == 'true' &&\n\s+needs\.resolve\.outputs\.head_repo == github\.repository/,
+    },
+  ];
+
+  for (const { file, guard } of workflows) {
+    const step = extractStepBlock(file, 'Checkout PR head for context');
+
+    assert.match(step, guard);
+    assert.match(step, /uses: actions\/checkout@v4/);
+    assert.match(step, /persist-credentials: false/);
   }
 });
 
