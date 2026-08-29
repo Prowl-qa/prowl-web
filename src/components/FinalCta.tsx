@@ -8,7 +8,7 @@ export default function FinalCta() {
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-muted">Start catching regressions today</p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-              One YAML file. Your Mac app and your web app, tested.
+              One YAML file. Your Mac and web apps, tested.
             </h2>
             <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">
               Deterministic hunts, artifacts in your repo, your own keys — end-to-end coverage without a vendor in the loop.

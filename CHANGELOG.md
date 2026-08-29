@@ -100,6 +100,9 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
   artifacts on failure.
 
 ### Changed
+- Tightened the hero headline to "End-to-end tests for your Mac and web apps, from
+  one YAML file." (owner copy edit, 2026-08-29); `homepage.yml` and
+  `legacy-routes.yml` assert the new line.
 - Repositioned every remaining section for the single product: root metadata and
   OG image, features ("Built for desktop and web apps", native + browser
   selectors), how-it-works, the agents section (`prowl analyze --app`, BYOK

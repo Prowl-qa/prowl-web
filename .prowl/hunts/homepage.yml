@@ -11,7 +11,7 @@ steps:
       timeout: 5000
 
   - assert:
-      visible: "End-to-end tests for your Mac app and your web app"
+      visible: "End-to-end tests for your Mac and web apps"
 
   - assert:
       visible: "Change the target, not the test"

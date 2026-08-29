@@ -38,7 +38,7 @@ export default function Hero() {
             variants={fadeUp}
             className="mt-7 max-w-3xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl lg:text-6xl"
           >
-            End-to-end tests for your Mac app and your web app, from{' '}
+            End-to-end tests for your Mac and web apps, from{' '}
             <GradientText shimmer>one YAML file</GradientText>.
           </motion.h1>
 
