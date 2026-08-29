@@ -261,7 +261,10 @@ const pullEndpoint = (prNumber: number) =>
 const runEndpoint = (runId: string) =>
   `repos/${REPOSITORY}/actions/runs/${runId}`;
 
-const runConfigResolveScript = (script: string): WorkflowResult => {
+const runConfigResolveScript = (
+  script: string,
+  options: { baseConfig?: string; prConfig?: string } = {},
+): WorkflowResult => {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'prowl-config-'));
   const workspace = path.join(directory, 'workspace');
   const scriptPath = path.join(directory, 'script.sh');
@@ -270,6 +273,18 @@ const runConfigResolveScript = (script: string): WorkflowResult => {
   try {
     fs.mkdirSync(path.join(workspace, 'prowl-base'), { recursive: true });
     fs.mkdirSync(path.join(workspace, 'pr-head'), { recursive: true });
+    if (options.baseConfig !== undefined) {
+      fs.writeFileSync(
+        path.join(workspace, 'prowl-base', '.prowl-review.yml'),
+        options.baseConfig,
+      );
+    }
+    if (options.prConfig !== undefined) {
+      fs.writeFileSync(
+        path.join(workspace, 'pr-head', '.prowl-review.yml'),
+        options.prConfig,
+      );
+    }
     fs.writeFileSync(scriptPath, script);
     fs.chmodSync(scriptPath, 0o755);
 
@@ -328,6 +343,25 @@ test('PR head checkouts have inline same-repo guards and disable persisted crede
     assert.match(step, /uses: actions\/checkout@v4/);
     assert.match(step, /persist-credentials: false/);
   }
+});
+
+test('self-hosted review jobs keep mandatory same-repo gates', () => {
+  const commandJob = extractJobBlock('prowl-review-command.yml', 'command');
+  const reviewJob = extractJobBlock('prowl-review.yml', 'review');
+
+  assert.match(
+    commandJob,
+    /if: >\n\s+needs\.resolve\.outputs\.trusted_head == 'true' &&\n\s+needs\.resolve\.outputs\.head_repo == github\.repository/,
+  );
+  assert.match(commandJob, /runs-on: \[self-hosted, macOS, prowl-review\]/);
+  assert.match(commandJob, /timeout-minutes: 30/);
+
+  assert.match(
+    reviewJob,
+    /if: >\n\s+needs\.resolve\.outputs\.resolved == 'true' &&\n\s+needs\.resolve\.outputs\.head_repo == github\.repository/,
+  );
+  assert.match(reviewJob, /runs-on: \[self-hosted, macOS, prowl-review\]/);
+  assert.match(reviewJob, /timeout-minutes: 30/);
 });
 
 test('command workflow queues command requests on server-derived PR metadata', () => {
@@ -406,6 +440,19 @@ test('config resolve scripts fail closed when base and PR configs are missing', 
     assert.equal(result.status, 1, `${file}\n${result.stdout}\n${result.stderr}`);
     assert.deepEqual(result.outputs, {});
     assert.match(result.stdout, /Missing prowl-review config/);
+  }
+});
+
+test('config resolve scripts prefer trusted base config when PR config is absent', () => {
+  for (const file of ['prowl-review.yml', 'prowl-review-command.yml']) {
+    const result = runConfigResolveScript(
+      extractRunBlock(file, 'Resolve prowl-review config'),
+      { baseConfig: 'provider: codex\n' },
+    );
+
+    assert.equal(result.status, 0, `${file}\n${result.stdout}\n${result.stderr}`);
+    assert.match(result.outputs.path, /\/prowl-base\/\.prowl-review\.yml$/);
+    assert.doesNotMatch(result.stdout, /Using bootstrap config/);
   }
 });
 
@@ -565,6 +612,32 @@ test('workflow_run resolve fails the setup check when the completed run cannot b
   assert.match(result.outputs.check_summary, /API, rate-limit, or permissions errors/);
 });
 
+test('workflow_run resolve fails the setup check when candidate PR metadata cannot be loaded', () => {
+  const result = runWorkflowScript(getWorkflowRunResolveScript(), {
+    env: {
+      CHECK_RUN: 'true',
+      HEAD_SHA,
+      PR_PAYLOAD: '[{"number":33}]',
+      RUN_ID: 'candidate-api-failure',
+    },
+    failEndpoints: [pullEndpoint(33)],
+    responses: {
+      [runEndpoint('candidate-api-failure')]: {
+        '.pull_requests[]?.number': '',
+      },
+    },
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(result.outputs.resolved, 'false');
+  assert.equal(result.outputs.pr_number, '33');
+  assert.equal(result.outputs.head_sha, HEAD_SHA);
+  assert.equal(result.outputs.check_head_sha, HEAD_SHA);
+  assert.equal(result.outputs.check_conclusion, 'failure');
+  assert.match(result.outputs.check_summary, /could not load pull request #33/);
+  assert.match(result.stdout, /failed to load PR #33 metadata/);
+});
+
 test('workflow_run resolve fails the setup check when resolved PR metadata is incomplete', () => {
   const invalidMetadata = [
     ['base_sha', `null\t${HEAD_SHA}\t${REPOSITORY}\tfalse`],
@@ -619,6 +692,31 @@ test('workflow_run resolve skips ambiguous matching pull requests', () => {
       },
       [pullEndpoint(34)]: {
         '[.state, .head.sha] | @tsv': `open\t${HEAD_SHA}`,
+      },
+    },
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+  assert.deepEqual(result.outputs, {
+    resolved: 'false',
+  });
+  assert.match(result.stdout, /expected exactly one open PR/);
+});
+
+test('workflow_run resolve skips closed pull requests at the CI head', () => {
+  const result = runWorkflowScript(getWorkflowRunResolveScript(), {
+    env: {
+      CHECK_RUN: 'true',
+      HEAD_SHA,
+      PR_PAYLOAD: '[{"number":33}]',
+      RUN_ID: 'closed-pr',
+    },
+    responses: {
+      [runEndpoint('closed-pr')]: {
+        '.pull_requests[]?.number': '',
+      },
+      [pullEndpoint(33)]: {
+        '[.state, .head.sha] | @tsv': `closed\t${HEAD_SHA}`,
       },
     },
   });
