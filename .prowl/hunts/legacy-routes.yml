@@ -13,7 +13,7 @@ steps:
       urlEquals: "http://localhost:3002/"
 
   - assert:
-      visible: "End-to-end tests for your Mac app and your web app"
+      visible: "End-to-end tests for your Mac and web apps"
 
   - navigate: "/hub"
 
@@ -24,7 +24,7 @@ steps:
       urlEquals: "http://localhost:3002/"
 
   - assert:
-      visible: "End-to-end tests for your Mac app and your web app"
+      visible: "End-to-end tests for your Mac and web apps"
 
   - navigate: "/infra"
 
@@ -35,7 +35,7 @@ steps:
       urlEquals: "http://localhost:3002/"
 
   - assert:
-      visible: "End-to-end tests for your Mac app and your web app"
+      visible: "End-to-end tests for your Mac and web apps"
 
 assertions:
   - selectorExists: "h1"
