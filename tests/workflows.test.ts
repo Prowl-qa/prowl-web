@@ -110,6 +110,28 @@ const extractStepBlockFromWorkflow = (workflow: string, stepName: string) => {
 const extractStepBlock = (file: string, stepName: string) =>
   extractStepBlockFromWorkflow(readWorkflow(file), stepName);
 
+const extractJobBlockFromWorkflow = (workflow: string, jobName: string) => {
+  const lines = workflow.split('\n');
+  const jobIndex = lines.findIndex((line) => line.trim() === `${jobName}:`);
+
+  assert.notEqual(jobIndex, -1, `Missing workflow job: ${jobName}`);
+
+  const jobIndent = leadingSpaceCount(lines[jobIndex]);
+  const jobLines = [lines[jobIndex]];
+  for (const line of lines.slice(jobIndex + 1)) {
+    if (line.trim() !== '' && leadingSpaceCount(line) <= jobIndent) {
+      break;
+    }
+
+    jobLines.push(line);
+  }
+
+  return jobLines.join('\n');
+};
+
+const extractJobBlock = (file: string, jobName: string) =>
+  extractJobBlockFromWorkflow(readWorkflow(file), jobName);
+
 const commandPrNumberExpression =
   /pr_number="\$\{\{\s*github\.event\.issue\.number\s*\|\|\s*github\.event\.pull_request\.number\s*\}\}"/;
 
@@ -306,6 +328,20 @@ test('PR head checkouts have inline same-repo guards and disable persisted crede
     assert.match(step, /uses: actions\/checkout@v4/);
     assert.match(step, /persist-credentials: false/);
   }
+});
+
+test('command workflow preserves all pending command request concurrency groups', () => {
+  const resolveJob = extractJobBlock('prowl-review-command.yml', 'resolve');
+  const commandJob = extractJobBlock('prowl-review-command.yml', 'command');
+
+  assert.match(
+    resolveJob,
+    /concurrency:\n\s+group: prowl-review-codex-\$\{\{ github\.repository \}\}-\$\{\{ github\.event\.issue\.number \|\| github\.event\.pull_request\.number \}\}\n\s+queue: max\n\s+cancel-in-progress: false/,
+  );
+  assert.match(
+    commandJob,
+    /concurrency:\n\s+group: prowl-review-codex-\$\{\{ github\.repository \}\}-\$\{\{ needs\.resolve\.outputs\.pr_number \}\}\n\s+queue: max\n\s+cancel-in-progress: false/,
+  );
 });
 
 test('run block extractor strips indentation relative to the run key', () => {

@@ -47,6 +47,7 @@ jobs:
     # (pull_request_review_comment).
     concurrency:
       group: prowl-review-codex-${{ github.repository }}-${{ github.event.issue.number || github.event.pull_request.number }}
+      queue: max
       cancel-in-progress: false
     outputs:
       pr_number: ${{ steps.pr.outputs.pr_number }}
@@ -102,6 +103,7 @@ jobs:
     # never cancelled by a newer auto-review push.
     concurrency:
       group: prowl-review-codex-${{ github.repository }}-${{ needs.resolve.outputs.pr_number }}
+      queue: max
       cancel-in-progress: false
     env:
       PROWL_APP_CONFIGURED: ${{ secrets.PROWL_APP_ID != '' && secrets.PROWL_APP_PRIVATE_KEY != '' }}

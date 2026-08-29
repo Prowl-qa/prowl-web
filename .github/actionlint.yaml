@@ -5,3 +5,10 @@
 self-hosted-runner:
   labels:
     - prowl-review
+
+paths:
+  .github/workflows/prowl-review-command.yml:
+    # GitHub Actions added `concurrency.queue` in 2026, but actionlint 1.7.12
+    # still uses the older concurrency schema.
+    ignore:
+      - '^unexpected key "queue" for "concurrency" section'
