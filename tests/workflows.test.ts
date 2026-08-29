@@ -114,6 +114,7 @@ const parseOutputs = (outputPath: string) => {
     .filter(Boolean)
     .map((line) => {
       const separatorIndex = line.indexOf('=');
+      assert.notEqual(separatorIndex, -1, `Invalid GITHUB_OUTPUT line: ${line}`);
       assert.ok(separatorIndex > 0, `Invalid GITHUB_OUTPUT line: ${line}`);
       return [line.slice(0, separatorIndex), line.slice(separatorIndex + 1)];
     });
@@ -181,6 +182,22 @@ test('pins both prowl-review action references to the reviewed Codex-capable com
       ),
     );
     assert.doesNotMatch(workflow, /prowl-tools\/prowl-code-review@main/);
+  }
+});
+
+test('workflow output parser rejects malformed lines without separators', () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'prowl-output-'));
+  const outputPath = path.join(directory, 'github-output');
+
+  try {
+    fs.writeFileSync(outputPath, 'not-a-key-value-line\n');
+
+    assert.throws(
+      () => parseOutputs(outputPath),
+      /Invalid GITHUB_OUTPUT line: not-a-key-value-line/,
+    );
+  } finally {
+    fs.rmSync(directory, { recursive: true, force: true });
   }
 });
 
