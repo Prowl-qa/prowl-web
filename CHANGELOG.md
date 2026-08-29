@@ -89,7 +89,8 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
   mandatory same-repo job gates, guarded PR-head checkouts, queued command
   concurrency, base-config preference, PR-config bootstrap fallback, invalid PR
   candidates, PR metadata API failures, closed PR candidates, fork skips, stale
-  heads, and malformed output parsing.
+  heads, malformed output parsing, and fake GitHub API fixture endpoint/option
+  validation.
 - Prowl Hub and Prowl Infra links (homepage tiles, nav, footer, docs hub) now point at the
   live satellite sites `hub.prowl.tools` and `infra.prowl.tools` instead of internal
   marketing pages.

@@ -163,9 +163,23 @@ const createFakeGh = (directory: string) => {
     `#!/usr/bin/env node
 const scenario = JSON.parse(process.env.GH_FAKE_SCENARIO ?? '{}');
 const [command, endpoint, ...rest] = process.argv.slice(2);
+const allowedEndpointPatterns = [
+  /^repos\\/prowl-tools\\/prowl-web\\/actions\\/runs\\/[A-Za-z0-9._-]+$/,
+  /^repos\\/prowl-tools\\/prowl-web\\/pulls\\/[1-9][0-9]*$/,
+];
 
 if (command !== 'api' || !endpoint) {
   console.error('Only gh api is supported by this test fixture.');
+  process.exit(1);
+}
+
+if (!allowedEndpointPatterns.some((pattern) => pattern.test(endpoint))) {
+  console.error('Unsupported gh api endpoint for this test fixture: ' + endpoint);
+  process.exit(1);
+}
+
+if (rest.length !== 2 || rest[0] !== '--jq' || rest[1] === undefined || rest[1] === '') {
+  console.error('Only gh api <endpoint> --jq <expression> is supported by this test fixture.');
   process.exit(1);
 }
 
@@ -174,10 +188,9 @@ if ((scenario.failEndpoints ?? []).includes(endpoint)) {
   process.exit(1);
 }
 
-const jqIndex = rest.indexOf('--jq');
-const jq = jqIndex === -1 ? 'default' : rest[jqIndex + 1];
+const jq = rest[1];
 const endpointResponses = scenario.responses?.[endpoint] ?? {};
-const response = endpointResponses[jq] ?? endpointResponses.default;
+const response = endpointResponses[jq];
 
 if (response === undefined) {
   console.error('No fake gh response for ' + endpoint + ' with jq ' + jq);
@@ -447,6 +460,30 @@ test('workflow output parser rejects malformed lines without keys', () => {
     fs.writeFileSync(outputPath, '=value\n');
 
     assert.throws(() => parseOutputs(outputPath), /Invalid GITHUB_OUTPUT line: =value/);
+  } finally {
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+test('fake gh fixture rejects unsupported API endpoints', () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'prowl-gh-'));
+
+  try {
+    createFakeGh(directory);
+    const result = spawnSync(
+      path.join(directory, 'gh'),
+      ['api', `repos/${REPOSITORY}/issues/33`, '--jq', '.number'],
+      {
+        encoding: 'utf8',
+        env: {
+          ...process.env,
+          GH_FAKE_SCENARIO: JSON.stringify({ responses: {} }),
+        },
+      },
+    );
+
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /Unsupported gh api endpoint/);
   } finally {
     fs.rmSync(directory, { recursive: true, force: true });
   }
