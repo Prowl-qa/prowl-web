@@ -7,10 +7,12 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
 ### Removed
 - Removed Prowl Code Review from the marketing site (PQW-026; counterpart of
   `prowl-code-review` #69). prowl-review moved to maintenance mode as an internal
-  tool (owner decision, 2026-08-26), so the site presents one product. Deleted the
-  `/code-review` route (`src/app/code-review/`, page + `opengraph-image`) with no
-  redirect — the URL now 404s — the `CodeReview` component, the `code-review` entry
-  in `src/lib/products.ts`, its `ProductIcon` variant, and the `/code-review`
+  tool (owner decision, 2026-08-26), leaving the site's current catalog at three
+  entries: Prowl CLI, Prowl Hub, and Prowl Infra Hub (Hub/Infra retirement is
+  tracked in PQW-025). Deleted the `/code-review` route (`src/app/code-review/`,
+  page + `opengraph-image`) with no redirect — the URL now 404s — the `CodeReview`
+  component, the `code-review` entry in `src/lib/products.ts`, its `ProductIcon`
+  variant, and the `/code-review`
   sitemap entry. Dropped every `review.prowl.tools` link and trimmed the Code
   Review mentions from the root layout description, the `/docs` hub description,
   the "own your keys" suite pillar, the `SuiteHero` copy, and the "Three tools"
