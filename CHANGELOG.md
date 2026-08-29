@@ -86,7 +86,24 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
   reviews only run once CI is green. The workflow resolves exactly one open PR from the
   completed CI run (with an API fallback), gates out forks, and hands the PR number and draft
   state to the action explicitly; CI now subscribes to `ready_for_review` so draft→ready still
-  triggers a review. Provider keys are read from org-level secrets.
+  triggers a review.
+- prowl-review now runs on the keyless Codex subscription provider (#64) on the self-hosted
+  Mac mini runner instead of the API-key Claude + Gemini ensemble, so per-review marginal cost
+  is $0.00 and no `PROWL_AI_KEY_*` secret is required or passed to the runner. The
+  `workflow_run`→CI chain and
+  the branded prowl-review[bot] identity (App-token minting) are preserved; the `review` and
+  `command` jobs move to `runs-on: [self-hosted, macOS, prowl-review]` behind a mandatory
+  same-repo fork gate (public repo), share a non-cancelling Codex concurrency group keyed by
+  repository, PR number, and server-derived head repository, and cap at `timeout-minutes: 30`.
+  `.prowl-review.yml` pins `provider: codex` / `model: gpt-5.5` /
+  `codex.effort: low` (the ensemble block is retained, commented out, as a key-gated fallback).
+  The action is pinned to reviewed commit `4e60b282f3837b3f09b2a9d0c74f19eef2804c10`
+  until a release tag includes the codex provider. Workflow tests cover the
+  mandatory same-repo job gates, guarded PR-head checkouts, queued command
+  concurrency, base-config preference, PR-config bootstrap fallback, invalid PR
+  candidates, PR metadata API failures, closed PR candidates, fork skips, stale
+  heads, malformed output parsing, and fake GitHub API fixture endpoint/option
+  validation.
 - Prowl Hub and Prowl Infra links (homepage tiles, nav, footer, docs hub) now point at the
   live satellite sites `hub.prowl.tools` and `infra.prowl.tools` instead of internal
   marketing pages.
@@ -100,6 +117,13 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
   decision recorded in the workspace CLAUDE.md.
 
 ### Fixed
+- Prowl Review workflow hardening: both `prowl-code-review` action references are pinned to
+  reviewed commit `4e60b282f3837b3f09b2a9d0c74f19eef2804c10`, and
+  `tests/workflows.test.ts` executes the inline resolve scripts with fake GitHub API responses
+  to cover same-repo, fork, command metadata failures, `workflow_run` incomplete metadata,
+  missing config, credentialless guarded PR-head checkout, malformed output, run-block
+  extraction, PR-number expression replacement, API-failure, ambiguous-match, and stale-head
+  branches.
 - Duplicate `<h1>` guard in MDX blog posts (PQW-015): `mdx-components.tsx`
   mapped a markdown `#` to `<h1>`, but `PostHeader` already renders the post
   title as the page's single `<h1>`, so a post body starting with `#` would emit
