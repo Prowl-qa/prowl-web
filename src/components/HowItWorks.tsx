@@ -25,7 +25,7 @@ const steps: { step: string; title: string; detail: string; code: ReactNode }[] 
   {
     step: '02',
     title: 'Describe real user flows in YAML',
-    detail: 'Capture login, onboarding, checkout, and other critical journeys with human-readable steps.',
+    detail: 'Login, onboarding, checkout, a menu bar action — human-readable steps that run against a Mac app or a browser.',
     code: (
       <>
         <span className={PURPLE}>name</span><span className={MUTED}>:</span> <span className={GREEN}>checkout-flow</span>{'\n'}
@@ -38,21 +38,21 @@ const steps: { step: string; title: string; detail: string; code: ReactNode }[] 
   {
     step: '03',
     title: 'Run locally and in CI',
-    detail: 'Execute hunts from terminal, then wire the same commands into your pull request pipeline.',
+    detail: 'Run hunts from the terminal, then wire the same command into your pull request pipeline.',
     code: (
       <>
-        <span className={MUTED}>$</span> <span className={CYAN}>prowl</span> run <span className={GREEN}>critical-flows</span> <span className={YELLOW}>--json</span>
+        <span className={MUTED}>$</span> <span className={CYAN}>prowl</span> run <span className={GREEN}>checkout-flow</span> <span className={YELLOW}>--json</span> <span className={YELLOW}>--trace</span>
       </>
     ),
   },
   {
     step: '04',
     title: 'Debug with artifacts',
-    detail: 'Use screenshots, traces, and logs to resolve issues quickly without reproducing flaky states manually.',
+    detail: 'Screenshots, logs, and traces land in your repo on every failure, so you fix the bug instead of reproducing it.',
     code: (
       <>
-        <span className={`${GREEN} font-bold`}>PASS</span> critical-flows{'\n'}
-        <span className={PURPLE}>artifacts</span><span className={MUTED}>:</span> <span className="text-zinc-400">./prowl-artifacts/latest</span>
+        <span className={`${GREEN} font-bold`}>PASS</span> checkout-flow (1.2s) 2/2 steps{'\n'}
+        <span className={PURPLE}>Artifacts</span><span className={MUTED}>:</span> <span className="text-zinc-400">.prowl/runs/2026-08-29_10-30-45</span>
       </>
     ),
   },
@@ -65,7 +65,7 @@ export default function HowItWorks() {
         <div className="mx-auto w-full max-w-7xl rounded-2xl border border-border bg-surface/80 p-6 sm:p-8">
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">How it works</h2>
           <p className="mt-3 max-w-2xl text-muted">
-            Go from install to your first useful test in under five minutes.
+            Four steps from install to a hunt running in CI.
           </p>
 
           <div className="mt-8 grid gap-4 md:grid-cols-2">

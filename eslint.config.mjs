@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Local Claude Code agent worktrees (untracked) carry their own .next output.
+    ".claude/**",
   ]),
 ]);
 

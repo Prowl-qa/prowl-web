@@ -8,21 +8,20 @@
 
 ## High Priority
 
-### PQW-024: Announce the mobile targets (Android + iOS) on the landing page
-**Priority**: High
-**Description**: Prowl v0.1.5 (released 2026-08-21) shipped experimental Android (emulator +
-USB device) and iOS Simulator targets — the "major shipped feature" tier the workspace rules
-say must reach the landing site. Update prowl.tools to tell the four-target story: **web,
-macOS, Android, iOS** — one YAML hunt format, one selector philosophy, local-first, no cloud
-required. Concrete surfaces: the hero/feature section (platform coverage), any "how it works"
-copy that currently implies web-only, and the competitor comparison table (Maestro requires a
-JVM and has no desktop-app story; BrowserStack has no native desktop testing at all — mind the
-FTC comparative-advertising guidelines in the CLI repo's LEGAL-004: factual, verifiable claims
-only). Label mobile as **experimental** honestly — same wording tier the CLI README uses.
-Coordinate messaging with the CLI repo's PROWL-037 (GTM-002 positioning matrix) so claims stay
-consistent; don't block on it.
-
 ## Medium Priority
+
+### PQW-028: Update the macOS install copy once the bundled helper ships
+**Priority**: Medium
+**Description**: The homepage states plainly that the macOS target's Accessibility helper
+(`prowl-macdriver`) is built from source today — the "Testing a native Mac app?" callout in
+`src/components/Install.tsx`, the "Can Prowl test a native macOS app?" FAQ answer in
+`src/lib/faq-data.ts`, and the "experimental" wording in `src/lib/comparison-data.ts`. When
+`prowl` PROWL-074 (signed, bundled helper; two-minute install) ships, replace the callout with
+the real `prowl init --target macos` flow, drop "experimental" for macOS (or "beta" if a caveat
+remains), and re-check the comparison table's `asOf` date. Coordinate with `prowl` PROWL-075
+and `prowl-docs` PQD-009 so README, docs, and site agree.
+**Acceptance**: no "built from source" language on prowl.tools once the bundled helper is
+released; `homepage.yml` still passes.
 
 ## Low Priority
 
@@ -45,30 +44,3 @@ maintenance mode as a personal tool, and the Prowl CLI becomes the single produc
 desktop-first (macOS) with web as the second target. The site must stop advertising four
 products. See the sunset sections in each of those repos' backlogs for the repo-side work.
 
-### PQW-025: Remove Prowl Hub and Prowl Infra Hub from the site
-**Priority**: High
-**Description**: Delete the `hub` and `infra` entries from `src/lib/products.ts` and everything
-that renders from them (homepage showcase, nav/footer, `DocsHub`, `ProductIcon`), remove the
-"Community Hub" section in `src/components/Community.tsx` (links to hub.prowl.tools), fix the
-`/docs` page description ("the CLI, Code Review, Hub, and Infra"), update `sitemap.ts`, and
-add redirects (or 410s) for any retired routes. Update the affected landing hunts in
-`.prowl/hunts/` (`homepage.yml`, `nav-desktop.yml`, `nav-mobile.yml`, `footer.yml`,
-`docs-page.yml`) so CI stays green. In the same pass, edit the workspace `CLAUDE.md` repo map
-and customer-facing display-name decision (it is workspace-level, not in any repo) so the
-"single source of truth" stops listing retired products.
-**Acceptance**: no mention of Hub/Infra Hub anywhere on prowl.tools; all landing hunts pass;
-workspace `CLAUDE.md` updated.
-
-### PQW-027: Reposition the landing page desktop-first (re-scopes PQW-024)
-**Priority**: High
-**Description**: PQW-024 asked for a "four-target story". The sharper story is: **the only
-declarative E2E tool that drives native macOS apps (including menu-bar extras) and your web
-app from the same YAML** — lead with macOS where there is no incumbent, keep web as the
-second target, and mention Android/iOS as experimental at most. Rewrite the hero, feature
-grid, and comparison table accordingly (Maestro: mobile/web, no desktop; Playwright: web only;
-XCUITest: Swift + Xcode). Keep claims factual per the CLI repo's LEGAL-004. Blocked on the
-macOS target being a two-minute install (`prowl` PROWL-052 / SUNSET-002) — do not advertise a
-setup that requires a Swift toolchain. Coordinate wording with `prowl` PROWL-075 (README
-headline) and `prowl-docs` PQD-009.
-**Acceptance**: hero leads with desktop; comparison table updated; `homepage.yml` and
-`cli-page.yml` hunts updated and passing.

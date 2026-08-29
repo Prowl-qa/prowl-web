@@ -87,7 +87,7 @@ export default function Features() {
         variants={staggerContainer}
       >
         <motion.h2 variants={fadeUp} className="text-3xl sm:text-4xl font-bold text-center mb-14">
-          Built for web testing
+          Built for desktop and web apps
         </motion.h2>
         <motion.div
           variants={staggerContainer}

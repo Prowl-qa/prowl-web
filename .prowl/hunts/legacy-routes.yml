@@ -1,0 +1,41 @@
+name: legacy-routes
+description: Retired marketing routes (/cli, /hub, /infra) land on the homepage instead of 404ing
+tags:
+  - full
+
+steps:
+  - navigate: "/cli"
+
+  - waitForNetworkIdle:
+      timeout: 5000
+
+  - assert:
+      urlEquals: "http://localhost:3002/"
+
+  - assert:
+      visible: "End-to-end tests for your Mac app and your web app"
+
+  - navigate: "/hub"
+
+  - waitForNetworkIdle:
+      timeout: 5000
+
+  - assert:
+      urlEquals: "http://localhost:3002/"
+
+  - assert:
+      visible: "End-to-end tests for your Mac app and your web app"
+
+  - navigate: "/infra"
+
+  - waitForNetworkIdle:
+      timeout: 5000
+
+  - assert:
+      urlEquals: "http://localhost:3002/"
+
+  - assert:
+      visible: "End-to-end tests for your Mac app and your web app"
+
+assertions:
+  - selectorExists: "h1"

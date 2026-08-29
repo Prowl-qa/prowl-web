@@ -6,7 +6,7 @@ export default function Faq() {
       <div className="mx-auto w-full max-w-5xl">
         <h2 className="text-center text-3xl font-semibold tracking-tight sm:text-4xl">FAQ</h2>
         <p className="mx-auto mt-3 max-w-2xl text-center text-muted">
-          Answers for teams adopting end-to-end testing as part of daily delivery.
+          What people ask before pointing Prowl at their app.
         </p>
 
         <div className="mt-8 space-y-3">

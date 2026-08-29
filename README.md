@@ -13,7 +13,7 @@ npm run dev
 
 ## Prowl Hunts
 
-Prowl keeps web QA self-sovereign: data stays under your control, BYOK/model choice remain open, and the workflow avoids vendor lock-in or metered test pricing. For deeper setup, see [docs.prowl.tools](https://docs.prowl.tools), [review.prowl.tools](https://review.prowl.tools), and [github.com/prowl-tools](https://github.com/prowl-tools).
+This site dogfoods the Prowl CLI: the landing hunts in `.prowl/hunts/` run against a local server in CI. Prowl keeps E2E testing self-sovereign — hunts, run history, and baselines stay in this repo, BYOK/model choice remain open, and nothing is metered. For the CLI itself, see [docs.prowl.tools](https://docs.prowl.tools) and [github.com/prowl-tools/prowl](https://github.com/prowl-tools/prowl).
 
 Keep the development server running in one terminal:
 

@@ -1,5 +1,5 @@
 name: homepage
-description: Homepage loads with the suite hero and all three product tiles
+description: Homepage leads with the desktop-first CLI story and its key sections render
 tags:
   - smoke
   - full
@@ -11,15 +11,28 @@ steps:
       timeout: 5000
 
   - assert:
-      visible: "A testing suite made for agents, controlled by humans."
+      visible: "End-to-end tests for your Mac app and your web app"
 
   - assert:
-      visible: "Three tools, one testing philosophy"
+      visible: "Change the target, not the test"
 
   - assert:
-      visible: "Docs for every tool"
+      visible: "How it works"
+
+  - assert:
+      visible: "Built for AI-assisted development"
+
+  - assert:
+      visible: "Desktop and web from the same file"
 
 assertions:
   - selectorExists: "h1"
+  - selectorNotExists: ":nth-match(h1, 2)"
+  - selectorExists: "#how-it-works"
+  - selectorExists: "a[href^='https://docs.prowl.tools']"
   - selectorExists: "a[href='https://github.com/prowl-tools/prowl']"
+  # PQW-025: no retired product links anywhere on the page.
+  - selectorNotExists: "a[href*='hub.prowl.tools']"
+  - selectorNotExists: "a[href*='infra.prowl.tools']"
+  - selectorNotExists: "a[href*='review.prowl.tools']"
   - noConsoleErrors: true

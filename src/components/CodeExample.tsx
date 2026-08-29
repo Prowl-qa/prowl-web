@@ -54,7 +54,7 @@ export default function CodeExample() {
           {/* YAML */}
           <div>
             <div className="rounded-t-xl bg-code-surface border border-border-subtle px-4 py-2.5">
-              <span className="text-xs font-medium text-muted font-mono">login.hunt.yaml</span>
+              <span className="text-xs font-medium text-muted font-mono">login-flow.yml</span>
             </div>
             <pre className="rounded-b-xl bg-code-bg border border-t-0 border-border-subtle p-6 overflow-x-auto font-mono">
               <YamlHighlight />

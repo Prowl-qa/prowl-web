@@ -1,5 +1,5 @@
 name: nav-mobile
-description: Mobile hamburger menu opens and lists products and site links (run with --viewport mobile)
+description: Mobile hamburger menu opens and lists the site links (run with --viewport mobile)
 tags:
   - mobile
 
@@ -13,10 +13,10 @@ steps:
       visible: "button[aria-label='Close menu']"
 
   - assert:
-      visible: "css=nav.sticky > div[class*='sm:hidden'] a[href='/cli']:visible"
+      visible: "css=nav.sticky > div[class*='sm:hidden'] a[href='https://docs.prowl.tools']:visible"
 
   - assert:
-      visible: "css=nav.sticky > div[class*='sm:hidden'] a[href='https://hub.prowl.tools']:visible"
+      visible: "css=nav.sticky > div[class*='sm:hidden'] a[href='/blog']:visible"
 
   - click:
       selector: "button[aria-label='Close menu']"

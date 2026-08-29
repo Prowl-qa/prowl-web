@@ -7,12 +7,12 @@ export interface HighlightItem {
 export const highlights: HighlightItem[] = [
   {
     title: 'Page analysis',
-    desc: 'prowl analyze <url> --json extracts interactive elements, selectors, and form structure. Agents get a structured page map without browser interaction.',
+    desc: 'prowl analyze <url> --json (or --app <bundle id>) extracts interactive elements with ranked selectors. Agents get a structured map of a page or an app without driving it.',
     icon: 'analyze',
   },
   {
     title: 'AI hunt generation',
-    desc: 'prowl generate turns a page analysis and natural language intent into a valid, runnable YAML hunt file.',
+    desc: 'prowl generate turns an analysis and a natural-language intent into a valid, runnable YAML hunt — using the model and key you choose.',
     icon: 'generate',
   },
   {

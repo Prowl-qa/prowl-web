@@ -5,19 +5,29 @@ export interface FaqItem {
 
 export const faqItems: FaqItem[] = [
   {
-    question: "Is this only for QA engineers?",
+    question: "Who is Prowl for?",
     answer:
-      "No. Prowl is designed for QA, product engineers, and teams new to end-to-end testing who need a simple CLI path to reliable flow coverage.",
+      "Indie and small-team Mac developers who need end-to-end tests for a desktop app, and web developers who want the same YAML-driven coverage for a browser app — without writing test code in Swift or JavaScript.",
   },
   {
-    question: "Do I need to know Playwright APIs?",
+    question: "Can Prowl test a native macOS app?",
     answer:
-      "No. You write hunts in YAML while Prowl handles browser automation and artifacts under the hood.",
+      "Yes. Set target.type to macos and target.app to a bundle id or .app path, and Prowl drives the app through Apple's Accessibility API — windows, sheets, and menu bar extras included, with statusItem and menu= selectors for status menus. The target is labelled experimental: its helper binary is built from source today, and a prebuilt, signed helper is the next milestone.",
+  },
+  {
+    question: "Do I need to know Playwright or XCUITest?",
+    answer:
+      "No. You write hunts in YAML. On the web target Prowl runs Playwright under the hood; on macOS it talks to the Accessibility API. Portable steps run on both, and web-only steps are rejected up front on native targets with a clear error.",
+  },
+  {
+    question: "What about iOS and Android?",
+    answer:
+      "Experimental. Prowl 0.1.5 added Android (emulator and USB device) and iOS Simulator targets that run the same portable steps. They are usable today but the selector dialect and step coverage may still change, and real iOS devices are out of scope for now.",
   },
   {
     question: "Can we run this in CI?",
     answer:
-      "Yes. Prowl is built for CI execution with deterministic exit codes and artifact outputs suitable for pipelines and pull requests.",
+      "Yes. prowl ci runs a suite with deterministic exit codes, JSON and JUnit XML output, and artifacts for the pipeline. Web hunts run on any hosted runner; macOS-app hunts need a runner that has been granted Accessibility permission, which in practice means a self-hosted or MDM-managed Mac.",
   },
   {
     question: "Can AI agents use Prowl?",
@@ -42,11 +52,11 @@ export const faqItems: FaqItem[] = [
   {
     question: "Can Prowl generate tests automatically?",
     answer:
-      "Yes. Run prowl analyze <url> --json to extract page elements, then pipe the output to prowl generate --intent 'describe the test' to produce a valid hunt file. The generated YAML is validated against Prowl's schema before output.",
+      "Yes. Run prowl analyze <url> --json (or --app <bundle id> for a Mac app) to extract elements and ranked selectors, then pipe the output to prowl generate --intent 'describe the test' to produce a valid hunt file. Generation uses the model and provider key you configure — your key, paid to your provider — and the YAML is validated against Prowl's schema before output.",
   },
   {
     question: "Does Prowl support network mocking?",
     answer:
-      "Yes. The mockRoute step intercepts requests matching a URL pattern and returns a custom response — inline JSON or from a file. Use unmockRoute to remove the mock. This lets you test error, loading, and empty states without backend changes.",
+      "Yes, on the web target. The mockRoute step intercepts requests matching a URL pattern and returns a custom response — inline JSON or from a file. Use unmockRoute to remove the mock. This lets you test error, loading, and empty states without backend changes.",
   },
 ];

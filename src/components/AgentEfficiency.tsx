@@ -116,9 +116,9 @@ export default function AgentEfficiency() {
           <motion.div variants={fadeUp} className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold">Built for AI-assisted development</h2>
             <p className="mt-4 max-w-2xl mx-auto text-muted">
-              AI agents can analyze pages, generate hunts, and execute tests through
+              AI agents can analyze a page or an app, generate hunts, and execute tests through
               the CLI or a native MCP server — deterministic results, structured output,
-              no browser reasoning required.
+              no UI reasoning required. Generation runs on your own provider key.
             </p>
           </motion.div>
 
@@ -134,7 +134,7 @@ export default function AgentEfficiency() {
 
             <div className="mb-4 grid gap-4 lg:grid-cols-2">
               <div>
-                <p className="mb-2 text-xs font-mono text-muted">login.hunt.yaml</p>
+                <p className="mb-2 text-xs font-mono text-muted">login.yml</p>
                 <pre className="overflow-x-auto rounded-md border border-border-subtle bg-code-bg p-4 text-xs leading-relaxed text-zinc-200 dark:text-zinc-300 font-mono">
                   <code>{prowlYaml}</code>
                 </pre>
@@ -150,7 +150,7 @@ export default function AgentEfficiency() {
             <ul className="space-y-1.5 text-sm text-muted">
               <li className="flex gap-2"><span className="text-cyan shrink-0">+</span>Deterministic execution — same YAML hunt, same result every time</li>
               <li className="flex gap-2"><span className="text-cyan shrink-0">+</span>Structured JSON output and exit codes for agent branching</li>
-              <li className="flex gap-2"><span className="text-cyan shrink-0">+</span>No browser reasoning — Prowl handles all Playwright interaction</li>
+              <li className="flex gap-2"><span className="text-cyan shrink-0">+</span>No UI reasoning — Prowl drives the browser or the Accessibility tree</li>
               <li className="flex gap-2"><span className="text-cyan shrink-0">+</span>Simple CLI interface — works standalone or as part of a larger agent toolchain</li>
             </ul>
           </motion.div>

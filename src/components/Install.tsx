@@ -11,9 +11,9 @@ interface Step {
 
 const steps: Step[] = [
   { label: 'Install the CLI', command: 'npm install -g prowl-tools', alt: 'brew tap prowl-tools/tap && brew install prowl' },
-  { label: 'Install browser engine', command: 'npx playwright install chromium' },
+  { label: 'Install a browser for the web target', command: 'npx playwright install chromium' },
   { label: 'Initialize your project', command: 'prowl init' },
-  { label: 'Run your first hunt', command: 'prowl run homepage' },
+  { label: 'Run the starter hunt', command: 'prowl run hello' },
 ];
 
 function copyToClipboard(text: string): Promise<void> {
@@ -110,7 +110,7 @@ export default function Install() {
             Get started in seconds
           </h2>
           <p className="text-center text-muted mb-10">
-            Four commands. Zero config files. You&apos;re testing in under a minute.
+            Four commands to a green web hunt. Testing a Mac app takes one more step today — see below.
           </p>
 
           <div className="space-y-4">
@@ -145,6 +145,29 @@ export default function Install() {
 
           <div className="mt-8 flex justify-center">
             <CopyAllButton text={allCommands} />
+          </div>
+
+          {/* Honest macOS status: the helper is not bundled yet (prowl PROWL-074). Update when it ships. */}
+          <div className="mt-8 rounded-xl border border-border bg-background/70 p-5 text-sm">
+            <p className="font-semibold">Testing a native Mac app?</p>
+            <p className="mt-1.5 leading-relaxed text-muted">
+              The macOS target ships in the CLI, but its Accessibility helper,{' '}
+              <code className="font-mono text-xs">prowl-macdriver</code>, is not bundled in the npm package yet — you build it
+              once from the source checkout with the Swift toolchain, then set{' '}
+              <code className="font-mono text-xs">target.type: macos</code> and grant Accessibility permission to your terminal.
+              A prebuilt, signed helper is the next release milestone.
+            </p>
+            <a
+              href="https://docs.prowl.tools/macos-target"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-cyan hover:underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm"
+            >
+              macOS target guide
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M7 17L17 7" /><path d="M7 7h10v10" />
+              </svg>
+            </a>
           </div>
         </div>
       </section>
