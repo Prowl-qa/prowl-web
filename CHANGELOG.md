@@ -100,6 +100,10 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
   artifacts on failure.
 
 ### Changed
+- Hid the blog while it has no real content (owner decision, 2026-08-29): the Blog
+  link is gone from the nav and footer and `/blog` (index, post, feed) is no longer
+  in the sitemap. The routes and RSS feed stay live at their URLs so existing links
+  keep working; restoring the links and sitemap entries un-hides it.
 - Tightened the hero headline to "End-to-end tests for your Mac and web apps, from
   one YAML file." (owner copy edit, 2026-08-29); `homepage.yml` and
   `legacy-routes.yml` assert the new line.
