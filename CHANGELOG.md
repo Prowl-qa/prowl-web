@@ -112,7 +112,7 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
   selectors), how-it-works, the agents section (`prowl analyze --app`, BYOK
   generation), the FAQ (macOS, iOS/Android, CI-runner answers), the install
   section — which now states plainly that the macOS helper is built from source
-  today — and the final CTA. Nav is a flat How it works / Docs / Blog / GitHub.
+  today — and the final CTA. Nav is a flat How it works / Docs / GitHub.
 - Single branded checks row for reviews: the prowl-review auto-review now triggers off the CI
   workflow completing (`workflow_run`) instead of `pull_request`, so the PR checks list shows
   only the branded "Prowl Review" check run (no extra `prowl-review / review` Actions row) and
