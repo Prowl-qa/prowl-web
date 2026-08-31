@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import Link from 'next/link';
 
 const footerLinkClass =
   'hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan rounded-sm';
@@ -115,9 +114,6 @@ export default function Footer() {
           <div>
             <h4 className="font-semibold mb-3 text-xs uppercase tracking-wider text-muted">Resources</h4>
             <ul className="space-y-2 text-muted">
-              <li>
-                <Link href="/blog" className={footerLinkClass}>Blog</Link>
-              </li>
               <li>
                 <a href="https://github.com/prowl-tools" target="_blank" rel="noopener noreferrer" className={footerLinkClass}>
                   GitHub

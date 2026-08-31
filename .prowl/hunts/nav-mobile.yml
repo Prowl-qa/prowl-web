@@ -15,8 +15,9 @@ steps:
   - assert:
       visible: "css=nav.sticky > div[class*='sm:hidden'] a[href='https://docs.prowl.tools']:visible"
 
+  # The blog is hidden while it has no content.
   - assert:
-      visible: "css=nav.sticky > div[class*='sm:hidden'] a[href='/blog']:visible"
+      notVisible: "css=nav.sticky > div[class*='sm:hidden'] a[href='/blog']"
 
   - click:
       selector: "button[aria-label='Close menu']"

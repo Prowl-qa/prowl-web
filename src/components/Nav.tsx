@@ -39,7 +39,6 @@ export default function Nav() {
           <a href="https://docs.prowl.tools" target="_blank" rel="noopener noreferrer" className={linkClass}>
             Docs
           </a>
-          <Link href="/blog" className={linkClass}>Blog</Link>
           <a href="https://github.com/prowl-tools/prowl" target="_blank" rel="noopener noreferrer" className={linkClass}>
             GitHub
           </a>
@@ -70,7 +69,6 @@ export default function Nav() {
           <a href="https://docs.prowl.tools" target="_blank" rel="noopener noreferrer" className={`block ${linkClass}`}>
             Docs
           </a>
-          <Link href="/blog" className={`block ${linkClass}`}>Blog</Link>
           <a href="https://github.com/prowl-tools/prowl" target="_blank" rel="noopener noreferrer" className={`block ${linkClass}`}>
             GitHub
           </a>
