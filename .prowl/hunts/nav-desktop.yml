@@ -17,6 +17,19 @@ steps:
   - assert:
       visible: "css=nav.sticky a[href='https://github.com/prowl-tools/prowl']:visible"
 
+  # The anchor link scrolls to the How it works section.
+  - click:
+      selector: "nav.sticky a[href='/#how-it-works']"
+
+  - waitForUrl:
+      value: "#how-it-works"
+      timeout: 10000
+
+  - assert:
+      visible: "Four steps from install to a hunt running in CI."
+
+  - navigate: "/"
+
   # Internal nav link actually navigates (client-side routing).
   # Scoped to the sticky top nav so the footer Blog link doesn't collide.
   - click:
