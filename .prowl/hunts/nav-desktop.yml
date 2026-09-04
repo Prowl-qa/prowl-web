@@ -27,7 +27,7 @@ steps:
       timeout: 10000
 
   - assert:
-      visible: "Blog"
+      visible: "css=main h1:has-text('Blog')"
 
 assertions:
   - urlIncludes: "/blog"
