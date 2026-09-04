@@ -1,5 +1,5 @@
 name: nav-desktop
-description: Desktop nav carries the single-product links (How it works, Docs, GitHub), hides the blog, and the How it works anchor lands on the section
+description: Desktop nav carries the single-product links (How it works, Docs, Blog, GitHub) and the Blog link navigates
 tags:
   - smoke
   - full
@@ -17,23 +17,19 @@ steps:
   - assert:
       visible: "css=nav.sticky a[href='https://github.com/prowl-tools/prowl']:visible"
 
-  # The blog is hidden while it has no content: no Blog link in the nav.
-  - assert:
-      notVisible: "css=nav.sticky a[href='/blog']"
-
-  # The anchor link scrolls to the How it works section.
+  # Internal nav link actually navigates (client-side routing).
+  # Scoped to the sticky top nav so the footer Blog link doesn't collide.
   - click:
-      selector: "nav.sticky a[href='/#how-it-works']"
+      selector: "nav.sticky a[href='/blog']"
 
   - waitForUrl:
-      value: "#how-it-works"
+      value: "/blog"
       timeout: 10000
 
   - assert:
-      visible: "Four steps from install to a hunt running in CI."
+      visible: "Blog"
 
 assertions:
-  - urlIncludes: "#how-it-works"
-  - selectorNotExists: "a[href='/blog']"
+  - urlIncludes: "/blog"
   - selectorNotExists: "a[href*='hub.prowl.tools']"
   - selectorNotExists: "a[href*='infra.prowl.tools']"
