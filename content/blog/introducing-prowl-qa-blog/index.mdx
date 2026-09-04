@@ -1,31 +1,31 @@
 ---
 title: "Introducing the Prowl Blog"
-description: "We're launching a blog to share what we're learning about AI-powered testing, developer workflows, and building Prowl in public."
+description: "We're launching a blog to share what we're learning building Prowl — end-to-end testing for native macOS and web apps from one declarative YAML file."
 date: "2026-03-09"
 author: "Prowl Tools"
 tags: ["announcements", "product"]
 ---
 
-We've been building Prowl — a CLI-first QA testing tool powered by Playwright — and we think it's time to start sharing what we're learning along the way.
+We've been building Prowl — end-to-end testing for native macOS apps and web apps, driven from the same declarative YAML "hunt" — and it's time to start sharing what we're learning along the way.
 
 ## Why a blog?
 
-The testing landscape is shifting fast. AI agents are writing code, reviewing pull requests, and now they're generating tests too. But most testing tools weren't built for this world. They assume a human is writing every test, clicking through a UI, or hand-crafting page objects.
+Desktop E2E testing has been the neglected corner of the toolchain. Web has Playwright; mobile has Maestro; native macOS testing means Swift and Xcode's XCUITest, locked to a language and an IDE. If you ship a Mac app and a web app, you end up maintaining two completely different testing stacks.
 
-Prowl takes a different approach: **deterministic YAML-defined browser flows** that are readable by both humans and AI agents. And we think there's a lot worth talking about at that intersection.
+Prowl takes a different approach: one declarative YAML file describes a flow, and the same file can drive **a native macOS app or a web app**. Playwright drives the web target; Apple's Accessibility API drives the macOS target (experimental today). iOS and Android are experimental too. The steps are readable by both humans and AI agents, and the results are developer-ready — screenshots, traces, and repro steps you can act on.
 
 ## What you'll find here
 
-This blog will cover a few core themes:
+This blog will cover:
 
-- **Testing craft** — Practical patterns for stable selectors, visual regression testing, and flows that don't break every time your UI changes
-- **AI + QA** — How AI agents interact with testing tools, and why determinism matters more than ever
-- **Building in public** — The technical decisions behind Prowl, from choosing YAML to designing the step type system
-- **Product updates** — New features, releases, and what's coming next
+- **Stories from building Prowl** — the technical decisions behind the tool, what worked, and what we had to rethink
+- **How-to guides** — practical walkthroughs, like testing a Mac app in CI or getting your first hunt running
+- **Honest engineering write-ups** — the hard parts of driving native apps through the Accessibility API, keeping flows deterministic, and BYOK AI-assisted generation
+- **Product updates** — new features, releases, and what's coming next
 
 ## Who this is for
 
-If you're a developer who writes E2E tests (or wishes they broke less often), a QA engineer evaluating tools, or someone building with AI agents who needs reliable test generation — this blog is for you.
+If you're a Mac developer who wants real E2E coverage without living in Xcode, a web developer who already scripts flows, or anyone building with AI agents who needs reliable, deterministic tests — this blog is for you.
 
 ## Get started with Prowl
 
