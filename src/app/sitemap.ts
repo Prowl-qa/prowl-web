@@ -1,6 +1,9 @@
 import type { MetadataRoute } from "next";
-import { getAllPosts } from "@/lib/blog";
-import { BLOG_FEED_PATH } from "@/lib/rss";
+// Relative ".ts" imports (not "@/") so the sitemap unit test can import this
+// module under the node test runner, which resolves neither the tsconfig "@/"
+// path alias nor extensionless specifiers. Mirrors src/lib/blog-metadata.ts.
+import { getAllPosts } from "../lib/blog.ts";
+import { BLOG_FEED_PATH } from "../lib/rss.ts";
 
 // The blog is visible again (owner decision, 2026-09-03): its nav/footer links
 // and the /blog and RSS feed sitemap entries are restored now that a
