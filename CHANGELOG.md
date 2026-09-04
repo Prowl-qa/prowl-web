@@ -100,10 +100,6 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
   artifacts on failure.
 
 ### Changed
-- Hid the blog while it has no real content (owner decision, 2026-08-29): the Blog
-  link is gone from the nav and footer and `/blog` (index, post, feed) is no longer
-  in the sitemap. The routes and RSS feed stay live at their URLs so existing links
-  keep working; restoring the links and sitemap entries un-hides it.
 - Tightened the hero headline to "End-to-end tests for your Mac and web apps, from
   one YAML file." (owner copy edit, 2026-08-29); `homepage.yml` and
   `legacy-routes.yml` assert the new line.
@@ -112,7 +108,7 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
   selectors), how-it-works, the agents section (`prowl analyze --app`, BYOK
   generation), the FAQ (macOS, iOS/Android, CI-runner answers), the install
   section — which now states plainly that the macOS helper is built from source
-  today — and the final CTA. Nav is a flat How it works / Docs / GitHub.
+  today — and the final CTA. Nav is a flat How it works / Docs / Blog / GitHub.
 - Single branded checks row for reviews: the prowl-review auto-review now triggers off the CI
   workflow completing (`workflow_run`) instead of `pull_request`, so the PR checks list shows
   only the branded "Prowl Review" check run (no extra `prowl-review / review` Actions row) and
