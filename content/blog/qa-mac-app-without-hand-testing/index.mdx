@@ -1,0 +1,88 @@
+---
+title: "How Do You QA a Mac App When You Don't Have Time to Test It by Hand?"
+description: "Hand-testing every screen of a macOS app before each release doesn't scale for a solo founder. Here's how Prowl 0.1.7 makes native macOS hunts actually verify state — plus the help-text bug that taught us AI agents read your docs as an API contract."
+date: "2026-09-04"
+author: "Prowl Tools"
+tags: ["macos", "how-to", "ai-agents"]
+---
+
+We were prototyping a menu-bar app recently — the kind of small utility a solo founder builds fast and ships faster. After finishing a pass of hand-testing the "browse mailbox" screen — clicking through every state, checking that the right message opens, making sure nothing silently breaks — one thought stopped us: if we do this by hand for every screen, on every change, we won't have time left to talk to customers or ship anything else.
+
+That's the actual bottleneck for a solo or small-team Mac developer. Prototyping produces bugs that are usually obvious the moment you see them — but "the moment you see them" requires someone to click through the app first, and that someone is you, on a clock that's already too short.
+
+## Why the usual answers don't fit
+
+If you're already testing on Apple platforms, you've hit the same wall we did:
+
+- **XCUITest** works, but it's Swift and Xcode only — you write tests in a different language than your scripts, CI configs, and the rest of your toolchain.
+- **Maestro** is a nice declarative format, but it targets mobile and web — no native macOS.
+- **Playwright** is the best web tool there is, and it doesn't touch a native Mac window at all.
+
+None of them let you describe a native macOS flow the same simple way you'd describe a web one. That gap is what Prowl's macOS target (still experimental) exists to close: one YAML file, one step vocabulary, driving either a native macOS app through Apple's Accessibility API or a web app through Playwright.
+
+## What actually changed in 0.1.7
+
+Two fixes in this release are the difference between a macOS hunt that *runs* and one that actually *catches something*.
+
+**Assertions used to be silently thrown away on native targets.** Before 0.1.7, a hunt's `assertions:` block executed fine on the web target and evaluated to `assertions: []` — nothing — on macOS, Android, and iOS. Your hunt would click through every step, print PASS, and never have actually checked the thing you asserted. Now `selectorExists` / `selectorNotExists` run for real on native targets after the steps complete (matching the web path's semantics, including running even when a step already failed), and web-only checks like `urlIncludes` report as `skipped` instead of vanishing.
+
+**`press` only understood Enter, Return, and Space.** Everything else — arrow keys to move through a list, Tab to move focus, a `Cmd+S` shortcut — was rejected outright. The macOS helper now synthesizes real keystrokes for the full key vocabulary the web target already supports: arrows, Escape, Tab, Backspace/Delete, Home/End, Page Up/Down, F-keys, and modifier combos (`Meta+s`, `Control+a`, and macOS aliases like `Cmd`/`Option`). A bare Enter still takes the fast, deterministic `AXPress` path when the element supports it; everything else gets keystrokes posted directly to your app's process, so they can't land in whatever window happens to be frontmost.
+
+Put together, a hunt like this now actually means what it says:
+
+```yaml
+# .prowl/config.yml
+target:
+  type: macos
+  app: "com.example.MailBar"
+
+# .prowl/hunts/browse-mailbox.yml
+name: browse-mailbox
+steps:
+  - click: "statusItem"
+  - assert:
+      visible: "Inbox"
+  - press:
+      selector: "id=messageList"
+      key: "ArrowDown"
+  - press:
+      selector: "id=messageList"
+      key: "Enter"
+  - assert:
+      visible: "Reply"
+assertions:
+  - selectorExists: "id=messageList"
+  - selectorNotExists: ".error-banner"
+```
+
+```bash
+prowl run browse-mailbox
+```
+
+Before 0.1.7, the `ArrowDown` step would have failed outright, and even if you swapped it for something `press` did support, the closing `assertions:` block would have run against nothing. Now it opens the menu-bar dropdown, arrows down to a message, opens it, and actually fails the hunt if the message list or an error banner isn't in the state you expect.
+
+## The help text was lying to our own tooling
+
+The other fix worth telling in full: `prowl run`, `watch`, and `history` have always described their argument as "Hunt name or path (e.g. `homepage` or `admin/users-crud`)." That's what `--help` says. It's also wrong — the validator rejected anything with a dot or a `.prowl/hunts/` prefix, so `prowl run .prowl/hunts/homepage.yml` failed with `Invalid hunt name` even though it's exactly the kind of input the help text implies is fine.
+
+No human filed this as a bug. It surfaced through automated QA runs, where an agent following the CLI's own documented usage — literally, because that's what agents do — had every hunt in a run fail on the same error. Triaging *why* they all failed the same way is what surfaced that the tool's help text and its validator disagreed with each other.
+
+That's the general lesson: when part of your audience is an AI agent instead of a human skimming for the gist, your `--help` output is an API contract, not a suggestion. A human developer might shrug off an unhelpful error and guess at the right syntax from context. An agent does exactly what the docs say, gets rejected, and has no reason to suspect the docs are wrong rather than its own input.
+
+0.1.7 fixes it properly instead of just fixing the text: `prowl run homepage`, `prowl run hunts/homepage.yml`, and `prowl run .prowl/hunts/homepage.yml` all now resolve to the same hunt, nested paths included (`.prowl/hunts/admin/users.yml` → `admin/users`). The help text was already right — we made the validator agree with it instead of the other way around.
+
+## What's still experimental
+
+The macOS target is still labeled experimental, and we want to be direct about the one piece of setup that isn't smooth yet: `prowl macdriver install` ships in 0.1.7 and is meant to download a signed, notarized helper binary in about two minutes with no Xcode required. That first signed release hasn't been cut yet, so running it today returns a clear "no release yet — build from source" error rather than pretending to succeed. Until then, building the helper from source (`cd macdriver && swift build -c release`, Xcode command-line tools required) is the working path — `prowl macdriver status` will tell you which one Prowl actually resolved.
+
+Everything else in this post — native assertions, the full `press` vocabulary, and the hunt-path fix — works today against the released `prowl-tools@0.1.7`.
+
+## Try it
+
+```bash
+npm install -g prowl-tools
+prowl init
+prowl run hello --headed
+```
+
+The [macOS Target section](https://docs.prowl.tools) of the docs covers permissions, selector discovery (`prowl analyze`), and the full step-compatibility matrix if you're ready to point a hunt at a native app.
