@@ -18,7 +18,7 @@ If you're already testing on Apple platforms, you've hit the same wall we did:
 - **Maestro** is a nice declarative format, but it targets mobile and web — no native macOS.
 - **Playwright** is the best web tool there is, and it doesn't touch a native Mac window at all.
 
-None of them let you describe a native macOS flow the same simple way you'd describe a web one. That gap is what Prowl's macOS target (still experimental) exists to close: one YAML file, one step vocabulary, driving either a native macOS app through Apple's Accessibility API or a web app through Playwright.
+None of them let you describe a native macOS flow the same simple way you'd describe a web one. That gap is what Prowl's macOS target (still experimental) exists to close: one YAML file, one-step vocabulary, driving either a native macOS app through Apple's Accessibility API or a web app through Playwright.
 
 ## What actually changed in 0.1.7
 
@@ -79,10 +79,34 @@ Everything else in this post — native assertions, the full `press` vocabulary,
 
 ## Try it
 
+For a web smoke test, Prowl needs two things before the run starts: a browser binary and the app URL from `.prowl/config.yml` running somewhere. In one terminal, install and initialize Prowl, then start the app:
+
 ```bash
 npm install -g prowl-tools
+npx playwright install chromium
 prowl init
+npm run dev
+```
+
+In another terminal, run the starter hunt against that live URL:
+
+```bash
 prowl run hello --headed
 ```
 
-The [macOS Target section](https://docs.prowl.tools) of the docs covers permissions, selector discovery (`prowl analyze`), and the full step-compatibility matrix if you're ready to point a hunt at a native app.
+For the native macOS path, build the helper from a Prowl source checkout until the first signed helper release exists:
+
+```bash
+cd macdriver
+swift build -c release
+export PROWL_MACDRIVER_BIN="$PWD/.build/release/prowl-macdriver"
+```
+
+Then return to your app repo, point `.prowl/config.yml` at the native target (`target.type: macos` and `target.app: "<bundle id or .app path>"`), grant Accessibility permission to the helper when macOS prompts, and run the native hunt:
+
+```bash
+prowl macdriver status
+prowl run browse-mailbox
+```
+
+The [macOS Target section](https://docs.prowl.tools/macos-target) is the direct docs entry for permissions and selector discovery (`prowl analyze`) when you're ready to point a hunt at a native app.
