@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import createMDX from "@next/mdx";
+import remarkFrontmatter from "remark-frontmatter";
 
 const nextConfig: NextConfig = {
   pageExtensions: ["ts", "tsx", "md", "mdx"],
@@ -17,6 +18,19 @@ const nextConfig: NextConfig = {
   },
 };
 
-const withMDX = createMDX({});
+// remark-frontmatter makes the MDX compiler strip the YAML frontmatter block
+// from the rendered body. Without it, @next/mdx renders the frontmatter as
+// content (the closing --- turns the block into a bold setext heading) — the
+// metadata itself is parsed separately by gray-matter in src/lib/blog.ts.
+// The webpack loader can receive the imported plugin function directly. The
+// Turbopack loader requires serializable options, and @next/mdx resolves plugin
+// package-name strings inside that loader.
+const remarkPlugins = process.env.TURBOPACK
+  ? ["remark-frontmatter"]
+  : [remarkFrontmatter];
+
+const withMDX = createMDX({
+  options: { remarkPlugins },
+});
 
 export default withMDX(nextConfig);

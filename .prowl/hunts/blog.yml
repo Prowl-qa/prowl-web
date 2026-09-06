@@ -26,6 +26,13 @@ steps:
   - assert:
       visible: "Back to all posts"
 
+  # Frontmatter must never leak into the rendered body (remark-frontmatter in
+  # next.config.ts strips it; without it the block renders as a bold heading).
+  - assert:
+      notVisible: 'title: "Introducing'
+  - assert:
+      notVisible: 'author: "Prowl Tools"'
+
 assertions:
   - urlIncludes: "/blog/introducing-prowl-qa-blog"
   - selectorExists: "h1"

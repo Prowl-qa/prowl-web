@@ -4,6 +4,15 @@ All notable changes to the Prowl Tools marketing site (`prowl.tools`) are docume
 
 ## [Unreleased]
 
+### Fixed
+- Blog post bodies no longer render their YAML frontmatter as content. The MDX
+  compiler (`@next/mdx`) had no `remark-frontmatter` plugin, so the frontmatter
+  block appeared as a bold heading at the top of every post (the closing `---`
+  turned it into a setext heading); metadata parsing (gray-matter in
+  `src/lib/blog.ts`) was unaffected. `next.config.ts` now registers
+  `remark-frontmatter`, and the blog hunt asserts frontmatter text is not
+  visible in the rendered post.
+
 ### Removed
 - Removed Prowl Hub and Prowl Infra Hub from the site (PQW-025; both repos were
   retired and archived 2026-08-26). Deleted the `hub` and `infra` product entries
