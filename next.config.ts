@@ -23,7 +23,9 @@ const nextConfig: NextConfig = {
 // metadata itself is parsed separately by gray-matter in src/lib/blog.ts.
 const withMDX = createMDX({
   options: {
-    remarkPlugins: [["remark-frontmatter"]],
+    // @next/mdx resolves plugin package names inside its loader. Keeping this as
+    // a string also keeps the Next 16/Turbopack loader options serializable.
+    remarkPlugins: ["remark-frontmatter"],
   },
 });
 
