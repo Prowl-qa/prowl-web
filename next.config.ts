@@ -17,6 +17,14 @@ const nextConfig: NextConfig = {
   },
 };
 
-const withMDX = createMDX({});
+// remark-frontmatter makes the MDX compiler strip the YAML frontmatter block
+// from the rendered body. Without it, @next/mdx renders the frontmatter as
+// content (the closing --- turns the block into a bold setext heading) — the
+// metadata itself is parsed separately by gray-matter in src/lib/blog.ts.
+const withMDX = createMDX({
+  options: {
+    remarkPlugins: [["remark-frontmatter"]],
+  },
+});
 
 export default withMDX(nextConfig);
