@@ -31,7 +31,7 @@ steps:
   - assert:
       notVisible: 'title: "Introducing'
   - assert:
-      notVisible: 'author: "Prowl Tools"
+      notVisible: 'author: "Prowl Tools"'
 
 assertions:
   - urlIncludes: "/blog/introducing-prowl-qa-blog"
